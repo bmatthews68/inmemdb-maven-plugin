@@ -50,4 +50,9 @@
 			<version>2.4.8</version>
 		</dependency>
 	</dependencies>
+	<scm>
+		<connection>scm:git:git@github.com:bmatthews68/inmemdb-maven-plugin.git</connection>
+		<url>scm:git:git@github.com:bmatthews68/inmemdb-maven-plugin.git</url>
+		<developerConnection>scm:git:git@github.com:bmatthews68/inmemdb-maven-plugin.git</developerConnection>
+	</scm>
 </project>	
