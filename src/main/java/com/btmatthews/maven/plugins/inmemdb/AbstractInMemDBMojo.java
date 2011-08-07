@@ -19,11 +19,8 @@ package com.btmatthews.maven.plugins.inmemdb;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import javax.sql.DataSource;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
-import org.hsqldb.jdbc.JDBCDataSource;
 
 /**
  * Abstract base class for all the In Memory Database plug-in's Mojos.
@@ -31,7 +28,8 @@ import org.hsqldb.jdbc.JDBCDataSource;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public abstract class AbstractInMemDBMojo extends AbstractMojo {
+public abstract class AbstractInMemDBMojo extends AbstractMojo implements
+		Logger {
 
 	/**
 	 * The base name of the message resource bundle.
@@ -73,16 +71,12 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo {
 	 * Use the database, user name and password plug-in configuration parameters
 	 * to construct an in-memory HSQLDB database.
 	 * 
-	 * @return The data source.
+	 * @return The database.
 	 */
-	protected final DataSource getDataSource() {
-		final StringBuilder url = new StringBuilder("jdbc:hsqldb:mem:");
-		url.append(database);
-		final JDBCDataSource dataSource = new JDBCDataSource();
-		dataSource.setUrl(url.toString());
-		dataSource.setUser(username);
-		dataSource.setPassword(password);
-		return dataSource;
+	protected final Database getDatabase() {
+		final DatabaseFactory factory = new DatabaseFactory();
+		return factory.createDatabase(DatabaseFactory.TYPE_HSQLDB, database,
+				username, password);
 	}
 
 	/**
@@ -96,8 +90,8 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo {
 	 * @throws MojoFailureException
 	 *             Propagates the error as an exception.
 	 */
-	protected final void logError(final String messageKey,
-			final Object... arguments) throws MojoFailureException {
+	public void logError(final String messageKey, final Object... arguments)
+			throws MojoFailureException {
 		final String message = getMessage(messageKey, arguments);
 		getLog().error(message);
 		throw new MojoFailureException(message);
@@ -116,10 +110,11 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo {
 	 *             Propagates the error as an exception encasulating the
 	 *             original exception.
 	 */
-	protected final void logError(final String messageKey,
-			final Throwable exception, final Object... arguments) {
+	public void logError(final String messageKey, final Throwable exception,
+			final Object... arguments) throws MojoFailureException {
 		final String message = getMessage(messageKey, arguments);
 		getLog().error(message, exception);
+		throw new MojoFailureException(message, exception);
 	}
 
 	/**

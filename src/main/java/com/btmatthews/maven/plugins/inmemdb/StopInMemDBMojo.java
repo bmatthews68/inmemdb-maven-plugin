@@ -16,12 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.sql.DataSource;
-
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
@@ -33,11 +27,6 @@ import org.apache.maven.plugin.MojoFailureException;
  * @version 1.0.0
  */
 public final class StopInMemDBMojo extends AbstractInMemDBMojo {
-
-	/**
-	 * The message key for the error reported when a server cannot be stopped.
-	 */
-	private static final String ERROR_STOPPING_SERVER = "error_stopping_server";
 
 	/**
 	 * The default constructor.
@@ -53,21 +42,7 @@ public final class StopInMemDBMojo extends AbstractInMemDBMojo {
 	 *             If there was an error executing the goal.
 	 */
 	public void execute() throws MojoFailureException {
-		final DataSource dataSource = getDataSource();
-		try {
-			final Connection connection = dataSource.getConnection();
-			try {
-				final Statement statement = connection.createStatement();
-				try {
-					statement.execute("SHUTDOWN");
-				} finally {
-					statement.close();
-				}
-			} finally {
-				connection.close();
-			}
-		} catch (final SQLException exception) {
-			logError(ERROR_STOPPING_SERVER, exception);
-		}
+		final Database database = getDatabase();
+		database.shutdown(this);
 	}
 }
