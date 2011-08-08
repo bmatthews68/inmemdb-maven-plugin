@@ -17,13 +17,15 @@
 package com.btmatthews.maven.plugins.inmemdb.db.derby;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.derby.jdbc.EmbeddedSimpleDataSource;
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.derby.jdbc.EmbeddedDriver;
 import org.apache.maven.plugin.MojoFailureException;
 
 import com.btmatthews.maven.plugins.inmemdb.AbstractDatabase;
@@ -50,7 +52,7 @@ public class DerbyDatabase extends AbstractDatabase {
 	 * The value of the additional connection parameter which will cause the
 	 * database to be shutdown.
 	 */
-	private static final String SHUTDOWN = "shutdown";
+	private static final String DROP = "drop";
 
 	/**
 	 * The loaders that are supported for loading data or executing scripts.
@@ -73,6 +75,23 @@ public class DerbyDatabase extends AbstractDatabase {
 			final String password) {
 		super(database, username, password);
 	}
+	
+	public String getUrl(final Map<String, String> attributes) {
+		final StringBuilder url = new StringBuilder("jdbc:derby:memory:");
+		url.append(getDatabaseName());
+		if (attributes.containsKey(CREATE)) {
+			url.append(';');
+			url.append(CREATE);
+			url.append('=');
+			url.append(attributes.get(CREATE));
+		} else if (attributes.containsKey(DROP)) {
+			url.append(';');
+			url.append(DROP);
+			url.append('=');
+			url.append(attributes.get(DROP));
+		}
+		return url.toString();
+	}
 
 	/**
 	 * Get the data source that describes the connection to the in-memory Apache
@@ -82,16 +101,11 @@ public class DerbyDatabase extends AbstractDatabase {
 	 *         constructor.
 	 */
 	public DataSource getDataSource(final Map<String, String> attributes) {
-		final EmbeddedSimpleDataSource dataSource = new EmbeddedSimpleDataSource();
-		dataSource.setDatabaseName(getDatabaseName());
-		dataSource.setUser(getUsername());
+		final BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setUrl(getUrl(attributes));
+		dataSource.setUsername(getUsername());
 		dataSource.setPassword(getPassword());
-		if (attributes.containsKey(CREATE)) {
-			dataSource.setCreateDatabase(CREATE);
-		}
-		if (attributes.containsKey(SHUTDOWN)) {
-			dataSource.setShutdownDatabase(SHUTDOWN);
-		}
+		dataSource.setDriverClassName("org.apache.derby.jdbc.EmbeddedDriver");
 		return dataSource;
 	}
 
@@ -115,8 +129,16 @@ public class DerbyDatabase extends AbstractDatabase {
 	public void start(final Logger logger) throws MojoFailureException {
 		assert logger != null;
 
+		try {
+			EmbeddedDriver.class.newInstance();
+		} catch (InstantiationException exception) {
+			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
+		} catch (IllegalAccessException exception) {
+			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
+		}
+
 		final Map<String, String> attributes = new HashMap<String, String>();
-		attributes.put(CREATE, CREATE);
+		attributes.put(CREATE, "true");
 		try {
 			final DataSource dataSource = getDataSource(attributes);
 			final Connection connection = dataSource.getConnection();
@@ -138,10 +160,12 @@ public class DerbyDatabase extends AbstractDatabase {
 		assert logger != null;
 
 		final Map<String, String> attributes = new HashMap<String, String>();
-		attributes.put(SHUTDOWN, CREATE);
+		attributes.put(DROP, "true");
 		try {
-			final DataSource dataSource = getDataSource(attributes);
-			final Connection connection = dataSource.getConnection();
+			
+//			final DataSource dataSource = getDataSource(attributes);
+//			final Connection connection = dataSource.getConnection();
+			final Connection connection = DriverManager.getConnection(getUrl(attributes));
 			connection.close();
 		} catch (final SQLException exception) {
 			logger.logError(ERROR_STOPPING_SERVER, exception, getDatabaseName());
