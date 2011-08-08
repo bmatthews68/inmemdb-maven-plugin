@@ -17,11 +17,7 @@
 package com.btmatthews.maven.plugins.inmemdb;
 
 import org.apache.maven.plugin.MojoFailureException;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 /**
  * Unit tests for loaders using an in-memory HSQL database.
@@ -29,32 +25,15 @@ import org.mockito.MockitoAnnotations;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public class TestHSQLDBShutdown {
+public final class TestHSQLDBShutdown extends AbstractTest {
 
 	/**
-	 * The factory used to create database objects.
+	 * Get the database type.
+	 * 
+	 * @return {@link DatabaseFactory.TYPE_HSQLDB}
 	 */
-	private DatabaseFactory factory;
-
-	/**
-	 * Mocks the logger.
-	 */
-	@Mock
-	private Logger logger;
-
-	/**
-	 * Prepare for each unit test by mock objects and test fixtures.
-	 */
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		Mockito.doThrow(new MojoFailureException("")).when(logger)
-				.logError(Mockito.anyString(), Mockito.anyVararg());
-		Mockito.doThrow(new MojoFailureException(""))
-				.when(logger)
-				.logError(Mockito.anyString(), Mockito.any(Throwable.class),
-						Mockito.anyVararg());
-		factory = new DatabaseFactory();
+	protected String getDatabaseType() {
+		return DatabaseFactory.TYPE_HSQLDB;
 	}
 
 	/**
@@ -65,8 +44,7 @@ public class TestHSQLDBShutdown {
 	 */
 	@Test
 	public void testShutdown() throws MojoFailureException {
-		Database database = factory.createDatabase(DatabaseFactory.TYPE_HSQLDB,
-				".", "sa", "");
-		database.shutdown(logger);
+		getDatabase().start(getLogger());
+		getDatabase().shutdown(getLogger());
 	}
 }

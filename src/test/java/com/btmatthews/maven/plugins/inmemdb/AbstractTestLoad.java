@@ -30,34 +30,15 @@ import org.mockito.MockitoAnnotations;
  * @version 1.0
  * 
  */
-public abstract class AbstractTestLoad {
-
-	/**
-	 * A test fixture containing the database object being tested.
-	 */
-	private Database database;
-
-	/**
-	 * Mocks the logger.
-	 */
-	@Mock
-	private Logger logger;
+public abstract class AbstractTestLoad extends AbstractTest {
 
 	/**
 	 * Prepare for each unit test by mock objects and test fixtures.
 	 */
 	@Before
 	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		Mockito.doThrow(new MojoFailureException("")).when(logger)
-				.logError(Mockito.anyString(), Mockito.anyVararg());
-		Mockito.doThrow(new MojoFailureException(""))
-				.when(logger)
-				.logError(Mockito.anyString(), Mockito.any(Throwable.class),
-						Mockito.anyVararg());
-		final DatabaseFactory factory = new DatabaseFactory();
-		database = factory.createDatabase(getDatabaseType(), "test", "sa", "");
-		database.start(logger);
+		super.setUp();
+		getDatabase().start(getLogger());
 	}
 
 	/**
@@ -67,31 +48,6 @@ public abstract class AbstractTestLoad {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		database.shutdown(logger);
-	}
-
-	/**
-	 * Returns a string that identifies the database type.
-	 * 
-	 * @return The database type.
-	 */
-	protected abstract String getDatabaseType();
-
-	/**
-	 * Get the database descriptor test fixture.
-	 * 
-	 * @return The database descriptor.
-	 */
-	protected final Database getDatabase() {
-		return database;
-	}
-
-	/**
-	 * Get the mock logger.
-	 * 
-	 * @return The mock logger.
-	 */
-	protected final Logger getLogger() {
-		return logger;
+		getDatabase().shutdown(getLogger());
 	}
 }

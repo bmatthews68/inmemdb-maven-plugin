@@ -29,33 +29,17 @@ import org.mockito.MockitoAnnotations;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public class TestDerbyShutdown {
+public class TestDerbyShutdown extends AbstractTest {
 
 	/**
-	 * The factory used to create database objects.
+	 * Get the database type.
+	 * 
+	 * @return {@link DatabaseFactory.TYPE_DERBY}
 	 */
-	private DatabaseFactory factory;
-
-	/**
-	 * Mocks the logger.
-	 */
-	@Mock
-	private Logger logger;
-
-	/**
-	 * Prepare for each unit test by mock objects and test fixtures.
-	 */
-	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		Mockito.doThrow(new MojoFailureException("")).when(logger)
-				.logError(Mockito.anyString(), Mockito.anyVararg());
-		Mockito.doThrow(new MojoFailureException(""))
-				.when(logger)
-				.logError(Mockito.anyString(), Mockito.any(Throwable.class),
-						Mockito.anyVararg());
-		factory = new DatabaseFactory();
+	protected String getDatabaseType() {
+		return DatabaseFactory.TYPE_DERBY;
 	}
+
 
 	/**
 	 * Verify that the database shutdown operation works.
@@ -65,8 +49,7 @@ public class TestDerbyShutdown {
 	 */
 	@Test
 	public void testShutdown() throws MojoFailureException {
-		Database database = factory.createDatabase(DatabaseFactory.TYPE_DERBY,
-				"test", "sa", "");
-		database.shutdown(logger);
+		getDatabase().start(getLogger());
+		getDatabase().shutdown(getLogger());
 	}
 }
