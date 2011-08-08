@@ -19,24 +19,30 @@ package com.btmatthews.maven.plugins.inmemdb;
 import java.io.File;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 /**
- * Unit tests for loaders using an in-memory HSQLDB database.
+ * Unit tests for loaders using an in-memory Apache Derby database.
  * 
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class TestHSQLDBLoad extends AbstractTestLoad {
+public final class TestDerbyLoad extends AbstractTestLoad {
 
 	/**
 	 * Get the database type.
 	 * 
-	 * @return {@link DatabaseFactory.TYPE_HSQLDB}
+	 * @return {@link DatabaseFactory.TYPE_DERBY}
 	 */
 	protected String getDatabaseType() {
-		return DatabaseFactory.TYPE_HSQLDB;
+		return DatabaseFactory.TYPE_DERBY;
 	}
+
 
 	/**
 	 * Verify that a valid DDL/DML script can be loaded.
