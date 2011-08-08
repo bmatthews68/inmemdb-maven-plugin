@@ -17,6 +17,10 @@
 package com.btmatthews.maven.plugins.inmemdb;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
 
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -36,9 +40,74 @@ public abstract class AbstractDatabase implements Database {
 	private static final String UNSUPPORTED_FILE_TYPE = "unsupported_file_type";
 
 	/**
+	 * The message key for the error reported when a server cannot be started.
+	 */
+	protected static final String ERROR_STARTING_SERVER = "error_starting_server";
+
+	/**
 	 * The message key for the error reported when a server cannot be stopped.
 	 */
 	protected static final String ERROR_STOPPING_SERVER = "error_stopping_server";
+
+	/**
+	 * The database name.
+	 */
+	private String databaseName;
+
+	/**
+	 * The user name used to connect to the database.
+	 */
+	private String username;
+
+	/**
+	 * The password used to connect to the database.
+	 */
+	private String password;
+
+	/**
+	 * The constructor for this object stores the database name, user name and
+	 * password that will be used to create connections.
+	 * 
+	 * @param database
+	 *            The database name.
+	 * @param username
+	 *            The user name for the database connection.
+	 * @param password
+	 *            The password for the database connection.
+	 */
+	protected AbstractDatabase(final String database, final String username,
+			final String password) {
+		this.databaseName = database;
+		this.username = username;
+		this.password = password;
+	}
+
+	/**
+	 * Get the database name.
+	 * 
+	 * @return The database name.
+	 */
+	protected final String getDatabaseName() {
+		return this.databaseName;
+	}
+
+	/**
+	 * Get the user name used to connect to the database.
+	 * 
+	 * @return The user name.
+	 */
+	protected final String getUsername() {
+		return username;
+	}
+
+	/**
+	 * Get the password used to connect to the database.
+	 * 
+	 * @return The password.
+	 */
+	protected final String getPassword() {
+		return password;
+	}
 
 	/**
 	 * Get the loaders that are supported for loading data or executing scripts.
@@ -46,6 +115,16 @@ public abstract class AbstractDatabase implements Database {
 	 * @return Returns an array of loaders.
 	 */
 	protected abstract Loader[] getLoaders();
+
+	/**
+	 * Get a data source object without additional connection attributes.
+	 * 
+	 * @return The data source object.
+	 */
+	public final DataSource getDataSource() {
+		final Map<String, String> attributes = new HashMap<String, String>();
+		return getDataSource(attributes);
+	}
 
 	/**
 	 * Find the loader that supports the source file and use it to load the data

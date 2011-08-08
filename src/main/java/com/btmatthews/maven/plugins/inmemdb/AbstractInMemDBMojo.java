@@ -43,6 +43,13 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo implements
 			.getBundle(BUNDLE_NAME);
 
 	/**
+	 * The database type.
+	 * 
+	 * @parameter expression="${inmemdb.type}" default-value="hsqldb"
+	 */
+	protected String type;
+
+	/**
 	 * The database name.
 	 * 
 	 * @parameter expression="${inmemdb.database}" default-value="."
@@ -75,8 +82,7 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo implements
 	 */
 	protected final Database getDatabase() {
 		final DatabaseFactory factory = new DatabaseFactory();
-		return factory.createDatabase(DatabaseFactory.TYPE_HSQLDB, database,
-				username, password);
+		return factory.createDatabase(type, database, username, password);
 	}
 
 	/**

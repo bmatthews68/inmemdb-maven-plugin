@@ -43,6 +43,8 @@ public final class StopInMemDBMojo extends AbstractInMemDBMojo {
 	 */
 	public void execute() throws MojoFailureException {
 		final Database database = getDatabase();
-		database.shutdown(this);
+		if (database != null) {
+			database.shutdown(this);
+		}
 	}
 }

@@ -17,6 +17,7 @@
 package com.btmatthews.maven.plugins.inmemdb;
 
 import java.io.File;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -38,6 +39,26 @@ public interface Database {
 	 * @return The data source.
 	 */
 	DataSource getDataSource();
+
+	/**
+	 * Get the data source that describes the connection to the in-memory
+	 * database.
+	 * 
+	 * @param attributes
+	 *            Additional connection attributes.
+	 * @return The data source.
+	 */
+	DataSource getDataSource(Map<String, String> attributes);
+
+	/**
+	 * Start the in-memory database.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @throws MojoFailureException
+	 *             If the database cannot be started.
+	 */
+	void start(Logger logger) throws MojoFailureException;
 
 	/**
 	 * Find the loader that supports the source file and use it to load the data

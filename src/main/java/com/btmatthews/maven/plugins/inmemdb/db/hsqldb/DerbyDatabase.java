@@ -18,13 +18,13 @@ package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.derby.jdbc.EmbeddedSimpleDataSource;
 import org.apache.maven.plugin.MojoFailureException;
-import org.hsqldb.jdbc.JDBCDataSource;
 
 import com.btmatthews.maven.plugins.inmemdb.AbstractDatabase;
 import com.btmatthews.maven.plugins.inmemdb.Loader;
@@ -33,18 +33,24 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.SQLLoader;
 
 /**
- * Implements support for in-memory HSQLDB databases.
+ * Implements support for in-memory Apache Derby databases.
  * 
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public class HSQLDBDatabase extends AbstractDatabase {
+public class DerbyDatabase extends AbstractDatabase {
 
 	/**
-	 * The data source that describes the connection to the in-memory HSQLDB
-	 * database.
+	 * The value of the additional connection parameter which will cause the
+	 * database to be created.
 	 */
-	private JDBCDataSource dataSource;
+	private static final String CREATE = "create";
+
+	/**
+	 * The value of the additional connection parameter which will cause the
+	 * database to be shutdown.
+	 */
+	private static final String SHUTDOWN = "shutdown";
 
 	/**
 	 * The loaders that are supported for loading data or executing scripts.
@@ -53,7 +59,8 @@ public class HSQLDBDatabase extends AbstractDatabase {
 			new DBUnitXMLLoader(), new SQLLoader() };
 
 	/**
-	 * The constructor for this object creates and initialises the data source.
+	 * The constructor for this object stores the database name, user name and
+	 * password that will be used to create connections.
 	 * 
 	 * @param database
 	 *            The database name.
@@ -62,24 +69,29 @@ public class HSQLDBDatabase extends AbstractDatabase {
 	 * @param password
 	 *            The password for the database connection.
 	 */
-	public HSQLDBDatabase(final String database, final String username, final String password) {
+	public DerbyDatabase(final String database, final String username,
+			final String password) {
 		super(database, username, password);
 	}
 
 	/**
-	 * Get the data source that describes the connection to the in-memory HSQLDB
-	 * database.
+	 * Get the data source that describes the connection to the in-memory Apache
+	 * Derby database.
 	 * 
 	 * @return Returns {@link dataSource} which was initialised by the
 	 *         constructor.
 	 */
 	public DataSource getDataSource(final Map<String, String> attributes) {
-		final StringBuilder url = new StringBuilder("jdbc:hsqldb:mem:");
-		url.append(getDatabaseName());
-		dataSource = new JDBCDataSource();
-		dataSource.setUrl(url.toString());
+		final EmbeddedSimpleDataSource dataSource = new EmbeddedSimpleDataSource();
+		dataSource.setDatabaseName(getDatabaseName());
 		dataSource.setUser(getUsername());
 		dataSource.setPassword(getPassword());
+		if (attributes.containsKey(CREATE)) {
+			dataSource.setCreateDatabase(CREATE);
+		}
+		if (attributes.containsKey(SHUTDOWN)) {
+			dataSource.setShutdownDatabase(SHUTDOWN);
+		}
 		return dataSource;
 	}
 
@@ -103,8 +115,10 @@ public class HSQLDBDatabase extends AbstractDatabase {
 	public void start(final Logger logger) throws MojoFailureException {
 		assert logger != null;
 
+		final Map<String, String> attributes = new HashMap<String, String>();
+		attributes.put(CREATE, CREATE);
 		try {
-			final DataSource dataSource = getDataSource();
+			final DataSource dataSource = getDataSource(attributes);
 			final Connection connection = dataSource.getConnection();
 			connection.close();
 		} catch (final SQLException exception) {
@@ -122,20 +136,13 @@ public class HSQLDBDatabase extends AbstractDatabase {
 	 */
 	public void shutdown(final Logger logger) throws MojoFailureException {
 		assert logger != null;
-		
+
+		final Map<String, String> attributes = new HashMap<String, String>();
+		attributes.put(SHUTDOWN, CREATE);
 		try {
-			final DataSource dataSource = getDataSource();
+			final DataSource dataSource = getDataSource(attributes);
 			final Connection connection = dataSource.getConnection();
-			try {
-				final Statement statement = connection.createStatement();
-				try {
-					statement.execute("SHUTDOWN");
-				} finally {
-					statement.close();
-				}
-			} finally {
-				connection.close();
-			}
+			connection.close();
 		} catch (final SQLException exception) {
 			logger.logError(ERROR_STOPPING_SERVER, exception, getDatabaseName());
 		}

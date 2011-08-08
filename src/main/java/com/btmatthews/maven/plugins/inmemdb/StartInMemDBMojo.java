@@ -52,8 +52,10 @@ public class StartInMemDBMojo extends AbstractInMemDBMojo {
 	 */
 	public void execute() throws MojoFailureException {
 		final Database database = getDatabase();
-		for (final File source : sources) {
-			database.load(this, source);
+		if (database != null) {
+			for (final File source : sources) {
+				database.load(this, source);
+			}
 		}
 	}
 }

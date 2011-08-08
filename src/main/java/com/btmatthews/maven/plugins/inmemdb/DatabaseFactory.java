@@ -16,6 +16,7 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
+import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.DerbyDatabase;
 import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabase;
 
 /**
@@ -30,6 +31,11 @@ public class DatabaseFactory {
 	 * The database type code for HSQLDB databases.
 	 */
 	public static final String TYPE_HSQLDB = "hsqldb";
+
+	/**
+	 * The database type code for Apache Derby databases.
+	 */
+	public static final String TYPE_DERBY = "derby";
 
 	/**
 	 * Create and return a database object corresponding to type and initialise
@@ -52,6 +58,8 @@ public class DatabaseFactory {
 		Database database;
 		if (TYPE_HSQLDB.equals(type)) {
 			database = new HSQLDBDatabase(databaseName, username, password);
+		} else if (TYPE_DERBY.equals(type)) {
+				database = new DerbyDatabase(databaseName, username, password);
 		} else {
 			database = null;
 		}
