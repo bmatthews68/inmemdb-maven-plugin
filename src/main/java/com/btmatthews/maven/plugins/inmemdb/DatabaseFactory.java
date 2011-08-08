@@ -16,7 +16,7 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
-import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.DerbyDatabase;
+import com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabase;
 import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabase;
 
 /**

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
+package com.btmatthews.maven.plugins.inmemdb.db.derby;
 
 import java.sql.Connection;
 import java.sql.SQLException;
