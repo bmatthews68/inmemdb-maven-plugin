@@ -16,12 +16,8 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
-import org.apache.maven.plugin.MojoFailureException;
 import org.junit.After;
 import org.junit.Before;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 /**
  * Abstract base class for unit tests that load data.
