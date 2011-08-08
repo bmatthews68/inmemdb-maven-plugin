@@ -19,12 +19,7 @@ package com.btmatthews.maven.plugins.inmemdb;
 import java.io.File;
 
 import org.apache.maven.plugin.MojoFailureException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 /**
  * Unit tests for loaders using an in-memory Apache Derby database.
