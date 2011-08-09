@@ -75,7 +75,16 @@ public class DerbyDatabase extends AbstractDatabase {
 			final String password) {
 		super(database, username, password);
 	}
-	
+
+	/**
+	 * Construct the JDBC URL with connection specific attributes. This method
+	 * handles the <code>create=true</code> and <code>drop=true</code> which
+	 * create and drop the database respectively when a connection is opened.
+	 * 
+	 * @param attributes
+	 *            The connection specific attributes.
+	 * @return The JDBC URL.
+	 */
 	public String getUrl(final Map<String, String> attributes) {
 		final StringBuilder url = new StringBuilder("jdbc:derby:memory:");
 		url.append(getDatabaseName());
@@ -149,7 +158,9 @@ public class DerbyDatabase extends AbstractDatabase {
 	}
 
 	/**
-	 * Shutdown the in-memory HSQLDB database by sending it a SHUTDOWN command.
+	 * Shutdown the in-memory Apache Derby database by opening a connection with
+	 * <code>drop=true</code>. If successful this will cause a SQL exception
+	 * with a SQL State of 08006 and a vendor specific error code of 45000.
 	 * 
 	 * @param logger
 	 *            Used to report errors and raise exceptions.
@@ -161,14 +172,16 @@ public class DerbyDatabase extends AbstractDatabase {
 
 		final Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put(DROP, "true");
+		final String url = getUrl(attributes);
 		try {
-			
-//			final DataSource dataSource = getDataSource(attributes);
-//			final Connection connection = dataSource.getConnection();
-			final Connection connection = DriverManager.getConnection(getUrl(attributes));
-			connection.close();
+			DriverManager.getConnection(url);
+			logger.logError(ERROR_STOPPING_SERVER, getDatabaseName());
 		} catch (final SQLException exception) {
-			logger.logError(ERROR_STOPPING_SERVER, exception, getDatabaseName());
+			if (!("08006".equals(exception.getSQLState()) && 45000 == exception
+					.getErrorCode())) {
+				logger.logError(ERROR_STOPPING_SERVER, exception,
+						getDatabaseName());
+			}
 		}
 	}
 }
