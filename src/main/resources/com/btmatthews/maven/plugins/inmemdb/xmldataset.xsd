@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:tns="http://www.example.org/xmldataset/" xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/xmldataset/">
+	<element name="dataset">
+		<complexType>
+			<sequence>
+				<element name="table" maxOccurs="unbounded" minOccurs="1">
+					<complexType>
+						<sequence>
+							<element name="column" type="string" maxOccurs="unbounded"
+								minOccurs="1" />
+							<element name="row" minOccurs="0" maxOccurs="unbounded">
+								<complexType>
+									<choice minOccurs="1" maxOccurs="unbounded">
+										<element name="value" type="string" />
+										<element name="null" />
+									</choice>
+								</complexType>
+							</element>
+						</sequence>
+						<attribute name="name" type="string" />
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

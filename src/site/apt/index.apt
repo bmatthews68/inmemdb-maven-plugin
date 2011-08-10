@@ -1,0 +1,53 @@
+ ------
+ Overview
+ ------
+ Brian Matthews
+ ------
+ 2011-08-12
+ ------
+
+~~ Copyright 2011 Brian Matthews
+~~
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+
+
+In-Memory Database Maven Plug-in
+
+  This plug-in provides the goals to launch and shutdown an embedded HSQLDB or Apache Derby
+  database that is running in-memory only. During launch the database can be seeded using
+  DDL/DML scripts and/or DBUnit data sets.
+
+* Goals Overview
+
+~~  General Information about the goals.
+
+  * {{{./start-mojo.html}inmemdb:start}} Start the in-memory database and optionally load data 
+    from DDL/DML scripts or DBUnit data sets.
+
+  * {{{./stop-mojo.html}inmemdb:stop}} Stop the embedded server and drop the in-memory database.
+
+* Usage
+
+  Instructions on how to use the In-Memory Database Maven Plugin can be found {{{./usage.html}here}}.
+
+* Examples
+
+  To provide you with better understanding of some usages of the In-Memory Database
+  Maven Plugin, you can take a look into the following examples:
+
+  * {{{./examples/unit.html}Unit testing with JUnit}}
+  
+  * {{{./examples/integration_webapp.html}Integration testing with Jetty and Selenium}}
+  
+  * {{{./examples/integration_websvc.html}Integration testing with Jetty and soapUI}}
+  

@@ -18,9 +18,6 @@ package com.btmatthews.maven.plugins.inmemdb;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 /**
  * Abstract base class for unit tests.
@@ -29,7 +26,7 @@ import org.mockito.MockitoAnnotations;
  * @version 1.0
  * 
  */
-public abstract class AbstractTest {
+public abstract class AbstractTest implements Logger {
 
 	/**
 	 * A test fixture containing the database object being tested.
@@ -37,23 +34,10 @@ public abstract class AbstractTest {
 	private Database database;
 
 	/**
-	 * Mocks the logger.
-	 */
-	@Mock
-	private Logger logger;
-
-	/**
 	 * Prepare for each unit test by mock objects and test fixtures.
 	 */
 	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		Mockito.doThrow(new MojoFailureException("")).when(logger)
-				.logError(Mockito.anyString(), Mockito.anyVararg());
-		Mockito.doThrow(new MojoFailureException(""))
-				.when(logger)
-				.logError(Mockito.anyString(), Mockito.any(Throwable.class),
-						Mockito.anyVararg());
+	public void setUp() throws MojoFailureException {
 		final DatabaseFactory factory = new DatabaseFactory();
 		database = factory.createDatabase(getDatabaseType(), "test", "sa", "");
 	}
@@ -80,6 +64,42 @@ public abstract class AbstractTest {
 	 * @return The mock logger.
 	 */
 	protected final Logger getLogger() {
-		return logger;
+		return this;
+	}
+
+	/**
+	 * Raise a {@link MojoFailureException} but do not write to the log when an
+	 * error occurs.
+	 * 
+	 * 
+	 * @param messageKey
+	 *            The message key in the resource bundle.
+	 * @param arguments
+	 *            The arguments.
+	 * @throws MojoFailureException
+	 *             Propagates the error as an exception.
+	 */
+	public void logError(final String messageKey, final Object... arguments)
+			throws MojoFailureException {
+		throw new MojoFailureException(messageKey);
+	}
+
+	/**
+	 * Raise a {@link MojoFailureException} but do not write to the log when an
+	 * error occurs.
+	 * 
+	 * @param messageKey
+	 *            The key of the message in the resource bundle.
+	 * @param exception
+	 *            The exception.
+	 * @param arguments
+	 *            The message arguments.
+	 * @throws MojoFailureException
+	 *             Propagates the error as an exception encapsulating the
+	 *             original exception.
+	 */
+	public void logError(final String messageKey, final Throwable exception,
+			final Object... arguments) throws MojoFailureException {
+		throw new MojoFailureException(messageKey, exception);
 	}
 }

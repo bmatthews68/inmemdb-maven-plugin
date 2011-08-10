@@ -36,6 +36,8 @@ public interface Loader {
 	/**
 	 * Determine whether or not the data or script can be loaded or executed.
 	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
 	 * @param source
 	 *            The source file containing the data or script.
 	 * @return <ul>
@@ -44,8 +46,11 @@ public interface Loader {
 	 *         <li><code>false</code>if the data or script cannot be loaded or
 	 *         executed.</li>
 	 *         </ul>
+	 * @throws MojoFailureException
+	 *             If there was an error checking that the data or script is
+	 *             supported by the loader.
 	 */
-	boolean isSupported(File source);
+	boolean isSupported(Logger logger, File source) throws MojoFailureException;
 
 	/**
 	 * Load data into or execute a script against the in-memory database.

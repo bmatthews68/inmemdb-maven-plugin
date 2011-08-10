@@ -146,7 +146,7 @@ public abstract class AbstractDatabase implements Database {
 			final Loader[] loaders = getLoaders();
 			int i = 0;
 			while (i < loaders.length) {
-				if (loaders[i].isSupported(source)) {
+				if (loaders[i].isSupported(logger, source)) {
 					loaders[i].load(logger, this, source);
 					break;
 				}

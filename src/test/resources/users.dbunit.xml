@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dataset SYSTEM "dataset.dtd">
+<dataset>
+    <table name="users">
+        <column>username_txt</column>
+        <column>password_txt</column>
+        <row>
+            <value>brian</value>
+            <value>everclear</value>
+        </row>
+    </table>
+</dataset>

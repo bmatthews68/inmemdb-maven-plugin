@@ -16,6 +16,7 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
+import org.apache.maven.plugin.MojoFailureException;
 import org.junit.After;
 import org.junit.Before;
 
@@ -32,7 +33,7 @@ public abstract class AbstractTestLoad extends AbstractTest {
 	 * Prepare for each unit test by mock objects and test fixtures.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws MojoFailureException {
 		super.setUp();
 		getDatabase().start(getLogger());
 	}
