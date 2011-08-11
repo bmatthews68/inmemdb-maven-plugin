@@ -15,7 +15,7 @@
  */
 
 /**
- * This package contains the classes that implement the plug-in's Mojos and interfaces for the databases and loaders.
+ * This package contains the interfaces for the databases and loaders.
  */
 package com.btmatthews.maven.plugins.inmemdb;
 

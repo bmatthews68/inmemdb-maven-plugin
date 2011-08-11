@@ -26,14 +26,14 @@ import javax.sql.DataSource;
 import org.apache.maven.plugin.MojoFailureException;
 import org.hsqldb.jdbc.JDBCDataSource;
 
-import com.btmatthews.maven.plugins.inmemdb.AbstractDatabase;
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
-import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitCSVLoader;
-import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitFlatXMLLoader;
-import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitXLSLoader;
-import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitXMLLoader;
-import com.btmatthews.maven.plugins.inmemdb.ldr.SQLLoader;
+import com.btmatthews.maven.plugins.inmemdb.db.AbstractDatabase;
+import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
+import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitFlatXMLLoader;
+import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXLSLoader;
+import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXMLLoader;
+import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 
 /**
  * Implements support for in-memory HSQLDB databases.
