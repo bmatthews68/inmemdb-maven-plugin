@@ -22,3 +22,113 @@
 
 
 Usage
+
+  The following examples describe the basic usage of the In-Memory Database Maven 
+  Plugin.
+
+* Basic Configuration
+
+  The recommended basic configuration is as follows.
+
+-------------------
+<project>
+  ...  
+  <build>
+    <plugins>
+      ...
+      <plugin>
+        <groupId>com.btmatthews.maven.plugins</groupId>
+        <artifactId>inmemdb-maven-plugin</artifactId>
+        <configuration>
+          <type>hsqldb|derby</type>
+          <database>[database name]</database>
+          <username>[username]</username>
+          <password>[password]</password>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-db</id>
+            <goals>
+              <goal>start</goal>
+            <goals>
+            <configuration>
+              <sources>
+                <source>[filename1]</source>
+                <source>[filename2]</source>
+                ...
+                <source>[filenameN]</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+-------------------
+
+** Database types
+
+  The following database types are supported:
+
+  * <<hsqldb>> - An embedded/in-memory {{{http://hsqldb.org/}HSQLDB}} database.
+  
+  * <<derby>> - An embedded/in-memory {{{http://db.apache.org/derby/}Apache Derby}} database.
+  
+** File formats
+
+   The following file formats are supported:
+
+  * <<.sql>> - Contains DDL/DML SQL commands to create the database structure and/or insert
+    test data
+ 
+  * <<.csv>> - A file containing a comma separated value (CSV) data set. The first row of the
+    data set contains the column names and the file name corresponds to the table name.
+ 
+  * <<.xml>> - A file containing a {{{http://www.dbunit.org/apidocs/org/dbunit/dataset/xml/FlatXmlDataSet.html}flat DBUnit XML data set}}.
+ 
+  * <<.dbunit.xml>> - A file containing a {{{http://www.dbunit.org/apidocs/org/dbunit/dataset/xml/XmlDataSet.html}DBUnit XML data set}}.
+ 
+  * <<.xls>> - A Microsoft Excel spread sheet containing one or more work sheets. The name of
+    the work sheet corresponds to the table name and the first row of each work sheet
+    contains the column names.
+
+
+* Example
+
+  The following example shows the configuration that could be used to launch in-memory HSQLDB
+  database, create the database schema using a SQL script and populating it from a CSV
+  data set.
+  
+-------------------
+<project>
+  ...
+  <build>
+    ...
+    <plugins>
+      ...
+        <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
+        <artifactId>inmemdb-maven-plugin</artifactId>
+        <configuration>
+          <type>hsqldb</type>
+          <database>.</database>
+          <username>sa</username>
+          <password></password>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/resources/create_database.sql</source>
+                <source>src/test/data/test_users.csv</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+    </plugins>
+  </build>
+</project>
+-------------------
