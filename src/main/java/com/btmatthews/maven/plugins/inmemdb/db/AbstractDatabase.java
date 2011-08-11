@@ -29,9 +29,8 @@ import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
 
 /**
- * Abstract base classes for database objects providing an implentation of the
- * {@link load()} operation that is used to load data into or execute scripts
- * against the database.
+ * Abstract base classes for database objects providing an implentation of the {@link load()} operation that is used to load data
+ * into or execute scripts against the database.
  * 
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
@@ -69,8 +68,7 @@ public abstract class AbstractDatabase implements Database {
     private String databasePassword;
 
     /**
-     * The constructor for this object stores the database name, user name and
-     * password that will be used to create connections.
+     * The constructor for this object stores the database name, user name and password that will be used to create connections.
      * 
      * @param database
      *            The database name.
@@ -83,7 +81,11 @@ public abstract class AbstractDatabase implements Database {
             final String password) {
         this.databaseName = database;
         this.databaseUsername = username;
-        this.databasePassword = password;
+        if (password == null) {
+            this.databasePassword = "";
+        } else {
+            this.databasePassword = password;
+        }
     }
 
     /**
@@ -131,16 +133,14 @@ public abstract class AbstractDatabase implements Database {
     }
 
     /**
-     * Find the loader that supports the source file and use it to load the data
-     * into or execute the script against the database.
+     * Find the loader that supports the source file and use it to load the data into or execute the script against the database.
      * 
      * @param logger
      *            Used to report errors and raise exceptions.
      * @param source
      *            The source file containing data or script.
      * @throws MojoFailureException
-     *             If there was an error loading the data or executing the
-     *             script or if the source file type was not supported.
+     *             If there was an error loading the data or executing the script or if the source file type was not supported.
      */
     public final void load(final Logger logger, final File source)
             throws MojoFailureException {

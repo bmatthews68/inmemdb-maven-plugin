@@ -32,32 +32,35 @@ import com.btmatthews.maven.plugins.inmemdb.Database;
  */
 public final class StartInMemDBMojo extends AbstractInMemDBMojo {
 
-	/**
-	 * The source files used to populate the database.
-	 * 
-	 * @parameter
-	 */
-	private File[] sources;
+    /**
+     * The source files used to populate the database.
+     * 
+     * @parameter
+     * @required
+     */
+    private File[] sources;
 
-	/**
-	 * The default constructor.
-	 */
-	public StartInMemDBMojo() {
-	}
+    /**
+     * The default constructor.
+     */
+    public StartInMemDBMojo() {
+    }
 
-	/**
-	 * Execute the Maven goal by creating a data source and then iterating over
-	 * the list of sources and loading each one.
-	 * 
-	 * @throws MojoFailureException
-	 *             If there was an error executing the goal.
-	 */
-	public void execute() throws MojoFailureException {
-		final Database database = getDatabase();
-		if (database != null) {
-			for (final File source : sources) {
-				database.load(this, source);
-			}
-		}
-	}
+    /**
+     * Execute the Maven goal by creating a data source and then iterating over the list of sources and loading each one.
+     * 
+     * @throws MojoFailureException
+     *             If there was an error executing the goal.
+     */
+    public void execute() throws MojoFailureException {
+        final Database database = getDatabase();
+        if (database != null) {
+            database.start(this);
+            if (sources != null) {
+                for (final File source : sources) {
+                    database.load(this, source);
+                }
+            }
+        }
+    }
 }
