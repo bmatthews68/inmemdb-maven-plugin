@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public class TestDerbyShutdown extends AbstractTest {
+public final class TestDerbyShutdown extends AbstractTest {
 
 	/**
 	 * Get the database type.

@@ -47,33 +47,33 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo implements
 	 * 
 	 * @parameter expression="${inmemdb.type}" default-value="hsqldb"
 	 */
-	protected String type;
+	private String type;
 
 	/**
 	 * The database name.
 	 * 
 	 * @parameter expression="${inmemdb.database}" default-value="."
 	 */
-	protected String database;
+	private String database;
 	/**
 	 * The username for database connections.
 	 * 
 	 * @parameter expression="${inmemdb.username}" default-value="sa"
 	 */
-	protected String username;
+	private String username;
 	/**
 	 * The password for database connections.
 	 * 
 	 * @parameter expression="${inmemdb.password}" default-value="sa"
 	 */
-	protected String password;
+	private String password;
 
 	/**
 	 * The default constructor.
 	 */
 	protected AbstractInMemDBMojo() {
 	}
-
+	
 	/**
 	 * Use the database, user name and password plug-in configuration parameters
 	 * to construct an in-memory HSQLDB database.
@@ -96,7 +96,7 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo implements
 	 * @throws MojoFailureException
 	 *             Propagates the error as an exception.
 	 */
-	public void logError(final String messageKey, final Object... arguments)
+	public final void logError(final String messageKey, final Object... arguments)
 			throws MojoFailureException {
 		final String message = getMessage(messageKey, arguments);
 		getLog().error(message);
@@ -116,7 +116,7 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo implements
 	 *             Propagates the error as an exception encasulating the
 	 *             original exception.
 	 */
-	public void logError(final String messageKey, final Throwable exception,
+	public final void logError(final String messageKey, final Throwable exception,
 			final Object... arguments) throws MojoFailureException {
 		final String message = getMessage(messageKey, arguments);
 		getLog().error(message, exception);

@@ -29,22 +29,26 @@ import org.junit.Before;
  */
 public abstract class AbstractTestLoad extends AbstractTest {
 
-	/**
-	 * Prepare for each unit test by mock objects and test fixtures.
-	 */
-	@Before
-	public void setUp() throws MojoFailureException {
-		super.setUp();
-		getDatabase().start(getLogger());
-	}
+    /**
+     * Prepare for each unit test by creating the database descriptor and starting the database.
+     * 
+     * @throws MojoFailureException
+     *             If there was a problem starting the database.
+     */
+    @Before
+    public void setUp() throws MojoFailureException {
+        super.setUp();
+        getDatabase().start(getLogger());
+    }
 
-	/**
-	 * Clean-up after each unit test by shutting down the database.
-	 * 
-	 * @throws Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-		getDatabase().shutdown(getLogger());
-	}
+    /**
+     * Clean-up after each unit test by shutting down the database.
+     * 
+     * @throws MojoFailureException
+     *             If there was a problem shutting down the database.
+     */
+    @After
+    public void tearDown() throws MojoFailureException {
+        getDatabase().shutdown(getLogger());
+    }
 }

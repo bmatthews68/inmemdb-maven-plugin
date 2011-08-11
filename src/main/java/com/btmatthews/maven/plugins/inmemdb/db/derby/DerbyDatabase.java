@@ -31,6 +31,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import com.btmatthews.maven.plugins.inmemdb.AbstractDatabase;
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
+import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitCSVLoader;
+import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitFlatXMLLoader;
+import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitXLSLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.DBUnitXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.SQLLoader;
 
@@ -40,7 +43,7 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.SQLLoader;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public class DerbyDatabase extends AbstractDatabase {
+public final class DerbyDatabase extends AbstractDatabase {
 
 	/**
 	 * The value of the additional connection parameter which will cause the
@@ -57,8 +60,9 @@ public class DerbyDatabase extends AbstractDatabase {
 	/**
 	 * The loaders that are supported for loading data or executing scripts.
 	 */
-	private static final Loader[] LOADERS = new Loader[] {
-			new DBUnitXMLLoader(), new SQLLoader() };
+    private static final Loader[] LOADERS = new Loader[] {
+        new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
+        new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
 
 	/**
 	 * The constructor for this object stores the database name, user name and
@@ -106,6 +110,8 @@ public class DerbyDatabase extends AbstractDatabase {
 	 * Get the data source that describes the connection to the in-memory Apache
 	 * Derby database.
 	 * 
+     * @param attributes
+     *            Additional attributes for the data source connection string.
 	 * @return Returns {@link dataSource} which was initialised by the
 	 *         constructor.
 	 */

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE dataset SYSTEM "users.dtd">
 <dataset>
 	<users username_txt="brian" password_txt="everclear" />
 	<users username_txt="elena" password_txt="neverhood" />

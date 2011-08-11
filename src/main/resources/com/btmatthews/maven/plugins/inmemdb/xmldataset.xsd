@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:tns="http://www.example.org/xmldataset/" xmlns="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://www.example.org/xmldataset/">
-	<element name="dataset">
-		<complexType>
-			<sequence>
-				<element name="table" maxOccurs="unbounded" minOccurs="1">
-					<complexType>
-						<sequence>
-							<element name="column" type="string" maxOccurs="unbounded"
+<xsd:schema xmlns:tns="http://btmatthews.com/inmemdb-mven-plugin/xmldataset/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://btmatthews.com/inmemdb-mven-plugin/xmldataset/">
+	<xsd:element name="dataset">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="table" maxOccurs="unbounded"
+					minOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="column" type="xsd:string" maxOccurs="unbounded"
 								minOccurs="1" />
-							<element name="row" minOccurs="0" maxOccurs="unbounded">
-								<complexType>
-									<choice minOccurs="1" maxOccurs="unbounded">
-										<element name="value" type="string" />
-										<element name="null" />
-									</choice>
-								</complexType>
-							</element>
-						</sequence>
-						<attribute name="name" type="string" />
-					</complexType>
-				</element>
-			</sequence>
-		</complexType>
-	</element>
-</schema>
+							<xsd:element name="row" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:choice minOccurs="1" maxOccurs="unbounded">
+										<xsd:element name="value" type="xsd:string" />
+										<xsd:element name="null" />
+									</xsd:choice>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute name="name" type="xsd:string" />
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

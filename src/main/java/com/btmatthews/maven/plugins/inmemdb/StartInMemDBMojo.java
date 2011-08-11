@@ -28,7 +28,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public class StartInMemDBMojo extends AbstractInMemDBMojo {
+public final class StartInMemDBMojo extends AbstractInMemDBMojo {
 
 	/**
 	 * The source files used to populate the database.

@@ -21,23 +21,23 @@ import java.io.IOException;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.dataset.excel.XlsDataSet;
 
 /**
- * Loader that loads data from a DBUnit XML data set.
+ * Loader that loads data from a DBUnit Excel data set.
  * 
  * @author <a href="brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class DBUnitFlatXMLLoader extends AbstractDBUnitLoader {
+public final class DBUnitXLSLoader extends AbstractDBUnitLoader {
 
     /**
-     * The file extension for DBUnit Flat XML data set files.
+     * The file extension for DBUnit Excel data set files.
      */
-    private static final String EXT = ".xml";
+    private static final String EXT = ".xls";
 
     /**
-     * Get the file extension for DBUnit Flat XML data set files.
+     * Get the file extension for DBUnit Excel data set files.
      * 
      * @return {@link EXT}
      */
@@ -47,23 +47,19 @@ public final class DBUnitFlatXMLLoader extends AbstractDBUnitLoader {
     }
 
     /**
-     * Load a DBUnit Flat XML data set.
+     * Load a DBUnit Excel data set.
      * 
      * @param source
-     *            The source file containing the DBUnit Flat XML data set.
-     * @return The DBUnit Flat XML data set.
+     *            The source file containing the DBUnit Excel data set.
+     * @return The DBUnit Excel data set.
      * @throws DataSetException
-     *             If there was an error loading the DBUnit Flat XML data set.
+     *             If there was an error loading the DBUnit Excel data set.
      * @throws IOException
-     *             If there was an error reading the DBUnit Flat XML data set from the file.
+     *             If there was an error reading the DBUnit Excel data set from the file.
      */
     @Override
     protected IDataSet loadDataSet(final File source) throws DataSetException,
             IOException {
-        assert source != null;
-
-        final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-        return builder.build(source);
+        return new XlsDataSet(source);
     }
-
 }

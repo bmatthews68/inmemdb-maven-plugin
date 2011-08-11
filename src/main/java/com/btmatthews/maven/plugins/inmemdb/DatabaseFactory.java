@@ -25,44 +25,43 @@ import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabase;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public class DatabaseFactory {
+public final class DatabaseFactory {
 
-	/**
-	 * The database type code for HSQLDB databases.
-	 */
-	public static final String TYPE_HSQLDB = "hsqldb";
+    /**
+     * The database type code for HSQLDB databases.
+     */
+    public static final String TYPE_HSQLDB = "hsqldb";
 
-	/**
-	 * The database type code for Apache Derby databases.
-	 */
-	public static final String TYPE_DERBY = "derby";
+    /**
+     * The database type code for Apache Derby databases.
+     */
+    public static final String TYPE_DERBY = "derby";
 
-	/**
-	 * Create and return a database object corresponding to type and initialise
-	 * it with the database name, user name and password. If the type is not
-	 * supported then <code>null</code> will be returned.
-	 * 
-	 * @param type
-	 *            The database type.
-	 * @param databaseName
-	 *            The database name.
-	 * @param username
-	 *            The user name used to connect to the database.
-	 * @param password
-	 *            The password used to connect to the database.
-	 * @return The database object or <code>null</code> if the database type is
-	 *         not supported.
-	 */
-	public Database createDatabase(String type, String databaseName,
-			String username, String password) {
-		Database database;
-		if (TYPE_HSQLDB.equals(type)) {
-			database = new HSQLDBDatabase(databaseName, username, password);
-		} else if (TYPE_DERBY.equals(type)) {
-				database = new DerbyDatabase(databaseName, username, password);
-		} else {
-			database = null;
-		}
-		return database;
-	}
+    /**
+     * Create and return a database object corresponding to type and initialise it with the database name, user name and password.
+     * If the type is not supported then <code>null</code> will be returned.
+     * 
+     * @param type
+     *            The database type.
+     * @param databaseName
+     *            The database name.
+     * @param username
+     *            The user name used to connect to the database.
+     * @param password
+     *            The password used to connect to the database.
+     * @return The database object or <code>null</code> if the database type is not supported.
+     */
+    public Database createDatabase(final String type,
+            final String databaseName, final String username,
+            final String password) {
+        Database database;
+        if (TYPE_HSQLDB.equals(type)) {
+            database = new HSQLDBDatabase(databaseName, username, password);
+        } else if (TYPE_DERBY.equals(type)) {
+            database = new DerbyDatabase(databaseName, username, password);
+        } else {
+            database = null;
+        }
+        return database;
+    }
 }

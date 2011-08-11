@@ -17,12 +17,14 @@
 package com.btmatthews.maven.plugins.inmemdb.ldr;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseDataSourceConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.operation.DatabaseOperation;
 
@@ -37,67 +39,57 @@ import com.btmatthews.maven.plugins.inmemdb.Logger;
  */
 public abstract class AbstractDBUnitLoader extends AbstractLoader {
 
-	/**
-	 * The file extension for DBUnit XL data sets.
-	 */
-	private static final String EXT = ".dbunit.xml";
+    /**
+     * Load a DBUnit data set.
+     * 
+     * @param source
+     *            The source file containing the DBUnit data set.
+     * @return The DBUnit data set.
+     * @throws DataSetException
+     *             If there was an error loading the DBUnit data set.
+     * @throws IOException
+     *             IF there was error reading the file containing the DBUnit data set.
+     */
+    protected abstract IDataSet loadDataSet(File source)
+            throws DataSetException, IOException;
 
-	/**
-	 * Return the file extension that denotes DBUnit XML data sets.
-	 * 
-	 * @return Returns {@link EXT}.
-	 */
-	protected String getExtension() {
-		return EXT;
-	}
+    /**
+     * Load a DBUnit data set into the in-memory database.
+     * 
+     * @param logger
+     *            Used to report errors and raise exceptions.
+     * @param database
+     *            The in-memory database.
+     * @param source
+     *            The source file containing the data set.
+     * @throws MojoFailureException
+     *             If there was an error loading the data set.
+     */
+    public final void load(final Logger logger, final Database database,
+            final File source) throws MojoFailureException {
+        assert database != null;
+        assert logger != null;
+        assert source != null;
 
-	/**
-	 * Load a DBUnit data set.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @param source
-	 *            The source file containing the DBUnit data set.
-	 * @throws MojoFailureException
-	 *             If there was an error loading the DBUnit data set.
-	 */
-	protected abstract IDataSet loadDataSet(Logger logger, File source)
-			throws MojoFailureException;
-
-	/**
-	 * Load a DBUnit data set into the in-memory database.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @param database
-	 *            The in-memory database.
-	 * @param source
-	 *            The source file containing the data set.
-	 * @throws MojoFailureException
-	 *             If there was an error loading the data set.
-	 */
-	public void load(final Logger logger, final Database database,
-			final File source) throws MojoFailureException {
-		assert database != null;
-		assert logger != null;
-		assert source != null;
-
-		try {
-			final IDataSet dataSet = loadDataSet(logger, source);
-			final IDatabaseConnection connection = new DatabaseDataSourceConnection(
-					database.getDataSource());
-			try {
-				DatabaseOperation.INSERT.execute(connection, dataSet);
-			} finally {
-				connection.close();
-			}
-		} catch (final SQLException exception) {
-			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
-					source.getPath());
-		} catch (final DatabaseUnitException exception) {
-			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
-					source.getPath());
-		}
-	}
+        try {
+            final IDataSet dataSet = loadDataSet(source);
+            final IDatabaseConnection connection = new DatabaseDataSourceConnection(
+                    database.getDataSource());
+            try {
+                DatabaseOperation.INSERT.execute(connection, dataSet);
+            } finally {
+                connection.close();
+            }
+        } catch (final SQLException exception) {
+            logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
+                    source.getPath());
+        } catch (final DatabaseUnitException exception) {
+            logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
+                    source.getPath());
+        } catch (final IOException exception) {
+            logger.logError(CANNOT_READ_SOURCE_FILE, exception,
+                    source.getPath());
+        }
+    }
 
 }
