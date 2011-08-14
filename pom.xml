@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://maven.apache.org/POM/4.0.0            http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
 	<artifactId>inmemdb-maven-plugin</artifactId>
-	<packaging>maven-plugin</packaging>
 	<version>1.1.1-SNAPSHOT</version>
+	<packaging>maven-plugin</packaging>
 	<name>In-Memory Database Plugin</name>
 	<description>A Maven 3 plug-in that can be used to launch an in-memory database for use in integration tests. Apache Derby and HSQLDB are both supported.
-    </description>
+ 	</description>
 	<inceptionYear>2011</inceptionYear>
 	<licenses>
 		<license>
@@ -24,6 +27,9 @@
 			<url>http://btmatthews.me</url>
 		</developer>
 	</developers>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<build>
 		<extensions>
 			<extension>
@@ -160,6 +166,10 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>2.8</version>
 			</plugin>
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
 		</plugins>
 	</reporting>
 	<dependencies>
@@ -243,15 +253,15 @@
 	</issueManagement>
 	<distributionManagement>
 		<site>
-			<id>inmemdb-maven-plugin.btmatthews.com</id>
+			<id>gh-pages</id>
 			<url>gitsite:git@github.com/bmatthews68/inmemdb-maven-plugin.git</url>
 		</site>
 		<repository>
-			<id>releases.btmatthews.com</id>
+			<id>releases.sonatype</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>snapshots.btmatthews.com</id>
+			<id>snapshots.sonatype</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
