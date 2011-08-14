@@ -48,7 +48,7 @@ public final class TestHSQLDBLoadDataSet extends AbstractTestLoad {
     /**
      * Get the database type.
      * 
-     * @return {@link DatabaseFactory.TYPE_HSQLDB}
+     * @return {@link DatabaseFactory#TYPE_HSQLDB}
      */
     protected String getDatabaseType() {
         return DatabaseFactory.TYPE_HSQLDB;
@@ -73,7 +73,7 @@ public final class TestHSQLDBLoadDataSet extends AbstractTestLoad {
      *             If there was an error.
      */
     @Test
-    public void testLoadFlatDBUnitXML() throws MojoFailureException {
+    public void testLoadDBUnitFlatXML() throws MojoFailureException {
         final File source = new File("src/test/resources/users.xml");
         getDatabase().load(getLogger(), source);
     }
@@ -85,7 +85,7 @@ public final class TestHSQLDBLoadDataSet extends AbstractTestLoad {
      *             If there was an error.
      */
     @Test
-    public void testLoadFlatDBUnitCSV() throws MojoFailureException {
+    public void testLoadDBUnitCSV() throws MojoFailureException {
         final File source = new File("src/test/resources/users.csv");
         getDatabase().load(getLogger(), source);
     }
@@ -97,7 +97,7 @@ public final class TestHSQLDBLoadDataSet extends AbstractTestLoad {
      *             If there was an error.
      */
     @Test
-    public void testLoadFlatDBUnitXLS() throws MojoFailureException {
+    public void testLoadDBUnitXLS() throws MojoFailureException {
         final File source = new File("src/test/resources/users.xls");
         getDatabase().load(getLogger(), source);
     }

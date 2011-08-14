@@ -32,7 +32,7 @@ public final class TestHSQLDBShutdown extends AbstractTest {
 	/**
 	 * Get the database type.
 	 * 
-	 * @return {@link DatabaseFactory.TYPE_HSQLDB}
+	 * @return {@link DatabaseFactory#TYPE_HSQLDB}
 	 */
 	protected String getDatabaseType() {
 		return DatabaseFactory.TYPE_HSQLDB;

@@ -32,7 +32,7 @@ public final class TestDerbyShutdown extends AbstractTest {
 	/**
 	 * Get the database type.
 	 * 
-	 * @return {@link DatabaseFactory.TYPE_DERBY}
+	 * @return {@link DatabaseFactory#TYPE_DERBY}
 	 */
 	protected String getDatabaseType() {
 		return DatabaseFactory.TYPE_DERBY;
