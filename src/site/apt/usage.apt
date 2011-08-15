@@ -40,7 +40,7 @@ Usage
         <groupId>com.btmatthews.maven.plugins</groupId>
         <artifactId>inmemdb-maven-plugin</artifactId>
         <configuration>
-          <type>hsqldb|derby</type>
+          <type>hsqldb|derby|h2</type>
           <database>[database name]</database>
           <username>[username]</username>
           <password>[password]</password>
@@ -74,6 +74,8 @@ Usage
   * <<hsqldb>> - An embedded/in-memory {{{http://hsqldb.org/}HSQLDB}} database.
   
   * <<derby>> - An embedded/in-memory {{{http://db.apache.org/derby/}Apache Derby}} database.
+  
+  * <<h2>> - An embedded/in-memory {{{http://www.h2database.com/}H2}} database.
   
 ** File formats
 

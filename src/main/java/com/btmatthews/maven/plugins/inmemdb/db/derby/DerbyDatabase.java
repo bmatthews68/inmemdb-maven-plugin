@@ -46,6 +46,11 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 public final class DerbyDatabase extends AbstractDatabase {
 
 	/**
+	 * The connection protocol for in-memory Apache Derby databases.
+	 */
+	private static final String PROTOCOL = "derby:memory";
+
+	/**
 	 * The value of the additional connection parameter which will cause the
 	 * database to be created.
 	 */
@@ -60,9 +65,9 @@ public final class DerbyDatabase extends AbstractDatabase {
 	/**
 	 * The loaders that are supported for loading data or executing scripts.
 	 */
-    private static final Loader[] LOADERS = new Loader[] {
-        new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
-        new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
+	private static final Loader[] LOADERS = new Loader[] {
+			new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
+			new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
 
 	/**
 	 * The constructor for this object stores the database name, user name and
@@ -81,37 +86,20 @@ public final class DerbyDatabase extends AbstractDatabase {
 	}
 
 	/**
-	 * Construct the JDBC URL with connection specific attributes. This method
-	 * handles the <code>create=true</code> and <code>drop=true</code> which
-	 * create and drop the database respectively when a connection is opened.
+	 * Get the database connection protocol.
 	 * 
-	 * @param attributes
-	 *            The connection specific attributes.
-	 * @return The JDBC URL.
+	 * @return Always returns {@link DerbyDatabase#PROTOCOL}.
 	 */
-	public String getUrl(final Map<String, String> attributes) {
-		final StringBuilder url = new StringBuilder("jdbc:derby:memory:");
-		url.append(getDatabaseName());
-		if (attributes.containsKey(CREATE)) {
-			url.append(';');
-			url.append(CREATE);
-			url.append('=');
-			url.append(attributes.get(CREATE));
-		} else if (attributes.containsKey(DROP)) {
-			url.append(';');
-			url.append(DROP);
-			url.append('=');
-			url.append(attributes.get(DROP));
-		}
-		return url.toString();
+	protected String getUrlProtocol() {
+		return PROTOCOL;
 	}
 
 	/**
 	 * Get the data source that describes the connection to the in-memory Apache
 	 * Derby database.
 	 * 
-     * @param attributes
-     *            Additional attributes for the data source connection string.
+	 * @param attributes
+	 *            Additional attributes for the data source connection string.
 	 * @return Returns {@link dataSource} which was initialised by the
 	 *         constructor.
 	 */

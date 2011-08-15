@@ -43,7 +43,12 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
  */
 public final class HSQLDBDatabase extends AbstractDatabase {
 
-    /**
+	/**
+	 * The connection protocol for in-memory HSQLDB databases.
+	 */
+	private static final String PROTOCOL = "hsqldb:mem";
+
+	/**
      * The loaders that are supported for loading data or executing scripts.
      */
     private static final Loader[] LOADERS = new Loader[] {
@@ -65,7 +70,16 @@ public final class HSQLDBDatabase extends AbstractDatabase {
         super(database, username, password);
     }
 
-    /**
+	/**
+	 * Get the database connection protocol.
+	 * 
+	 * @return Always returns {@link HSQLDBDatabase#PROTOCOL}.
+	 */
+	protected String getUrlProtocol() {
+		return PROTOCOL;
+	}
+
+	/**
      * Get the data source that describes the connection to the in-memory HSQLDB database.
      * 
      * @param attributes
@@ -73,10 +87,8 @@ public final class HSQLDBDatabase extends AbstractDatabase {
      * @return Returns {@link dataSource} which was initialised by the constructor.
      */
     public DataSource getDataSource(final Map<String, String> attributes) {
-        final StringBuilder url = new StringBuilder("jdbc:hsqldb:mem:");
-        url.append(getDatabaseName());
         final JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl(url.toString());
+        dataSource.setUrl(getUrl(attributes));
         dataSource.setUser(getUsername());
         dataSource.setPassword(getPassword());
         return dataSource;

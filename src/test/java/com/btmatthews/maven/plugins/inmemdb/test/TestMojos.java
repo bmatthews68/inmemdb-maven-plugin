@@ -80,4 +80,28 @@ public final class TestMojos extends AbstractMojoTest {
         assertEquals(mojo, "password", null);
         mojo.execute();
     }
+
+    /**
+     * Test the configuration for the start and stop goals.
+     * 
+     * @throws Exception
+     *             If something unexpected happens.
+     */
+    public void testStartStopH2() throws Exception {
+        Mojo mojo = this.getMojo("testH2", "start");
+        TestCase.assertNotNull(mojo);
+        assertEquals(mojo, "type", "h2");
+        assertEquals(mojo, "database", "test");
+        assertEquals(mojo, "username", "sa");
+        assertEquals(mojo, "password", null);
+        mojo.execute();
+
+        mojo = this.getMojo("testH2", "stop");
+        TestCase.assertNotNull(mojo);
+        assertEquals(mojo, "type", "h2");
+        assertEquals(mojo, "database", "test");
+        assertEquals(mojo, "username", "sa");
+        assertEquals(mojo, "password", null);
+        mojo.execute();
+    }
 }
