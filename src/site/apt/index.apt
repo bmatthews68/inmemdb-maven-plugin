@@ -23,7 +23,7 @@
 
 In-Memory Database Maven Plug-in
 
-  This plug-in provides the goals to launch and shutdown an embedded HSQLDB or Apache Derby
+  This plug-in provides the goals to launch and shutdown an embedded H2, HSQLDB or Apache Derby
   database that is running in-memory only. During launch the database can be seeded using
   DDL/DML scripts and/or DBUnit data sets.
 
