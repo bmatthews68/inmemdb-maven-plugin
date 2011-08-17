@@ -22,6 +22,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 
 import com.btmatthews.maven.plugins.inmemdb.DatabaseFactory;
+import com.btmatthews.maven.plugins.inmemdb.mojo.Script;
 
 /**
  * Unit tests for loaders using an in-memory HSQLDB database.
@@ -48,7 +49,8 @@ public final class TestHSQLDBLoad extends AbstractTestLoad {
 	 */
 	@Test
 	public void testLoadScript() throws MojoFailureException {
-		final File source = new File("src/test/resources/create_database.sql");
+		final Script source = new Script();
+		source.setSourceFile(new File("src/test/resources/create_database.sql"));
 		getDatabase().load(getLogger(), source);
 	}
 
@@ -60,7 +62,8 @@ public final class TestHSQLDBLoad extends AbstractTestLoad {
 	 */
 	@Test(expected = MojoFailureException.class)
 	public void testLoadNonExistantScript() throws MojoFailureException {
-		final File source = new File("src/test/resources/create_database1.sql");
+		final Script source = new Script();
+		source.setSourceFile(new File("src/test/resources/create_database1.sql"));
 		getDatabase().load(getLogger(), source);
 	}
 
@@ -72,7 +75,8 @@ public final class TestHSQLDBLoad extends AbstractTestLoad {
 	 */
 	@Test(expected = MojoFailureException.class)
 	public void testLoadInvalidScript() throws MojoFailureException {
-		final File source = new File("src/test/resources/create_database2.sql");
+		final Script source = new Script();
+		source.setSourceFile(new File("src/test/resources/create_database2.sql"));
 		getDatabase().load(getLogger(), source);
 	}
 
@@ -97,7 +101,8 @@ public final class TestHSQLDBLoad extends AbstractTestLoad {
 	 */
 	@Test(expected = MojoFailureException.class)
 	public void testLoadDirectory() throws MojoFailureException {
-		final File source = new File("src/test/resources");
+		final Script source = new Script();
+		source.setSourceFile(new File("src/test/resources"));
 		getDatabase().load(getLogger(), source);
 	}
 }

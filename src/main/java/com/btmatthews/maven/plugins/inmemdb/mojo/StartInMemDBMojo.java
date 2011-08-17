@@ -16,11 +16,10 @@
 
 package com.btmatthews.maven.plugins.inmemdb.mojo;
 
-import java.io.File;
-
 import org.apache.maven.plugin.MojoFailureException;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
+import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
  * This plug-in Mojo starts an In Memory Database.
@@ -38,7 +37,7 @@ public final class StartInMemDBMojo extends AbstractInMemDBMojo {
      * @parameter
      * @required
      */
-    private File[] sources;
+    private Source[] sources;
 
     /**
      * The default constructor.
@@ -57,7 +56,7 @@ public final class StartInMemDBMojo extends AbstractInMemDBMojo {
         if (database != null) {
             database.start(this);
             if (sources != null) {
-                for (final File source : sources) {
+                for (final Source source : sources) {
                     database.load(this, source);
                 }
             }

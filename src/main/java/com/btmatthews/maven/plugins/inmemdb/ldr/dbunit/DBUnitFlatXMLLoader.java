@@ -16,12 +16,13 @@
 
 package com.btmatthews.maven.plugins.inmemdb.ldr.dbunit;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+
+import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
  * Loader that loads data from a DBUnit XML data set.
@@ -58,12 +59,10 @@ public final class DBUnitFlatXMLLoader extends AbstractDBUnitLoader {
      *             If there was an error reading the DBUnit Flat XML data set from the file.
      */
     @Override
-    protected IDataSet loadDataSet(final File source) throws DataSetException,
+    protected IDataSet loadDataSet(final Source source) throws DataSetException,
             IOException {
-        assert source != null;
-
         final FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-        return builder.build(source);
+        return builder.build(source.getSourceFile());
     }
 
 }

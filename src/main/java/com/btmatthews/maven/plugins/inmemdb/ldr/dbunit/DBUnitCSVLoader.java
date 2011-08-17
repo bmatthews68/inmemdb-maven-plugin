@@ -30,6 +30,8 @@ import org.dbunit.dataset.csv.CsvParser;
 import org.dbunit.dataset.csv.CsvParserImpl;
 import org.dbunit.dataset.datatype.DataType;
 
+import com.btmatthews.maven.plugins.inmemdb.Source;
+
 /**
  * Loader that loads data from a DBUnit CSV data set.
  * 
@@ -66,20 +68,21 @@ public final class DBUnitCSVLoader extends AbstractDBUnitLoader {
      */
     @SuppressWarnings("rawtypes")
     @Override
-    protected IDataSet loadDataSet(final File source) throws DataSetException,
+    protected IDataSet loadDataSet(final Source source) throws DataSetException,
             IOException {
+    	final File sourceFile = source.getSourceFile();
         final CachedDataSet dataSet = new CachedDataSet();
         dataSet.startDataSet();
         final CsvParser parser = new CsvParserImpl();
-        final List readData = parser.parse(source);
+        final List readData = parser.parse(sourceFile);
         final List readColumns = ((List) readData.get(0));
         final Column[] columns = new Column[readColumns.size()];
         for (int i = 0; i < readColumns.size(); i++) {
             columns[i] = new Column((String) readColumns.get(i),
                     DataType.UNKNOWN);
         }
-        final String tableName = source.getName().substring(0,
-                source.getName().indexOf(".csv"));
+        final String tableName = sourceFile.getName().substring(0,
+                sourceFile.getName().indexOf(".csv"));
         final ITableMetaData metaData = new DefaultTableMetaData(tableName,
                 columns);
         dataSet.startTable(metaData);

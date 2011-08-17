@@ -16,13 +16,14 @@
 
 package com.btmatthews.maven.plugins.inmemdb.ldr.dbunit;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
+
+import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
  * Loader that loads data from a DBUnit XML data set.
@@ -32,38 +33,38 @@ import org.dbunit.dataset.xml.XmlDataSet;
  */
 public final class DBUnitXMLLoader extends AbstractDBUnitLoader {
 
-    /**
-     * The file extension for DBUnit XML data set files.
-     */
-    private static final String EXT = ".dbunit.xml";
+	/**
+	 * The file extension for DBUnit XML data set files.
+	 */
+	private static final String EXT = ".dbunit.xml";
 
-    /**
-     * Get the file extension for DBUnit XML data set files.
-     * 
-     * @return {@link EXT}
-     */
-    @Override
-     protected String getExtension() {
-        return EXT;
-    }
+	/**
+	 * Get the file extension for DBUnit XML data set files.
+	 * 
+	 * @return {@link EXT}
+	 */
+	@Override
+	protected String getExtension() {
+		return EXT;
+	}
 
-    /**
-     * Load a DBUnit XML data set.
-     * 
-     * @param source
-     *            The source file containing the DBUnit XML data set.
-     * @return The DBUnit XML data set.
-     * @throws DataSetException
-     *             If there was an error loading the DBUnit XML data set.
-     * @throws IOException
-     *             If there was an error reading the DBUnit XML data set from the file.
-     */
-    @Override
-    protected IDataSet loadDataSet(final File source) throws DataSetException,
-            IOException {
-        assert source != null;
-
-        final FileInputStream inputStream = new FileInputStream(source);
-        return new XmlDataSet(inputStream);
-    }
+	/**
+	 * Load a DBUnit XML data set.
+	 * 
+	 * @param source
+	 *            The source file containing the DBUnit XML data set.
+	 * @return The DBUnit XML data set.
+	 * @throws DataSetException
+	 *             If there was an error loading the DBUnit XML data set.
+	 * @throws IOException
+	 *             If there was an error reading the DBUnit XML data set from
+	 *             the file.
+	 */
+	@Override
+	protected IDataSet loadDataSet(final Source source)
+			throws DataSetException, IOException {
+		final FileInputStream inputStream = new FileInputStream(
+				source.getSourceFile());
+		return new XmlDataSet(inputStream);
+	}
 }

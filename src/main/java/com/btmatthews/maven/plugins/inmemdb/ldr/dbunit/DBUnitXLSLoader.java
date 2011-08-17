@@ -16,12 +16,13 @@
 
 package com.btmatthews.maven.plugins.inmemdb.ldr.dbunit;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
+
+import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
  * Loader that loads data from a DBUnit Excel data set.
@@ -58,8 +59,8 @@ public final class DBUnitXLSLoader extends AbstractDBUnitLoader {
      *             If there was an error reading the DBUnit Excel data set from the file.
      */
     @Override
-    protected IDataSet loadDataSet(final File source) throws DataSetException,
+    protected IDataSet loadDataSet(final Source source) throws DataSetException,
             IOException {
-        return new XlsDataSet(source);
+        return new XlsDataSet(source.getSourceFile());
     }
 }

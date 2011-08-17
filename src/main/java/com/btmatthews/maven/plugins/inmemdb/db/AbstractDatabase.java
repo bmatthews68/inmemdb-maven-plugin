@@ -16,7 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +26,10 @@ import org.apache.maven.plugin.MojoFailureException;
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
+import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
- * Abstract base classes for database objects providing an implentation of the
+ * Abstract base classes for database objects providing an implementation of the
  * {@link load()} operation that is used to load data into or execute scripts
  * against the database.
  * 
@@ -146,7 +146,7 @@ public abstract class AbstractDatabase implements Database {
 	 *             If there was an error loading the data or executing the
 	 *             script or if the source file type was not supported.
 	 */
-	public final void load(final Logger logger, final File source)
+	public final void load(final Logger logger, final Source source)
 			throws MojoFailureException {
 		if (source == null) {
 			logger.logError(UNSUPPORTED_FILE_TYPE, "null");
@@ -161,7 +161,7 @@ public abstract class AbstractDatabase implements Database {
 				++i;
 			}
 			if (i >= loaders.length) {
-				logger.logError(UNSUPPORTED_FILE_TYPE, source.getPath());
+				logger.logError(UNSUPPORTED_FILE_TYPE, source.getSourceFile().getPath());
 			}
 		}
 	}

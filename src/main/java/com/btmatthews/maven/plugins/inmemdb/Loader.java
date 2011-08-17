@@ -16,8 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
-import java.io.File;
-
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
@@ -52,7 +50,7 @@ public interface Loader {
      * @throws MojoFailureException
      *             If there was an error checking that the data or script is supported by the loader.
      */
-    boolean isSupported(Logger logger, File source) throws MojoFailureException;
+    boolean isSupported(Logger logger, Source source) throws MojoFailureException;
 
     /**
      * Load data into or execute a script against the in-memory database.
@@ -66,6 +64,6 @@ public interface Loader {
      * @throws MojoFailureException
      *             If there was an error loading data or executing the script.
      */
-    void load(Logger logger, Database database, File source)
+    void load(Logger logger, Database database, Source source)
             throws MojoFailureException;
 }

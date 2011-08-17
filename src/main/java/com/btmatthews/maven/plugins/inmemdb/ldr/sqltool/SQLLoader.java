@@ -16,7 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.ldr.sqltool;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -29,68 +28,66 @@ import org.hsqldb.cmdline.SqlToolError;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
+import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.maven.plugins.inmemdb.ldr.AbstractLoader;
 
 /**
- * Loader that uses HSQLDB&apos;s {@link SqlFile} to load a DDL/DML script into the database.
+ * Loader that uses HSQLDB&apos;s {@link SqlFile} to load a DDL/DML script into
+ * the database.
  * 
  * @author <a href="brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
 public final class SQLLoader extends AbstractLoader {
 
-    /**
-     * The file extension for DDL/DML scripts.
-     */
-    private static final String EXT = ".sql";
+	/**
+	 * The file extension for DDL/DML scripts.
+	 */
+	private static final String EXT = ".sql";
 
-    /**
-     * Return the file extension that denotes DBUnit XML data sets.
-     * 
-     * @return Returns {@link EXT}.
-     */
-    public String getExtension() {
-        return EXT;
-    }
+	/**
+	 * Return the file extension that denotes DBUnit XML data sets.
+	 * 
+	 * @return Returns {@link EXT}.
+	 */
+	public String getExtension() {
+		return EXT;
+	}
 
-    /**
-     * Load a DDL/DML script into the in-memory database.
-     * 
-     * @param logger
-     *            Used to report errors and raise exceptions.
-     * @param database
-     *            The in-memory database.
-     * @param source
-     *            The source file containing the DDL/DML script.
-     * @throws MojoFailureException
-     *             If there was an error loading the DDL/DML script.
-     */
-    public void load(final Logger logger, final Database database,
-            final File source) throws MojoFailureException {
-        assert database != null;
-        assert logger != null;
-        assert source != null;
-
-        try {
-            final SqlFile sqlFile = new SqlFile(source);
-            final DataSource dataSource = database.getDataSource();
-            final Connection connection = dataSource.getConnection();
-            try {
-                sqlFile.setConnection(connection);
-                sqlFile.execute();
-                connection.commit();
-            } finally {
-                connection.close();
-            }
-        } catch (final IOException exception) {
-            logger.logError(CANNOT_READ_SOURCE_FILE, exception,
-                    source.getPath());
-        } catch (final SQLException exception) {
-            logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
-                    source.getPath());
-        } catch (final SqlToolError exception) {
-            logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
-                    source.getPath());
-        }
-    }
+	/**
+	 * Load a DDL/DML script into the in-memory database.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @param database
+	 *            The in-memory database.
+	 * @param source
+	 *            The source file containing the DDL/DML script.
+	 * @throws MojoFailureException
+	 *             If there was an error loading the DDL/DML script.
+	 */
+	public void load(final Logger logger, final Database database,
+			final Source source) throws MojoFailureException {
+		try {
+			final SqlFile sqlFile = new SqlFile(source.getSourceFile());
+			final DataSource dataSource = database.getDataSource();
+			final Connection connection = dataSource.getConnection();
+			try {
+				sqlFile.setConnection(connection);
+				sqlFile.execute();
+				connection.commit();
+			} finally {
+				connection.close();
+			}
+		} catch (final IOException exception) {
+			logger.logError(CANNOT_READ_SOURCE_FILE, exception, source
+					.getSourceFile().getPath());
+		} catch (final SQLException exception) {
+			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception, source
+					.getSourceFile().getPath());
+		} catch (final SqlToolError exception) {
+			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception, source
+					.getSourceFile().getPath());
+		}
+	}
 }

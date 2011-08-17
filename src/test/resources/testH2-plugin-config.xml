@@ -38,8 +38,12 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>src/test/resources/create_database.sql</source>
-								<source>src/test/resources/users.csv</source>
+								<script>
+									<sourceFile>src/test/resources/create_database.sql</sourceFile>
+								</script>
+								<dataSet>
+									<sourceFile>src/test/resources/users.csv</sourceFile>
+								</dataSet>
 							</sources>
 						</configuration>
 					</execution>

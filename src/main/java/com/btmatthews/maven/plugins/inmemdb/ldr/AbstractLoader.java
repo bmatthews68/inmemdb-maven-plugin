@@ -23,6 +23,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
+import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
  * Abstract base class for loaders that implements the {@link
@@ -62,7 +63,7 @@ public abstract class AbstractLoader implements Loader {
 	 *             script that is supported by the loader. If there was an error
 	 *             loading the DBUnit XML data set.
 	 */
-	protected boolean hasValidContent(final Logger logger, final File source)
+	protected boolean hasValidContent(final Logger logger, final Source source)
 			throws MojoFailureException {
 		return true;
 	}
@@ -84,14 +85,20 @@ public abstract class AbstractLoader implements Loader {
 	 *             If there was an error checking that the data or script is
 	 *             supported by the loader.
 	 */
-	public final boolean isSupported(final Logger logger, final File source)
+	public final boolean isSupported(final Logger logger, final Source source)
 			throws MojoFailureException {
 		boolean result;
-		if (source != null && source.isFile()) {
-			final Locale locale = Locale.getDefault();
-			final String name = source.getAbsolutePath().toLowerCase(locale);
-			result = name.endsWith(getExtension())
-					&& hasValidContent(logger, source);
+		if (source != null) {
+			final File sourceFile = source.getSourceFile();
+			if (sourceFile != null && sourceFile.isFile()) {
+				final Locale locale = Locale.getDefault();
+				final String name = sourceFile.getAbsolutePath().toLowerCase(
+						locale);
+				result = name.endsWith(getExtension())
+						&& hasValidContent(logger, source);
+			} else {
+				result = false;
+			}
 		} else {
 			result = false;
 		}

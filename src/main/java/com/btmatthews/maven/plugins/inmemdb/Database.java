@@ -16,7 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
-import java.io.File;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -31,7 +30,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @version 1.0.0
  */
 public interface Database {
-
+	
 	/**
 	 * Get the data source that describes the connection to the in-memory
 	 * database.
@@ -72,7 +71,7 @@ public interface Database {
 	 *             If there was an error loading the data or executing the
 	 *             script or if the source file type was not supported.
 	 */
-	void load(Logger logger, File source) throws MojoFailureException;
+	void load(Logger logger, Source source) throws MojoFailureException;
 
 	/**
 	 * Shutdown the in-memory database.
