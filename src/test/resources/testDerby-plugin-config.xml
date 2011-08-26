@@ -18,13 +18,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
 	<artifactId>inmemdb-hsqldb-maven-plugin-test</artifactId>
-	<version>1.2.0</version>
+	<version>${project.version}</version>
 	<packaging>pom</packaging>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
 				<artifactId>inmemdb-maven-plugin</artifactId>
+				<version>${project.version}</version>
 				<configuration>
 					<type>derby</type>
 					<database>test</database>
