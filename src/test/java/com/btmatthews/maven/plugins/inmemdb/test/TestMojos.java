@@ -27,6 +27,8 @@ import org.apache.maven.plugin.Mojo;
  * @version 1.0
  */
 public final class TestMojos extends AbstractMojoTest {
+	
+	
     /**
      * The default constructor.
      */
@@ -39,8 +41,8 @@ public final class TestMojos extends AbstractMojoTest {
      * @throws Exception
      *             If something unexpected happens.
      */
-    public void testStartStopHSQLDB() throws Exception {
-        Mojo mojo = this.getMojo("testHSQLDB", "start");
+    public void testHSQLDB() throws Exception {
+        Mojo mojo = this.getMojo(getName(), "start");
         TestCase.assertNotNull(mojo);
         assertEquals(mojo, "type", "hsqldb");
         assertEquals(mojo, "database", "test");
@@ -48,7 +50,7 @@ public final class TestMojos extends AbstractMojoTest {
         assertEquals(mojo, "password", null);
         mojo.execute();
 
-        mojo = this.getMojo("testHSQLDB", "stop");
+        mojo = this.getMojo(getName(), "stop");
         TestCase.assertNotNull(mojo);
         assertEquals(mojo, "type", "hsqldb");
         assertEquals(mojo, "database", "test");
@@ -63,8 +65,8 @@ public final class TestMojos extends AbstractMojoTest {
      * @throws Exception
      *             If something unexpected happens.
      */
-    public void testStartStopDerby() throws Exception {
-        Mojo mojo = this.getMojo("testDerby", "start");
+    public void testDerby() throws Exception {
+        Mojo mojo = this.getMojo(getName(), "start");
         TestCase.assertNotNull(mojo);
         assertEquals(mojo, "type", "derby");
         assertEquals(mojo, "database", "test");
@@ -72,7 +74,7 @@ public final class TestMojos extends AbstractMojoTest {
         assertEquals(mojo, "password", null);
         mojo.execute();
 
-        mojo = this.getMojo("testDerby", "stop");
+        mojo = this.getMojo(getName(), "stop");
         TestCase.assertNotNull(mojo);
         assertEquals(mojo, "type", "derby");
         assertEquals(mojo, "database", "test");
@@ -87,8 +89,8 @@ public final class TestMojos extends AbstractMojoTest {
      * @throws Exception
      *             If something unexpected happens.
      */
-    public void testStartStopH2() throws Exception {
-        Mojo mojo = this.getMojo("testH2", "start");
+    public void testH2() throws Exception {
+        Mojo mojo = this.getMojo(getName(), "start");
         TestCase.assertNotNull(mojo);
         assertEquals(mojo, "type", "h2");
         assertEquals(mojo, "database", "test");
@@ -96,7 +98,7 @@ public final class TestMojos extends AbstractMojoTest {
         assertEquals(mojo, "password", null);
         mojo.execute();
 
-        mojo = this.getMojo("testH2", "stop");
+        mojo = this.getMojo(getName(), "stop");
         TestCase.assertNotNull(mojo);
         assertEquals(mojo, "type", "h2");
         assertEquals(mojo, "database", "test");
