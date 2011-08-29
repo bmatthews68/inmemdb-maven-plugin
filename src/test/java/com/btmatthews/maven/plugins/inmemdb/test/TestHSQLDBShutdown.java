@@ -46,7 +46,20 @@ public final class TestHSQLDBShutdown extends AbstractTest {
 	 */
 	@Test
 	public void testShutdown() throws MojoFailureException {
-		getDatabase().start(getLogger());
+		final Thread serverThread = new Thread() {
+			public void run() {
+				try {
+					getDatabase().start(getLogger());
+					getDatabase().run(getLogger());
+				} catch (MojoFailureException exception) {
+				}
+			}
+		};
+		serverThread.start();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+		}
 		getDatabase().shutdown(getLogger());
 	}
 }

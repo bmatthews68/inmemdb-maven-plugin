@@ -48,7 +48,7 @@ public final class DerbyDatabase extends AbstractDatabase {
 	/**
 	 * The connection protocol for in-memory Apache Derby databases.
 	 */
-	private static final String PROTOCOL = "derby:memory";
+	private static final String PROTOCOL = "derby:memory:";
 
 	/**
 	 * The value of the additional connection parameter which will cause the
@@ -149,6 +149,9 @@ public final class DerbyDatabase extends AbstractDatabase {
 		} catch (final SQLException exception) {
 			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
 		}
+	}
+
+	public void run(final Logger logger) throws MojoFailureException {
 	}
 
 	/**

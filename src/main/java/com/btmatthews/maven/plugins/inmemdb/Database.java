@@ -59,6 +59,8 @@ public interface Database {
 	 */
 	void start(Logger logger) throws MojoFailureException;
 
+	void run(Logger logger) throws MojoFailureException;
+
 	/**
 	 * Find the loader that supports the source file and use it to load the data
 	 * into or execute the script against the database.

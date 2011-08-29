@@ -47,7 +47,7 @@ public final class H2Database extends AbstractDatabase {
 	/**
 	 * The connection protocol for in-memory H2 databases.
 	 */
-	private static final String PROTOCOL = "h2:mem";
+	private static final String PROTOCOL = "h2:mem:";
 
 	/**
 	 * The loaders that are supported for loading data or executing scripts.
@@ -127,6 +127,9 @@ public final class H2Database extends AbstractDatabase {
 		} catch (final SQLException exception) {
 			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
 		}
+	}
+
+	public void run(final Logger logger) throws MojoFailureException {
 	}
 
 	/**

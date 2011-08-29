@@ -16,6 +16,7 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
 
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,7 +25,10 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.hsqldb.DatabaseURL;
 import org.hsqldb.jdbc.JDBCDataSource;
+import org.hsqldb.server.Server;
+import org.hsqldb.server.ServerConstants;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
@@ -46,29 +50,34 @@ public final class HSQLDBDatabase extends AbstractDatabase {
 	/**
 	 * The connection protocol for in-memory HSQLDB databases.
 	 */
-	private static final String PROTOCOL = "hsqldb:mem";
+	private static final String PROTOCOL = "hsqldb:hsql//localhost/";
 
 	/**
-     * The loaders that are supported for loading data or executing scripts.
-     */
-    private static final Loader[] LOADERS = new Loader[] {
-            new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
-            new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
+	 * The loaders that are supported for loading data or executing scripts.
+	 */
+	private static final Loader[] LOADERS = new Loader[] {
+			new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
+			new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
 
-    /**
-     * The constructor for this object creates and initialises the data source.
-     * 
-     * @param database
-     *            The database name.
-     * @param username
-     *            The user name for the database connection.
-     * @param password
-     *            The password for the database connection.
-     */
-    public HSQLDBDatabase(final String database, final String username,
-            final String password) {
-        super(database, username, password);
-    }
+	/**
+	 * The HSQLDB server.
+	 */
+	private Server server;
+
+	/**
+	 * The constructor for this object creates and initialises the data source.
+	 * 
+	 * @param database
+	 *            The database name.
+	 * @param username
+	 *            The user name for the database connection.
+	 * @param password
+	 *            The password for the database connection.
+	 */
+	public HSQLDBDatabase(final String database, final String username,
+			final String password) {
+		super(database, username, password);
+	}
 
 	/**
 	 * Get the database connection protocol.
@@ -80,75 +89,99 @@ public final class HSQLDBDatabase extends AbstractDatabase {
 	}
 
 	/**
-     * Get the data source that describes the connection to the in-memory HSQLDB database.
-     * 
-     * @param attributes
-     *            Additional attributes for the data source connection string.
-     * @return Returns {@link dataSource} which was initialised by the constructor.
-     */
-    public DataSource getDataSource(final Map<String, String> attributes) {
-        final JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl(getUrl(attributes));
-        dataSource.setUser(getUsername());
-        dataSource.setPassword(getPassword());
-        return dataSource;
-    }
+	 * Get the data source that describes the connection to the in-memory HSQLDB
+	 * database.
+	 * 
+	 * @param attributes
+	 *            Additional attributes for the data source connection string.
+	 * @return Returns {@link dataSource} which was initialised by the
+	 *         constructor.
+	 */
+	public DataSource getDataSource(final Map<String, String> attributes) {
+		final JDBCDataSource dataSource = new JDBCDataSource();
+		dataSource.setUrl(getUrl(attributes));
+		dataSource.setUser(getUsername());
+		dataSource.setPassword(getPassword());
+		return dataSource;
+	}
 
-    /**
-     * Get the loaders that are supported for loading data or executing scripts.
-     * 
-     * @return Returns {@link LOADERS}.
-     */
-    public Loader[] getLoaders() {
-        return LOADERS;
-    }
+	/**
+	 * Get the loaders that are supported for loading data or executing scripts.
+	 * 
+	 * @return Returns {@link LOADERS}.
+	 */
+	public Loader[] getLoaders() {
+		return LOADERS;
+	}
 
-    /**
-     * Start the in-memory Apache Derby database.
-     * 
-     * @param logger
-     *            Used to report errors and raise exceptions.
-     * @throws MojoFailureException
-     *             If the database cannot be started.
-     */
-    public void start(final Logger logger) throws MojoFailureException {
-        assert logger != null;
+	/**
+	 * Start the in-memory HSQLDB server.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @throws MojoFailureException
+	 *             If the database cannot be started.
+	 */
+	public void start(final Logger logger) throws MojoFailureException {
 
-        try {
-            final DataSource dataSource = getDataSource();
-            final Connection connection = dataSource.getConnection();
-            connection.close();
-        } catch (final SQLException exception) {
-            logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
-        }
-    }
+		server = new Server();
+		server.setDatabasePath(0, DatabaseURL.S_MEM + getDatabaseName());
+		server.setDatabaseName(0, getDatabaseName());
+		server.setDaemon(true);
+		server.setAddress("localhost");
+		server.setPort(9001);
+		server.setErrWriter(new PrintWriter(System.err));
+		server.setLogWriter(new PrintWriter(System.out));
+		server.setTls(false);
+		server.setTrace(false);
+		server.setSilent(true);
+		if (server.start() != ServerConstants.SERVER_STATE_ONLINE) {
+			logger.logError(ERROR_STARTING_SERVER);
+		}
+	}
 
-    /**
-     * Shutdown the in-memory HSQLDB database by sending it a SHUTDOWN command.
-     * 
-     * @param logger
-     *            Used to report errors and raise exceptions.
-     * @throws MojoFailureException
-     *             If there was an error trying to shutdown the database.
-     */
-    public void shutdown(final Logger logger) throws MojoFailureException {
-        assert logger != null;
+	/**
+	 * Run the in-memory HSQLDB server.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @throws MojoFailureException
+	 *             If there was an error trying to shutdown the database.
+	 */
+	public void run(final Logger logger) throws MojoFailureException {
+		try {
+			server.getServerThread().join();
+		} catch (final InterruptedException exception) {
+			logger.logError("", exception);
+		}
+	}
 
-        try {
-            final DataSource dataSource = getDataSource();
-            final Connection connection = dataSource.getConnection();
-            try {
-                final Statement statement = connection.createStatement();
-                try {
-                    statement.execute("SHUTDOWN");
-                } finally {
-                    statement.close();
-                }
-            } finally {
-                connection.close();
-            }
-        } catch (final SQLException exception) {
-            logger.logError(ERROR_STOPPING_SERVER, exception, getDatabaseName());
-        }
-    }
+	/**
+	 * Shutdown the in-memory HSQLDB database by sending it a SHUTDOWN command.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @throws MojoFailureException
+	 *             If there was an error trying to shutdown the database.
+	 */
+	public void shutdown(final Logger logger) throws MojoFailureException {
+		assert logger != null;
+
+		try {
+			final DataSource dataSource = getDataSource();
+			final Connection connection = dataSource.getConnection();
+			try {
+				final Statement statement = connection.createStatement();
+				try {
+					statement.execute("SHUTDOWN");
+				} finally {
+					statement.close();
+				}
+			} finally {
+				connection.close();
+			}
+		} catch (final SQLException exception) {
+			logger.logError(ERROR_STOPPING_SERVER, exception, getDatabaseName());
+		}
+	}
 }

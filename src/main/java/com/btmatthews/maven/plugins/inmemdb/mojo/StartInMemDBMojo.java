@@ -25,6 +25,7 @@ import com.btmatthews.maven.plugins.inmemdb.Source;
  * This plug-in Mojo starts an In Memory Database.
  * 
  * @goal start
+ * @execute phase="test-compile"
  * 
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
@@ -60,6 +61,7 @@ public final class StartInMemDBMojo extends AbstractInMemDBMojo {
                     database.load(this, source);
                 }
             }
+            database.run(this);
         }
     }
 }

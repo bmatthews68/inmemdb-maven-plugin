@@ -19,6 +19,7 @@ package com.btmatthews.maven.plugins.inmemdb.test;
 import java.io.File;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,6 +49,11 @@ public final class TestHSQLDBLoadDataSet extends AbstractTestLoad {
 		final Script source = new Script();
 		source.setSourceFile(new File("src/test/resources/create_database.sql"));
 		getDatabase().load(getLogger(), source);
+	}
+	
+	@After
+	public void tearDown() throws MojoFailureException {
+		super.tearDown();
 	}
 
 	/**

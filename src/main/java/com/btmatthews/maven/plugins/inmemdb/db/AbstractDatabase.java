@@ -183,7 +183,6 @@ public abstract class AbstractDatabase implements Database {
 	public final String getUrl(final Map<String, String> attributes) {
 		final StringBuilder url = new StringBuilder("jdbc:");
 		url.append(getUrlProtocol());
-		url.append(':');
 		url.append(getDatabaseName());
 		if (attributes.size() > 0) {
 			for (Map.Entry<String, String> entry : attributes.entrySet()) {
