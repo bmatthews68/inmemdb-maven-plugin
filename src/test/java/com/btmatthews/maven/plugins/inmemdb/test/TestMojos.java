@@ -19,8 +19,8 @@ package com.btmatthews.maven.plugins.inmemdb.test;
 import junit.framework.TestCase;
 
 import org.apache.maven.plugin.Mojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+
+import com.btmatthews.maven.plugins.inmemdb.DatabaseFactory;
 
 /**
  * Unit tests for the plug-in mojo's.
@@ -29,6 +29,58 @@ import org.apache.maven.plugin.MojoFailureException;
  * @version 1.0
  */
 public final class TestMojos extends AbstractMojoTest {
+
+	/**
+	 * The database name.
+	 */
+	private static final String DATABASE_NAME = "test";
+
+	/**
+	 * The user name used to access the database.
+	 */
+	private static final String USERNAME = "sa";
+
+	/**
+	 * The password used to access the database.
+	 */
+	private static final String PASSWORD = null;
+
+	/**
+	 * The name of the goal that starts the database server.
+	 */
+	private static final String START_GOAL = "start";
+
+	/**
+	 * The name of the goal that stops the database server.
+	 */
+	private static final String STOP_GOAL = "stop";
+
+	/**
+	 * The delay between the start and stop goals.
+	 */
+	private static final int START_DELAY = 500;
+
+	/**
+	 * The Mojo parameter that specifies the database type.
+	 */
+	private static final String TYPE_PARAM = "type";
+
+	/**
+	 * The Mojo parameter that specifies the database name.
+	 */
+	private static final String DATABASE_PARAM = "database";
+
+	/**
+	 * The Mojo parameter that specifies the user name used to access the
+	 * database.
+	 */
+	private static final String USERNAME_PARAM = "username";
+
+	/**
+	 * The Mojo parameter that specifies the password used to access the
+	 * database.
+	 */
+	private static final String PASSWORD_PARAM = "password";
 
 	/**
 	 * The default constructor.
@@ -43,32 +95,7 @@ public final class TestMojos extends AbstractMojoTest {
 	 *             If something unexpected happens.
 	 */
 	public void testHSQLDB() throws Exception {
-
-		final Mojo startMojo = this.getMojo(getName(), "start");
-		TestCase.assertNotNull(startMojo);
-		assertEquals(startMojo, "type", "hsqldb");
-		assertEquals(startMojo, "database", "test");
-		assertEquals(startMojo, "username", "sa");
-		assertEquals(startMojo, "password", null);
-
-		final Mojo stopMojo = this.getMojo(getName(), "stop");
-		TestCase.assertNotNull(stopMojo);
-		assertEquals(stopMojo, "type", "hsqldb");
-		assertEquals(stopMojo, "database", "test");
-		assertEquals(stopMojo, "username", "sa");
-		assertEquals(stopMojo, "password", null);
-		Thread serverThread = new Thread() {
-			public void run() {
-				try {
-					startMojo.execute();
-				} catch (MojoExecutionException e) {
-				} catch (MojoFailureException e) {
-				}
-			}
-		};
-		serverThread.start();
-		Thread.sleep(500);
-		stopMojo.execute();
+		runTest(getName(), DatabaseFactory.TYPE_HSQLDB);
 	}
 
 	/**
@@ -78,20 +105,20 @@ public final class TestMojos extends AbstractMojoTest {
 	 *             If something unexpected happens.
 	 */
 	public void testDerby() throws Exception {
-		Mojo mojo = this.getMojo(getName(), "start");
+		Mojo mojo = this.getMojo(getName(), START_GOAL);
 		TestCase.assertNotNull(mojo);
-		assertEquals(mojo, "type", "derby");
-		assertEquals(mojo, "database", "test");
-		assertEquals(mojo, "username", "sa");
-		assertEquals(mojo, "password", null);
+		assertEquals(mojo, TYPE_PARAM, DatabaseFactory.TYPE_DERBY);
+		assertEquals(mojo, DATABASE_PARAM, DATABASE_NAME);
+		assertEquals(mojo, USERNAME_PARAM, USERNAME);
+		assertEquals(mojo, PASSWORD_PARAM, PASSWORD);
 		mojo.execute();
 
-		mojo = this.getMojo(getName(), "stop");
+		mojo = this.getMojo(getName(), STOP_GOAL);
 		TestCase.assertNotNull(mojo);
-		assertEquals(mojo, "type", "derby");
-		assertEquals(mojo, "database", "test");
-		assertEquals(mojo, "username", "sa");
-		assertEquals(mojo, "password", null);
+		assertEquals(mojo, TYPE_PARAM, DatabaseFactory.TYPE_DERBY);
+		assertEquals(mojo, DATABASE_PARAM, DATABASE_NAME);
+		assertEquals(mojo, USERNAME_PARAM, USERNAME);
+		assertEquals(mojo, PASSWORD_PARAM, PASSWORD);
 		mojo.execute();
 	}
 
@@ -102,20 +129,89 @@ public final class TestMojos extends AbstractMojoTest {
 	 *             If something unexpected happens.
 	 */
 	public void testH2() throws Exception {
-		Mojo mojo = this.getMojo(getName(), "start");
-		TestCase.assertNotNull(mojo);
-		assertEquals(mojo, "type", "h2");
-		assertEquals(mojo, "database", "test");
-		assertEquals(mojo, "username", "sa");
-		assertEquals(mojo, "password", null);
-		mojo.execute();
-
-		mojo = this.getMojo(getName(), "stop");
-		TestCase.assertNotNull(mojo);
-		assertEquals(mojo, "type", "h2");
-		assertEquals(mojo, "database", "test");
-		assertEquals(mojo, "username", "sa");
-		assertEquals(mojo, "password", null);
-		mojo.execute();
+		runTest(getName(), DatabaseFactory.TYPE_H2);
 	}
+
+	/**
+	 * Test helper used to verify starting and stopping a database.
+	 * 
+	 * @param testName
+	 *            The test name.
+	 * @param databaseType
+	 *            The database type.
+	 * @throws Exception
+	 *             If there is a problem stopping or starting the database.
+	 */
+	public void runTest(final String testName, final String databaseType)
+			throws Exception {
+		final Mojo startMojo = this.getMojo(testName, START_GOAL);
+		TestCase.assertNotNull(startMojo);
+		assertEquals(startMojo, TYPE_PARAM, databaseType);
+		assertEquals(startMojo, DATABASE_PARAM, DATABASE_NAME);
+		assertEquals(startMojo, USERNAME_PARAM, USERNAME);
+		assertEquals(startMojo, PASSWORD_PARAM, PASSWORD);
+
+		final Mojo stopMojo = this.getMojo(testName, STOP_GOAL);
+		TestCase.assertNotNull(stopMojo);
+		assertEquals(stopMojo, TYPE_PARAM, databaseType);
+		assertEquals(stopMojo, DATABASE_PARAM, DATABASE_NAME);
+		assertEquals(stopMojo, USERNAME_PARAM, USERNAME);
+		assertEquals(stopMojo, PASSWORD_PARAM, PASSWORD);
+
+		MojoStarter starter = new MojoStarter(startMojo);
+		Thread serverThread = new Thread(starter);
+		serverThread.start();
+		Thread.sleep(START_DELAY);
+		if (starter.getError() != null) {
+			throw starter.getError();
+		}
+		stopMojo.execute();
+	}
+
+	/**
+	 * {@link Runnable} that runs the start Mojo and captures any exceptions.
+	 */
+	static class MojoStarter implements Runnable {
+
+		/**
+		 * The start Mojo.
+		 */
+		private Mojo startMojo;
+
+		/**
+		 * An exception that was captured.
+		 */
+		private Exception error;
+
+		/**
+		 * The constructor.
+		 * 
+		 * @param mojo
+		 *            The start mojo.
+		 */
+		public MojoStarter(final Mojo mojo) {
+			startMojo = mojo;
+		}
+
+		/**
+		 * Return the exception that was captured.
+		 * 
+		 * @return An exception or null.
+		 */
+		public Exception getError() {
+			return error;
+		}
+
+		/**
+		 * The run method.
+		 */
+		public void run() {
+			try {
+				startMojo.execute();
+			} catch (final Exception exception) {
+				error = exception;
+			}
+		}
+	}
+
 }

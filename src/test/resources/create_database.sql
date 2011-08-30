@@ -1,3 +1,5 @@
+drop table if exists users;
+
 create table users (
 	username_txt varchar(16) not null,
 	password_txt varchar(50) not null,

@@ -91,13 +91,13 @@ public abstract class AbstractDBUnitLoader extends AbstractLoader {
 				connection.close();
 			}
 		} catch (final SQLException exception) {
-			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
+			logger.logErrorAndThrow(ERROR_PROCESSING_SOURCE_FILE, exception,
 					source.getSourceFile().getPath());
 		} catch (final DatabaseUnitException exception) {
-			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception,
+			logger.logErrorAndThrow(ERROR_PROCESSING_SOURCE_FILE, exception,
 					source.getSourceFile().getPath());
 		} catch (final IOException exception) {
-			logger.logError(CANNOT_READ_SOURCE_FILE, exception,
+			logger.logErrorAndThrow(CANNOT_READ_SOURCE_FILE, exception,
 					source.getSourceFile().getPath());
 		}
 	}

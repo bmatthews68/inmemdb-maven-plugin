@@ -149,7 +149,7 @@ public abstract class AbstractDatabase implements Database {
 	public final void load(final Logger logger, final Source source)
 			throws MojoFailureException {
 		if (source == null) {
-			logger.logError(UNSUPPORTED_FILE_TYPE, "null");
+			logger.logErrorAndThrow(UNSUPPORTED_FILE_TYPE, "null");
 		} else {
 			final Loader[] loaders = getLoaders();
 			int i = 0;
@@ -161,7 +161,7 @@ public abstract class AbstractDatabase implements Database {
 				++i;
 			}
 			if (i >= loaders.length) {
-				logger.logError(UNSUPPORTED_FILE_TYPE, source.getSourceFile().getPath());
+				logger.logErrorAndThrow(UNSUPPORTED_FILE_TYPE, source.getSourceFile().getPath());
 			}
 		}
 	}

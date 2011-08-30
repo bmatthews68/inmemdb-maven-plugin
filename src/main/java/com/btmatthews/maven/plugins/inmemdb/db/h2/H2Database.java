@@ -26,6 +26,8 @@ import javax.sql.DataSource;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.h2.jdbcx.JdbcDataSource;
+import org.h2.server.ShutdownHandler;
+import org.h2.server.TcpServer;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.Logger;
@@ -42,12 +44,13 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class H2Database extends AbstractDatabase {
+public final class H2Database extends AbstractDatabase implements
+		ShutdownHandler {
 
 	/**
 	 * The connection protocol for in-memory H2 databases.
 	 */
-	private static final String PROTOCOL = "h2:mem:";
+	private static final String PROTOCOL = "h2:tcp://localhost/";
 
 	/**
 	 * The loaders that are supported for loading data or executing scripts.
@@ -55,6 +58,11 @@ public final class H2Database extends AbstractDatabase {
 	private static final Loader[] LOADERS = new Loader[] {
 			new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
 			new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
+
+	/**
+	 * The H2 TCP server.
+	 */
+	private TcpServer service;
 
 	/**
 	 * The constructor for this object stores the database name, user name and
@@ -118,6 +126,16 @@ public final class H2Database extends AbstractDatabase {
 	public void start(final Logger logger) throws MojoFailureException {
 		assert logger != null;
 
+		try {
+			service = new TcpServer();
+			service.init("-tcpDaemon");
+			service.start();
+			service.setShutdownHandler(this);
+		} catch (final Exception exception) {
+			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception,
+					getDatabaseName());
+		}
+
 		final Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("DB_CLOSE_DELAY", "-1");
 		try {
@@ -125,11 +143,21 @@ public final class H2Database extends AbstractDatabase {
 			final Connection connection = dataSource.getConnection();
 			connection.close();
 		} catch (final SQLException exception) {
-			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
+			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception,
+					getDatabaseName());
 		}
 	}
 
+	/**
+	 * Run the in-memory H2 server.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @throws MojoFailureException
+	 *             If there was an error trying to shutdown the database.
+	 */
 	public void run(final Logger logger) throws MojoFailureException {
+		service.listen();
 	}
 
 	/**
@@ -158,7 +186,19 @@ public final class H2Database extends AbstractDatabase {
 				connection.close();
 			}
 		} catch (final SQLException exception) {
-			logger.logError(ERROR_STOPPING_SERVER, exception, getDatabaseName());
+			logger.logErrorAndThrow(ERROR_STOPPING_SERVER, exception,
+					getDatabaseName());
+		}
+	}
+
+	/**
+	 * Handles the shutdown event by stopping the TCP server.
+	 * 
+	 * @see ShutdownHandler#shutdown()
+	 */
+	public void shutdown() {
+		if (service.isRunning(false)) {
+			service.stop();
 		}
 	}
 }

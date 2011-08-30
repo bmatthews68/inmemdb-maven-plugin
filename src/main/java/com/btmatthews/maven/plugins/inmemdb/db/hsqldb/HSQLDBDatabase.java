@@ -16,7 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
 
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -128,16 +127,16 @@ public final class HSQLDBDatabase extends AbstractDatabase {
 		server.setDatabasePath(0, DatabaseURL.S_MEM + getDatabaseName());
 		server.setDatabaseName(0, getDatabaseName());
 		server.setDaemon(true);
-		server.setAddress("localhost");
-		server.setPort(9001);
-		server.setErrWriter(new PrintWriter(System.err));
-		server.setLogWriter(new PrintWriter(System.out));
+		server.setAddress(ServerConstants.SC_DEFAULT_ADDRESS);
+		server.setPort(ServerConstants.SC_DEFAULT_HSQL_SERVER_PORT);
+		server.setErrWriter(null);
+		server.setLogWriter(null);
 		server.setTls(false);
 		server.setTrace(false);
 		server.setSilent(true);
-		if (server.start() != ServerConstants.SERVER_STATE_ONLINE) {
-			logger.logError(ERROR_STARTING_SERVER);
-		}
+		server.setNoSystemExit(true);
+		server.setRestartOnShutdown(false);
+		server.start();
 	}
 
 	/**
@@ -149,10 +148,13 @@ public final class HSQLDBDatabase extends AbstractDatabase {
 	 *             If there was an error trying to shutdown the database.
 	 */
 	public void run(final Logger logger) throws MojoFailureException {
-		try {
-			server.getServerThread().join();
-		} catch (final InterruptedException exception) {
-			logger.logError("", exception);
+		final Thread serverThread = server.getServerThread();
+		if (serverThread != null) {
+			try {
+				serverThread.join();
+			} catch (final InterruptedException exception) {
+				logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception);
+			}
 		}
 	}
 
@@ -167,21 +169,27 @@ public final class HSQLDBDatabase extends AbstractDatabase {
 	public void shutdown(final Logger logger) throws MojoFailureException {
 		assert logger != null;
 
-		try {
-			final DataSource dataSource = getDataSource();
-			final Connection connection = dataSource.getConnection();
+		if (server == null) {
 			try {
-				final Statement statement = connection.createStatement();
+				final DataSource dataSource = getDataSource();
+				final Connection connection = dataSource.getConnection();
 				try {
-					statement.execute("SHUTDOWN");
+					final Statement statement = connection.createStatement();
+					try {
+						statement.execute("SHUTDOWN");
+					} finally {
+						statement.close();
+					}
 				} finally {
-					statement.close();
+					connection.close();
 				}
-			} finally {
-				connection.close();
+			} catch (final SQLException exception) {
+				logger.logErrorAndThrow(ERROR_STOPPING_SERVER, exception,
+						getDatabaseName());
 			}
-		} catch (final SQLException exception) {
-			logger.logError(ERROR_STOPPING_SERVER, exception, getDatabaseName());
+		} else {
+			server.shutdown();
+			server = null;
 		}
 	}
 }

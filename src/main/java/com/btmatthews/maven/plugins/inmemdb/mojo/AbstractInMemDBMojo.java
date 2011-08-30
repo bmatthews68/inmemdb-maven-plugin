@@ -100,7 +100,7 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo implements
 	 * @throws MojoFailureException
 	 *             Propagates the error as an exception.
 	 */
-	public final void logError(final String messageKey, final Object... arguments)
+	public final void logErrorAndThrow(final String messageKey, final Object... arguments)
 			throws MojoFailureException {
 		final String message = getMessage(messageKey, arguments);
 		getLog().error(message);
@@ -120,7 +120,7 @@ public abstract class AbstractInMemDBMojo extends AbstractMojo implements
 	 *             Propagates the error as an exception encasulating the
 	 *             original exception.
 	 */
-	public final void logError(final String messageKey, final Throwable exception,
+	public final void logErrorAndThrow(final String messageKey, final Throwable exception,
 			final Object... arguments) throws MojoFailureException {
 		final String message = getMessage(messageKey, arguments);
 		getLog().error(message, exception);

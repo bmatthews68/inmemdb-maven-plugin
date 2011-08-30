@@ -135,9 +135,9 @@ public final class DerbyDatabase extends AbstractDatabase {
 		try {
 			EmbeddedDriver.class.newInstance();
 		} catch (InstantiationException exception) {
-			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
+			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception, getDatabaseName());
 		} catch (IllegalAccessException exception) {
-			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
+			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception, getDatabaseName());
 		}
 
 		final Map<String, String> attributes = new HashMap<String, String>();
@@ -147,7 +147,7 @@ public final class DerbyDatabase extends AbstractDatabase {
 			final Connection connection = dataSource.getConnection();
 			connection.close();
 		} catch (final SQLException exception) {
-			logger.logError(ERROR_STARTING_SERVER, exception, getDatabaseName());
+			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception, getDatabaseName());
 		}
 	}
 
@@ -172,11 +172,11 @@ public final class DerbyDatabase extends AbstractDatabase {
 		final String url = getUrl(attributes);
 		try {
 			DriverManager.getConnection(url);
-			logger.logError(ERROR_STOPPING_SERVER, getDatabaseName());
+			logger.logErrorAndThrow(ERROR_STOPPING_SERVER, getDatabaseName());
 		} catch (final SQLException exception) {
 			if (!("08006".equals(exception.getSQLState()) && 45000 == exception
 					.getErrorCode())) {
-				logger.logError(ERROR_STOPPING_SERVER, exception,
+				logger.logErrorAndThrow(ERROR_STOPPING_SERVER, exception,
 						getDatabaseName());
 			}
 		}

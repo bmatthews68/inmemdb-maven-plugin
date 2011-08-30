@@ -48,7 +48,7 @@ public final class SQLLoader extends AbstractLoader {
 	/**
 	 * Return the file extension that denotes DBUnit XML data sets.
 	 * 
-	 * @return Returns {@link EXT}.
+	 * @return Returns {@link SQLLoader#EXT}.
 	 */
 	public String getExtension() {
 		return EXT;
@@ -75,18 +75,17 @@ public final class SQLLoader extends AbstractLoader {
 			try {
 				sqlFile.setConnection(connection);
 				sqlFile.execute();
-				connection.commit();
 			} finally {
 				connection.close();
 			}
 		} catch (final IOException exception) {
-			logger.logError(CANNOT_READ_SOURCE_FILE, exception, source
+			logger.logErrorAndThrow(CANNOT_READ_SOURCE_FILE, exception, source
 					.getSourceFile().getPath());
 		} catch (final SQLException exception) {
-			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception, source
+			logger.logErrorAndThrow(ERROR_PROCESSING_SOURCE_FILE, exception, source
 					.getSourceFile().getPath());
 		} catch (final SqlToolError exception) {
-			logger.logError(ERROR_PROCESSING_SOURCE_FILE, exception, source
+			logger.logErrorAndThrow(ERROR_PROCESSING_SOURCE_FILE, exception, source
 					.getSourceFile().getPath());
 		}
 	}

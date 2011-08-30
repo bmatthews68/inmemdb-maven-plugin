@@ -85,7 +85,7 @@ public abstract class AbstractTest implements Logger {
      * @throws MojoFailureException
      *             Propagates the error as an exception.
      */
-    public final void logError(final String messageKey, final Object... arguments)
+    public final void logErrorAndThrow(final String messageKey, final Object... arguments)
             throws MojoFailureException {
         throw new MojoFailureException(messageKey);
     }
@@ -102,7 +102,7 @@ public abstract class AbstractTest implements Logger {
      * @throws MojoFailureException
      *             Propagates the error as an exception encapsulating the original exception.
      */
-    public final void logError(final String messageKey, final Throwable exception,
+    public final void logErrorAndThrow(final String messageKey, final Throwable exception,
             final Object... arguments) throws MojoFailureException {
         throw new MojoFailureException(messageKey, exception);
     }
