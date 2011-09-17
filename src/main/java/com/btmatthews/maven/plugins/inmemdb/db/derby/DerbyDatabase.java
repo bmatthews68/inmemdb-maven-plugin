@@ -151,6 +151,14 @@ public final class DerbyDatabase extends AbstractDatabase {
 		}
 	}
 
+	/**
+	 * Run the in-memory Apache Derby database as a daemon process.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @throws MojoFailureException
+	 *             If the database cannot be started.
+	 */
 	public void run(final Logger logger) throws MojoFailureException {
 	}
 

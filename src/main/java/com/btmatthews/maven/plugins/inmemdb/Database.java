@@ -30,7 +30,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @version 1.0.0
  */
 public interface Database {
-	
+
 	/**
 	 * Get the data source that describes the connection to the in-memory
 	 * database.
@@ -59,6 +59,14 @@ public interface Database {
 	 */
 	void start(Logger logger) throws MojoFailureException;
 
+	/**
+	 * Run the in-memory database as a daemon process.
+	 * 
+	 * @param logger
+	 *            Used to report errors and raise exceptions.
+	 * @throws MojoFailureException
+	 *             If the database cannot be started.
+	 */
 	void run(Logger logger) throws MojoFailureException;
 
 	/**

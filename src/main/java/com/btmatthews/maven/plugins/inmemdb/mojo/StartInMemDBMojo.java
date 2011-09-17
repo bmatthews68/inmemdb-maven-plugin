@@ -32,36 +32,46 @@ import com.btmatthews.maven.plugins.inmemdb.Source;
  */
 public final class StartInMemDBMojo extends AbstractInMemDBMojo {
 
-    /**
-     * The source files used to populate the database.
-     * 
-     * @parameter
-     * @required
-     */
-    private Source[] sources;
+	/**
+	 * The source files used to populate the database.
+	 * 
+	 * @parameter
+	 * @required
+	 */
+	private Source[] sources;
 
-    /**
-     * The default constructor.
-     */
-    public StartInMemDBMojo() {
-    }
+	/**
+	 * Determines whether the server is run as a daemon.
+	 * 
+	 * @parameter default-value="false"
+	 */
+	private boolean daemon;
 
-    /**
-     * Execute the Maven goal by creating a data source and then iterating over the list of sources and loading each one.
-     * 
-     * @throws MojoFailureException
-     *             If there was an error executing the goal.
-     */
-    public void execute() throws MojoFailureException {
-        final Database database = getDatabase();
-        if (database != null) {
-            database.start(this);
-            if (sources != null) {
-                for (final Source source : sources) {
-                    database.load(this, source);
-                }
-            }
-            database.run(this);
-        }
-    }
+	/**
+	 * The default constructor.
+	 */
+	public StartInMemDBMojo() {
+	}
+
+	/**
+	 * Execute the Maven goal by creating a data source and then iterating over
+	 * the list of sources and loading each one.
+	 * 
+	 * @throws MojoFailureException
+	 *             If there was an error executing the goal.
+	 */
+	public void execute() throws MojoFailureException {
+		final Database database = getDatabase();
+		if (database != null) {
+			database.start(this);
+			if (sources != null) {
+				for (final Source source : sources) {
+					database.load(this, source);
+				}
+			}
+			if (!daemon) {
+				database.run(this);
+			}
+		}
+	}
 }

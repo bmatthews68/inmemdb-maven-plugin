@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <!-- 
     Copyright 2011 Brian Matthews
 	
@@ -14,33 +14,40 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 -->
-<project name="${project.name}">
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://maven.apache.org/DECORATION/1.1.0
+        http://maven.apache.org/xsd/decoration-1.1.0.xsd"
+	name="In-Memory Database Maven Plugin">
+	<googleAnalyticsAccountId>UA-5713196-8</googleAnalyticsAccountId>
 	<bannerLeft>
-		<name>In-Memory Database Maven Plugin</name>  
-		<href>http://inmemdb-maven-plugin.btmatthews.com</href>  
-	</bannerLeft>  
-	<publishDate format="dd MMM yyyy" position="left" />  
-    <version position="left" />  
+		<name>In-Memory Database Maven Plugin</name>
+		<href>http://inmemdb-maven-plugin.btmatthews.com</href>
+	</bannerLeft>
+	<publishDate format="dd MMM yyyy" position="left" />
+	<version position="left" />
 	<body>
 		<links>
 			<item name="Maven 3" href="http://maven.apache.org/" />
 			<item name="HSQLDB" href="http://hsqldb.org/" />
-			<item name="Derby" href="http://db.apache.org/derby/" /> 
+			<item name="Derby" href="http://db.apache.org/derby/" />
 			<item name="DBUnit" href="http://www.dbunit.org/" />
 		</links>
 		<menu name="Overview">
-			<item name="Introduction" href="index.html" /> 
-			<item name="Goals" href="plugin-info.html" /> 
-			<item name="Usage" href="usage.html" /> 
+			<item name="Introduction" href="index.html" />
+			<item name="Goals" href="plugin-info.html" />
+			<item name="Usage" href="usage.html" />
 		</menu>
 		<menu name="Examples">
 			<item name="Unit testing" href="examples/unit.html" />
 			<item name="Web application integration testing" href="examples/integration_webapp.html" />
-			<item name="Web Service integration testing" href="examples/integration_websvc.html"/>
+			<item name="Web Service integration testing" href="examples/integration_websvc.html" />
 		</menu>
-		${reports}
+		<menu ref="reports" />
 	</body>
-    <poweredBy>
-        <logo name="Maven" href="http://maven.apache.org/" img="http://maven.apache.org/images/logos/maven-feather.png"/>  
-    </poweredBy>
+	<poweredBy>
+		<logo name="Maven" href="http://maven.apache.org/"
+			img="http://maven.apache.org/images/logos/maven-feather.png" />
+	</poweredBy>
 </project>

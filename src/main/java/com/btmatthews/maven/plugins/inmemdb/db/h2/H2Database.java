@@ -135,7 +135,7 @@ public final class H2Database extends AbstractDatabase implements
 			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception,
 					getDatabaseName());
 		}
-
+/*
 		final Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put("DB_CLOSE_DELAY", "-1");
 		try {
@@ -145,7 +145,7 @@ public final class H2Database extends AbstractDatabase implements
 		} catch (final SQLException exception) {
 			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception,
 					getDatabaseName());
-		}
+		}*/
 	}
 
 	/**
