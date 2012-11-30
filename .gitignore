@@ -4,3 +4,7 @@
 /.checkstyle
 /.project
 /derby.log
+/.idea
+*.iml
+*.db
+
