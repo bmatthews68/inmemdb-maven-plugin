@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@ package com.btmatthews.maven.plugins.inmemdb.ldr.dbunit;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
+import com.btmatthews.maven.plugins.inmemdb.Source;
 import org.dbunit.dataset.CachedDataSet;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.DataSetException;
@@ -30,11 +32,9 @@ import org.dbunit.dataset.csv.CsvParser;
 import org.dbunit.dataset.csv.CsvParserImpl;
 import org.dbunit.dataset.datatype.DataType;
 
-import com.btmatthews.maven.plugins.inmemdb.Source;
-
 /**
  * Loader that loads data from a DBUnit CSV data set.
- * 
+ *
  * @author <a href="brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
@@ -47,8 +47,8 @@ public final class DBUnitCSVLoader extends AbstractDBUnitLoader {
 
     /**
      * Get the file extension for DBUnit CSV data set files.
-     * 
-     * @return {@link EXT}
+     *
+     * @return {@link #EXT}
      */
     @Override
     protected String getExtension() {
@@ -56,38 +56,53 @@ public final class DBUnitCSVLoader extends AbstractDBUnitLoader {
     }
 
     /**
-     * Load a DBUnit CSV data set. This implementation was lifted from {@link org.dbunit.dataset.csv.CsvProducer#produceFromFile()}.
-     * 
-     * @param source
-     *            The source file containing the DBUnit CSV data set.
+     * Load a DBUnit CSV data set. This implementation was lifted from
+     * {@link org.dbunit.dataset.csv.CsvProducer#produceFromFile(java.io.File)}.
+     *
+     * @param source The source file containing the DBUnit CSV data set.
      * @return The DBUnit CSV data set.
-     * @throws DataSetException
-     *             If there was an error loading the DBUnit CSV data set.
-     * @throws IOException
-     *             If there was an error reading the DBUnit CSV data set from the file.
+     * @throws DataSetException If there was an error loading the DBUnit CSV data set.
+     * @throws IOException      If there was an error reading the DBUnit CSV data set from the file.
      */
     @SuppressWarnings("rawtypes")
     @Override
     protected IDataSet loadDataSet(final Source source) throws DataSetException,
             IOException {
-    	final File sourceFile = source.getSourceFile();
+        final int dotPos = source.getSourceFile().lastIndexOf(".");
+        final int slashPos = source.getSourceFile().lastIndexOf("/");
+        final CsvParser parser = new CsvParserImpl();
+        final List readData;
+        final String tableName;
+        if (source.getSourceFile().startsWith("classpath:")) {
+            final URL url = getClass().getResource(source.getSourceFile().substring(10));
+            readData = parser.parse(url);
+            if (slashPos == -1) {
+                tableName = source.getSourceFile().substring(10, dotPos);
+            } else {
+                tableName = source.getSourceFile().substring(slashPos + 1, dotPos);
+            }
+        } else {
+            final File sourceFile = new File(source.getSourceFile());
+            readData = parser.parse(sourceFile);
+            if (slashPos == -1) {
+                tableName = source.getSourceFile().substring(0, dotPos);
+            } else {
+                tableName = source.getSourceFile().substring(slashPos + 1, dotPos);
+            }
+        }
+
         final CachedDataSet dataSet = new CachedDataSet();
         dataSet.startDataSet();
-        final CsvParser parser = new CsvParserImpl();
-        final List readData = parser.parse(sourceFile);
-        final List readColumns = ((List) readData.get(0));
+        final List readColumns = ((List)readData.get(0));
         final Column[] columns = new Column[readColumns.size()];
         for (int i = 0; i < readColumns.size(); i++) {
-            columns[i] = new Column((String) readColumns.get(i),
-                    DataType.UNKNOWN);
+            columns[i] = new Column((String)readColumns.get(i), DataType.UNKNOWN);
         }
-        final String tableName = sourceFile.getName().substring(0,
-                sourceFile.getName().indexOf(".csv"));
-        final ITableMetaData metaData = new DefaultTableMetaData(tableName,
-                columns);
+
+        final ITableMetaData metaData = new DefaultTableMetaData(tableName, columns);
         dataSet.startTable(metaData);
         for (int rowIndex = 1; rowIndex < readData.size(); rowIndex++) {
-            final List row = (List) readData.get(rowIndex);
+            final List row = (List)readData.get(rowIndex);
             final Object[] values = row.toArray();
             for (int columnIndex = 0; columnIndex < values.length; columnIndex++) {
                 if (values[columnIndex].equals(CsvDataSetWriter.NULL)) {

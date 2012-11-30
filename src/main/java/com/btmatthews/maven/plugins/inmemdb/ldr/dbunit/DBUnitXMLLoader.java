@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,53 +18,54 @@ package com.btmatthews.maven.plugins.inmemdb.ldr.dbunit;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
+import com.btmatthews.maven.plugins.inmemdb.Source;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.XmlDataSet;
 
-import com.btmatthews.maven.plugins.inmemdb.Source;
-
 /**
  * Loader that loads data from a DBUnit XML data set.
- * 
+ *
  * @author <a href="brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
 public final class DBUnitXMLLoader extends AbstractDBUnitLoader {
 
-	/**
-	 * The file extension for DBUnit XML data set files.
-	 */
-	private static final String EXT = ".dbunit.xml";
+    /**
+     * The file extension for DBUnit XML data set files.
+     */
+    private static final String EXT = ".dbunit.xml";
 
-	/**
-	 * Get the file extension for DBUnit XML data set files.
-	 * 
-	 * @return {@link EXT}
-	 */
-	@Override
-	protected String getExtension() {
-		return EXT;
-	}
+    /**
+     * Get the file extension for DBUnit XML data set files.
+     *
+     * @return {@link #EXT}
+     */
+    @Override
+    protected String getExtension() {
+        return EXT;
+    }
 
-	/**
-	 * Load a DBUnit XML data set.
-	 * 
-	 * @param source
-	 *            The source file containing the DBUnit XML data set.
-	 * @return The DBUnit XML data set.
-	 * @throws DataSetException
-	 *             If there was an error loading the DBUnit XML data set.
-	 * @throws IOException
-	 *             If there was an error reading the DBUnit XML data set from
-	 *             the file.
-	 */
-	@Override
-	protected IDataSet loadDataSet(final Source source)
-			throws DataSetException, IOException {
-		final FileInputStream inputStream = new FileInputStream(
-				source.getSourceFile());
-		return new XmlDataSet(inputStream);
-	}
+    /**
+     * Load a DBUnit XML data set.
+     *
+     * @param source The source file containing the DBUnit XML data set.
+     * @return The DBUnit XML data set.
+     * @throws DataSetException If there was an error loading the DBUnit XML data set.
+     * @throws IOException      If there was an error reading the DBUnit XML data set from
+     *                          the file.
+     */
+    @Override
+    protected IDataSet loadDataSet(final Source source)
+            throws DataSetException, IOException {
+        final InputStream inputStream;
+        if (source.getSourceFile().startsWith("classpath:")) {
+            inputStream = getClass().getResourceAsStream(source.getSourceFile().substring(10));
+        } else {
+            inputStream = new FileInputStream(source.getSourceFile());
+        }
+        return new XmlDataSet(inputStream);
+    }
 }

@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.btmatthews.utils.monitor.Logger;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
@@ -50,26 +51,6 @@ public interface Database {
 	DataSource getDataSource(Map<String, String> attributes);
 
 	/**
-	 * Start the in-memory database.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @throws MojoFailureException
-	 *             If the database cannot be started.
-	 */
-	void start(Logger logger) throws MojoFailureException;
-
-	/**
-	 * Run the in-memory database as a daemon process.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @throws MojoFailureException
-	 *             If the database cannot be started.
-	 */
-	void run(Logger logger) throws MojoFailureException;
-
-	/**
 	 * Find the loader that supports the source file and use it to load the data
 	 * into or execute the script against the database.
 	 * 
@@ -77,19 +58,6 @@ public interface Database {
 	 *            Used to report errors and raise exceptions.
 	 * @param source
 	 *            The source file containing data or script.
-	 * @throws MojoFailureException
-	 *             If there was an error loading the data or executing the
-	 *             script or if the source file type was not supported.
 	 */
-	void load(Logger logger, Source source) throws MojoFailureException;
-
-	/**
-	 * Shutdown the in-memory database.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @throws MojoFailureException
-	 *             If there was an error trying to shutdown the database.
-	 */
-	void shutdown(Logger logger) throws MojoFailureException;
+	void load(Logger logger, Source source);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +16,39 @@
 
 package com.btmatthews.maven.plugins.inmemdb.mojo;
 
-import java.io.File;
-
 /**
  * Describes source files that contain DDL/DML scripts that can be used to
  * create and populate the in-memory database.
- * 
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
 public final class Script extends AbstractSource {
 
-	/**
-	 * The default constructor.
-	 */
-	public Script() {
-	}
+    /**
+     * The default constructor.
+     */
+    public Script() {
+    }
 
-	/**
-	 * Construct a source object that describes a DDL/DML script or DBUnit data
-	 * set.
-	 * 
-	 * @param file
-	 *            The source file that contains the DDL/DML script or DBUnit
-	 *            data set.
-	 */
-	public Script(final File file) {
-		super(file);
-	}
+    /**
+     * Construct a source object that describes a DDL/DML script or DBUnit data
+     * set.
+     *
+     * @param file The source file that contains the DDL/DML script or DBUnit
+     *             data set.
+     */
+    public Script(final String file) {
+        super(file);
+    }
 
-	/**
-	 * Indicates that the script source descriptor does not distinguish between
-	 * qualified and unqualified table names by returning <code>null</code>.
-	 * 
-	 * @return Always returns <code>null</code>.
-	 */
-	public Boolean getQualifiedTableNames() {
-		return null;
-	}
+    /**
+     * Indicates that the script source descriptor does not distinguish between
+     * qualified and unqualified table names by returning <code>null</code>.
+     *
+     * @return Always returns <code>null</code>.
+     */
+    public Boolean getQualifiedTableNames() {
+        return null;
+    }
 }

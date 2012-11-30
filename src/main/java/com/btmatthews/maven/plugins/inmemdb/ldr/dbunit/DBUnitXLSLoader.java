@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 
 package com.btmatthews.maven.plugins.inmemdb.ldr.dbunit;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -40,7 +43,7 @@ public final class DBUnitXLSLoader extends AbstractDBUnitLoader {
     /**
      * Get the file extension for DBUnit Excel data set files.
      * 
-     * @return {@link EXT}
+     * @return {@link #EXT}
      */
     @Override
     protected String getExtension() {
@@ -61,6 +64,13 @@ public final class DBUnitXLSLoader extends AbstractDBUnitLoader {
     @Override
     protected IDataSet loadDataSet(final Source source) throws DataSetException,
             IOException {
-        return new XlsDataSet(source.getSourceFile());
+        if (source.getSourceFile().startsWith("classpath:")) {
+            final InputStream in = getClass().getResourceAsStream(source.getSourceFile().substring(10));
+            return new XlsDataSet(in);
+        } else {
+            final File file = new File(source.getSourceFile());
+            return new XlsDataSet(file);
+        }
+
     }
 }

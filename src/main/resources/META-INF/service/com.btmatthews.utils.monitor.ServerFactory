@@ -1,0 +1,3 @@
+com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabaseFactory
+com.btmatthews.maven.plugins.inmemdb.db.h2.H2DatabaseFactory
+com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabaseFactory

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,189 +16,154 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.h2;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.apache.maven.plugin.MojoFailureException;
-import org.h2.jdbcx.JdbcDataSource;
-import org.h2.server.ShutdownHandler;
-import org.h2.server.TcpServer;
-
 import com.btmatthews.maven.plugins.inmemdb.Loader;
-import com.btmatthews.maven.plugins.inmemdb.Logger;
+import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
 import com.btmatthews.maven.plugins.inmemdb.db.AbstractDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitFlatXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXLSLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
+import com.btmatthews.utils.monitor.Logger;
+import org.apache.maven.plugin.MojoFailureException;
+import org.h2.jdbcx.JdbcDataSource;
+import org.h2.server.ShutdownHandler;
+import org.h2.server.TcpServer;
 
 /**
  * Implements support for in-memory H2 databases.
- * 
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
 public final class H2Database extends AbstractDatabase implements
-		ShutdownHandler {
+        ShutdownHandler {
 
-	/**
-	 * The connection protocol for in-memory H2 databases.
-	 */
-	private static final String PROTOCOL = "h2:tcp://localhost/";
+    /**
+     * The connection protocol for in-memory H2 databases.
+     */
+    private static final String PROTOCOL = "h2:tcp://localhost/";
 
-	/**
-	 * The loaders that are supported for loading data or executing scripts.
-	 */
-	private static final Loader[] LOADERS = new Loader[] {
-			new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
-			new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
+    /**
+     * The loaders that are supported for loading data or executing scripts.
+     */
+    private static final Loader[] LOADERS = new Loader[]{
+            new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
+            new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
 
-	/**
-	 * The H2 TCP server.
-	 */
-	private TcpServer service;
+    /**
+     * The H2 TCP server.
+     */
+    private TcpServer service;
 
-	/**
-	 * The constructor for this object stores the database name, user name and
-	 * password that will be used to create connections.
-	 * 
-	 * @param database
-	 *            The database name.
-	 * @param username
-	 *            The user name for the database connection.
-	 * @param password
-	 *            The password for the database connection.
-	 */
-	public H2Database(final String database, final String username,
-			final String password) {
-		super(database, username, password);
-	}
+    /**
+     * Get the database connection protocol.
+     *
+     * @return Always returns {@link H2Database#PROTOCOL}.
+     */
+    protected String getUrlProtocol() {
+        return PROTOCOL;
+    }
 
-	/**
-	 * Get the database connection protocol.
-	 * 
-	 * @return Always returns {@link H2Database#PROTOCOL}.
-	 */
-	protected String getUrlProtocol() {
-		return PROTOCOL;
-	}
+    /**
+     * Get the data source that describes the connection to the in-memory H2
+     * database.
+     *
+     * @param attributes Additional attributes for the data source connection string.
+     * @return Returns {@code dataSource} which was initialised by the
+     *         constructor.
+     */
+    @Override
+    public DataSource getDataSource(final Map<String, String> attributes) {
+        final JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setURL(getUrl(attributes));
+        dataSource.setUser(getUsername());
+        dataSource.setPassword(getPassword());
+        return dataSource;
+    }
 
-	/**
-	 * Get the data source that describes the connection to the in-memory H2
-	 * database.
-	 * 
-	 * @param attributes
-	 *            Additional attributes for the data source connection string.
-	 * @return Returns {@link dataSource} which was initialised by the
-	 *         constructor.
-	 */
-	public DataSource getDataSource(final Map<String, String> attributes) {
-		final JdbcDataSource dataSource = new JdbcDataSource();
-		dataSource.setURL(getUrl(attributes));
-		dataSource.setUser(getUsername());
-		dataSource.setPassword(getPassword());
-		return dataSource;
-	}
+    /**
+     * Get the loaders that are supported for loading data or executing scripts.
+     *
+     * @return Returns {@link #LOADERS}.
+     */
+    @Override
+    public Loader[] getLoaders() {
+        return LOADERS;
+    }
 
-	/**
-	 * Get the loaders that are supported for loading data or executing scripts.
-	 * 
-	 * @return Returns {@link LOADERS}.
-	 */
-	public Loader[] getLoaders() {
-		return LOADERS;
-	}
+    /**
+     * Start the in-memory H2 database.
+     *
+     * @param logger Used to report errors and raise exceptions.
+     */
+    @Override
+    public void start(final Logger logger) {
+        assert logger != null;
 
-	/**
-	 * Start the in-memory H2 database.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @throws MojoFailureException
-	 *             If the database cannot be started.
-	 */
-	public void start(final Logger logger) throws MojoFailureException {
-		assert logger != null;
+        try {
+            service = new TcpServer();
+            service.init("-tcpDaemon");
+            service.start();
+            service.setShutdownHandler(this);
+        } catch (final Exception exception) {
+            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+            logger.logError(message, exception);
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                service.listen();
+            }
+        }).start();
+    }
 
-		try {
-			service = new TcpServer();
-			service.init("-tcpDaemon");
-			service.start();
-			service.setShutdownHandler(this);
-		} catch (final Exception exception) {
-			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception,
-					getDatabaseName());
-		}
-/*
-		final Map<String, String> attributes = new HashMap<String, String>();
-		attributes.put("DB_CLOSE_DELAY", "-1");
-		try {
-			final DataSource dataSource = getDataSource(attributes);
-			final Connection connection = dataSource.getConnection();
-			connection.close();
-		} catch (final SQLException exception) {
-			logger.logErrorAndThrow(ERROR_STARTING_SERVER, exception,
-					getDatabaseName());
-		}*/
-	}
+    /**
+     * Shutdown the in-memory H2 database by opening a connection and issuing
+     * the SHUTDOWN command.
+     *
+     * @param logger Used to report errors and raise exceptions.
+     * @throws MojoFailureException If there was an error trying to shutdown the database.
+     */
+    public void stop(final Logger logger) {
+        assert logger != null;
 
-	/**
-	 * Run the in-memory H2 server.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @throws MojoFailureException
-	 *             If there was an error trying to shutdown the database.
-	 */
-	public void run(final Logger logger) throws MojoFailureException {
-		service.listen();
-	}
+        try {
+            final DataSource dataSource = getDataSource();
+            final Connection connection = dataSource.getConnection();
+            try {
+                final Statement statement = connection.createStatement();
+                try {
+                    statement.execute("SHUTDOWN");
+                } finally {
+                    statement.close();
+                }
+            } finally {
+                connection.close();
+            }
+        } catch (final SQLException exception) {
+            final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
+            logger.logError(message, exception);
+            //throw new MojoFailureException(message, exception);
+            return;
+        }
+    }
 
-	/**
-	 * Shutdown the in-memory H2 database by opening a connection and issuing
-	 * the SHUTDOWN command.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @throws MojoFailureException
-	 *             If there was an error trying to shutdown the database.
-	 */
-	public void shutdown(final Logger logger) throws MojoFailureException {
-		assert logger != null;
-
-		try {
-			final DataSource dataSource = getDataSource();
-			final Connection connection = dataSource.getConnection();
-			try {
-				final Statement statement = connection.createStatement();
-				try {
-					statement.execute("SHUTDOWN");
-				} finally {
-					statement.close();
-				}
-			} finally {
-				connection.close();
-			}
-		} catch (final SQLException exception) {
-			logger.logErrorAndThrow(ERROR_STOPPING_SERVER, exception,
-					getDatabaseName());
-		}
-	}
-
-	/**
-	 * Handles the shutdown event by stopping the TCP server.
-	 * 
-	 * @see ShutdownHandler#shutdown()
-	 */
-	public void shutdown() {
-		if (service.isRunning(false)) {
-			service.stop();
-		}
-	}
+    /**
+     * Handles the shutdown event by stopping the TCP server.
+     *
+     * @see ShutdownHandler#shutdown()
+     */
+    public void shutdown() {
+        if (service.isRunning(false)) {
+            service.stop();
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public abstract class AbstractSource implements Source {
 	/**
 	 * The source file that contains the DDL/DML script or DBUnit data set.
 	 */
-	private File sourceFile;
+	private String sourceFile;
 
 	/**
 	 * The default constructor.
@@ -48,7 +48,7 @@ public abstract class AbstractSource implements Source {
 	 *            The source file that contains the DDL/DML script or DBUnit
 	 *            data set.
 	 */
-	protected AbstractSource(final File file) {
+	protected AbstractSource(final String file) {
 		this.sourceFile = file;
 	}
 
@@ -57,7 +57,7 @@ public abstract class AbstractSource implements Source {
 	 * 
 	 * @return The source file.
 	 */
-	public final File getSourceFile() {
+	public final String getSourceFile() {
 		return this.sourceFile;
 	}
 
@@ -68,7 +68,7 @@ public abstract class AbstractSource implements Source {
 	 * @param file
 	 *            The source file.
 	 */
-	public final void setSourceFile(final File file) {
+	public final void setSourceFile(final String file) {
 		this.sourceFile = file;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Brian Matthews
+ * Copyright 2011-2012 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,107 +19,96 @@ package com.btmatthews.maven.plugins.inmemdb.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabaseFactory;
+import com.btmatthews.maven.plugins.inmemdb.db.h2.H2DatabaseFactory;
+import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabaseFactory;
+import com.btmatthews.utils.monitor.Logger;
+import com.btmatthews.utils.monitor.ServerFactory;
+import com.btmatthews.utils.monitor.ServerFactoryLocator;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.btmatthews.maven.plugins.inmemdb.Database;
-import com.btmatthews.maven.plugins.inmemdb.DatabaseFactory;
-import com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabase;
-import com.btmatthews.maven.plugins.inmemdb.db.h2.H2Database;
-import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabase;
+import org.mockito.Mock;
 
 /**
- * Unit test the {@link DatabaseFactory} class.
- * 
+ * Unit test the server factory configuration.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
 public final class TestDatabaseFactory {
 
-	/**
-	 * The test database name.
-	 */
-	private static final String DATABASE = "test";
+    /**
+     * Mock for the logger.
+     */
+    @Mock
+    private Logger logger;
 
-	/**
-	 * The user name for the test database.
-	 */
-	private static final String USERNAME = "sa";
+    /**
+     * Used to locate the {@link ServerFactory} for the database server.
+     */
+    private ServerFactoryLocator locator;
 
-	/**
-	 * The password for the test database.
-	 */
-	private static final String PASSWORD = "";
+    /**
+     * Create the server locator factory test fixture.
+     */
+    @Before
+    public void setUp() {
+        initMocks(this);
+        locator = ServerFactoryLocator.getInstance(logger);
+    }
 
-	/**
-	 * The database factory that is tested.
-	 */
-	private DatabaseFactory databaseFactory;
+    /**
+     * Verify that the server factory locator returns {@code null} when {@code null} is passed as the
+     * database type.
+     */
+    @Test
+    public void testNullType() {
+        final ServerFactory factory = locator.getFactory(null);
+        assertNull(factory);
+    }
 
-	/**
-	 * Create the database factory test fixture.
-	 */
-	@Before
-	public void setUp() {
-		databaseFactory = new DatabaseFactory();
-	}
+    /**
+     * Verify that the server factory locator returns a {@link DerbyDatabaseFactory} when
+     * &quot;derby&quot; is passed as the database type.
+     */
+    @Test
+    public void testDerbyType() {
+        final ServerFactory factory = locator.getFactory("derby");
+        assertNotNull(factory);
+        assertTrue(factory instanceof DerbyDatabaseFactory);
+    }
 
-	/**
-	 * Verify that the database factory returns null when null is passed as the
-	 * database type.
-	 */
-	@Test
-	public void testNullType() {
-		final Database database = databaseFactory.createDatabase(null,
-				DATABASE, USERNAME, PASSWORD);
-		assertNull(database);
-	}
+    /**
+     * Verify that the server factory locator returns a {@link H2DatabaseFactory} when
+     * &quot;h2&quot; is passed as the database type.
+     */
+    @Test
+    public void testH2Type() {
+        final ServerFactory factory = locator.getFactory("h2");
+        assertNotNull(factory);
+        assertTrue(factory instanceof H2DatabaseFactory);
+    }
 
-	/**
-	 * Verify that the database factory returns a {@link DerbyDatabase} when
-	 * &quot;derby&quot; is passed as the database type.
-	 */
-	@Test
-	public void testDerbyType() {
-		final Database database = databaseFactory.createDatabase("derby",
-				DATABASE, USERNAME, PASSWORD);
-		assertNotNull(database);
-		assertTrue(database instanceof DerbyDatabase);
-	}
+    /**
+     * Verify that the server factory locator returns a {@link HSQLDBDatabaseFactory} when
+     * &quot;hsqldb&quot; is passed as the database type.
+     */
+    @Test
+    public void testHSQLDBType() {
+        final ServerFactory factory = locator.getFactory("hsqldb");
+        assertNotNull(factory);
+        assertTrue(factory instanceof HSQLDBDatabaseFactory);
+    }
 
-	/**
-	 * Verify that the database factory returns a {@link H2Database} when
-	 * &quot;h2&quot; is passed as the database type.
-	 */
-	@Test
-	public void testH2Type() {
-		final Database database = databaseFactory.createDatabase("h2",
-				DATABASE, USERNAME, PASSWORD);
-		assertNotNull(database);
-		assertTrue(database instanceof H2Database);
-	}
-
-	/**
-	 * Verify that the database factory returns a {@link HSQLDBDatabase} when
-	 * &quot;hsql&quot; is passed as the database type.
-	 */
-	@Test
-	public void testHSQLDBType() {
-		final Database database = databaseFactory.createDatabase("hsqldb",
-				DATABASE, USERNAME, PASSWORD);
-		assertNotNull(database);
-		assertTrue(database instanceof HSQLDBDatabase);
-	}
-
-	/**
-	 * Verify that the database factory returns null when an supported value is
-	 * passed as the database type.
-	 */
-	@Test
-	public void testUnknownType() {
-		final Database database = databaseFactory.createDatabase("mysql",
-				DATABASE, USERNAME, PASSWORD);
-		assertNull(database);
-	}
+    /**
+     * Verify that the server factory locator returns a {@code null} when
+     * &quot;mysql&quot; is passed as the database type.
+     */
+    @Test
+    public void testUnknownType() {
+        final ServerFactory factory = locator.getFactory("mysql");
+        assertNull(factory);
+    }
 }
