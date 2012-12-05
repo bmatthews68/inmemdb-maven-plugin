@@ -72,7 +72,7 @@ public final class RunMojo extends AbstractRunMojo {
      * @return The value of {@link #type}.
      */
     @Override
-    protected String getServerType() {
+    public String getServerType() {
         return type;
     }
 
@@ -82,7 +82,7 @@ public final class RunMojo extends AbstractRunMojo {
      * @return A {@link Map} containing the configuration parameters.
      */
     @Override
-    protected Map<String, Object> getServerConfig() {
+    public Map<String, Object> getServerConfig() {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("database", database);
         config.put("username", username);
