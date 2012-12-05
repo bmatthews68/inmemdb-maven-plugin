@@ -301,7 +301,7 @@
         <dependency>
             <groupId>com.btmatthews.utils</groupId>
             <artifactId>monitor</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
     <scm>
