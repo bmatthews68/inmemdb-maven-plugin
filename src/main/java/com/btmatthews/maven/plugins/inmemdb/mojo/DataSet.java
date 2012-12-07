@@ -88,4 +88,9 @@ public final class DataSet extends AbstractSource {
     public void setQualifiedTableNames(final Boolean flag) {
         this.qualifiedTableNames = flag;
     }
+
+    @Override
+    public String toString() {
+        return "DataSet[" + getSourceFile() + "]";
+    }
 }

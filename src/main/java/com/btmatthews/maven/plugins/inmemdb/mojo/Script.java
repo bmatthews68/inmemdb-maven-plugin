@@ -51,4 +51,9 @@ public final class Script extends AbstractSource {
     public Boolean getQualifiedTableNames() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Script[" + getSourceFile() + "]";
+    }
 }

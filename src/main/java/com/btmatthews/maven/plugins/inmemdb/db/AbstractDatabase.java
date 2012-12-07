@@ -26,7 +26,6 @@ import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
 import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.utils.monitor.AbstractServer;
 import com.btmatthews.utils.monitor.Logger;
-import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Abstract base classes for database objects providing an implementation of the
@@ -114,7 +113,11 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
      * @return The password.
      */
     protected final String getPassword() {
-        return databasePassword;
+        if (databasePassword == null) {
+            return "";
+        } else {
+            return databasePassword;
+        }
     }
 
     /**
@@ -141,9 +144,9 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
      *
      * @param logger Used to report errors and raise exceptions.
      * @param source The source file containing data or script.
-      */
+     */
     @Override
-    public final void load(final Logger logger, final Source source)  {
+    public final void load(final Logger logger, final Source source) {
         if (source == null) {
             final String message = MessageUtil.getMessage(UNSUPPORTED_FILE_TYPE, "null");
             logger.logError(message);

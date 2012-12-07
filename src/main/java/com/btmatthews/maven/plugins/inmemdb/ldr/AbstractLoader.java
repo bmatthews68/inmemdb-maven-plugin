@@ -18,7 +18,6 @@ package com.btmatthews.maven.plugins.inmemdb.ldr;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -94,26 +93,49 @@ public abstract class AbstractLoader implements Loader {
         return result;
     }
 
+    /**
+     * Determine if data set or script source is a file system or class path resource. If the name is prefixed with
+     * classpath: then it is a class path resource.
+     *
+     * @param source The data set or script.
+     * @return {@code true} if the source filename is prefixed with classpath:. Otherwise, {@code false}.
+     */
     protected boolean isClasspath(final Source source) {
         return source.getSourceFile().startsWith("classpath:");
     }
 
-    protected InputStream getInputStream(final Source source) throws IOException {
+    /**
+     * Get an input stream for the data set or script source.
+     *
+     * @param source The data set or script.
+     * @return An {@link InputStream} or {@code null} if the source cannot be found.
+     * @throws IOException If there was an error creating the input stream.
+     */
+    protected final InputStream getInputStream(final Source source) throws IOException {
         if (isClasspath(source)) {
             return getClass().getResourceAsStream(source.getSourceFile().substring(10));
         } else {
             final File file = new File(source.getSourceFile());
-            return new FileInputStream(file);
+            if (file.exists()) {
+                return new FileInputStream(file);
+            }
         }
+        return null;
     }
 
-    protected Reader getReader(final Source source) throws IOException {
-        if (isClasspath(source)) {
-            final InputStream inputStream = getClass().getResourceAsStream(source.getSourceFile().substring(10));
-            return new InputStreamReader(inputStream, System.getProperty("file.encoding"));
+    /**
+     * Get a reader  for the data set or script source.
+     *
+     * @param source The data set or script.
+     * @return A {@link Reader} or {@code null} if the source cannot be found.
+     * @throws IOException If there was an error creating the reader.
+     */
+    protected final Reader getReader(final Source source) throws IOException {
+        final InputStream inputStream = getInputStream(source);
+        if (inputStream == null) {
+            return null;
         } else {
-            final File file = new File(source.getSourceFile());
-            return new FileReader(file);
+            return new InputStreamReader(inputStream, System.getProperty("file.encoding"));
         }
     }
 }

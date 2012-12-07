@@ -20,15 +20,28 @@ import com.btmatthews.utils.monitor.Server;
 import com.btmatthews.utils.monitor.ServerFactory;
 
 /**
+ * A factory that creates embedded H2 database servers.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.2.0
  */
 public class H2DatabaseFactory implements ServerFactory {
+
+    /**
+     * Get the name of the server created by this server factory.
+     *
+     * @return Always returns {@code h2}.
+     */
     @Override
     public String getServerName() {
         return "h2";
     }
 
+    /**
+     * Create the server instance.
+     *
+     * @return A {@link H2Database} instance.
+     */
     @Override
     public Server createServer() {
         return new H2Database();

@@ -17,10 +17,12 @@
 package com.btmatthews.maven.plugins.inmemdb.mojo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Source;
+import com.btmatthews.utils.monitor.Logger;
 import com.btmatthews.utils.monitor.Server;
 import com.btmatthews.utils.monitor.mojo.AbstractRunMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -33,38 +35,38 @@ import org.apache.maven.plugins.annotations.Parameter;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.2.0
  */
-@Mojo(name = "run", defaultPhase = LifecyclePhase.TEST_COMPILE)
+@Mojo(name = "run", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public final class RunMojo extends AbstractRunMojo {
 
     /**
      * The source files used to populate the database.
      */
     @Parameter
-    private Source[] sources;
+    private List<? extends Source> sources;
 
     /**
      * The database type.
      */
     @Parameter(property = "inmemdb.type", defaultValue = "hsqldb")
-    private String type;
+    private String type = "hsqldb";
 
     /**
      * The database name.
      */
     @Parameter(property = "inmemdb.database", defaultValue = ".")
-    private String database;
+    private String database = ".";
 
     /**
      * The username for database connections.
      */
     @Parameter(property = "inmemdb.username", defaultValue = "sa")
-    private String username;
+    private String username = "sa";
 
     /**
      * The password for database connections.
      */
-    @Parameter(property = "inmemdb.password", defaultValue = "sa")
-    private String password;
+    @Parameter(property = "inmemdb.password", defaultValue = "")
+    private String password = "";
 
     /**
      * Get the server type.
@@ -86,7 +88,11 @@ public final class RunMojo extends AbstractRunMojo {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("database", database);
         config.put("username", username);
-        config.put("password", password);
+        if (password == null) {
+            config.put("password", "");
+        } else {
+            config.put("password", password);
+        }
         return config;
     }
 
@@ -96,9 +102,13 @@ public final class RunMojo extends AbstractRunMojo {
      *
      * @param server The database server.
      */
-    protected void started(final Server server) {
+    @Override
+    public void started(final Server server, final Logger logger) {
+        logger.logInfo("Server has been started");
         if (sources != null) {
+            logger.logInfo("Executing initialization scripts and loading data sets");
             for (final Source source : sources) {
+                logger.logInfo("Loading " + source.toString());
                 ((Database)server).load(this, source);
             }
         }

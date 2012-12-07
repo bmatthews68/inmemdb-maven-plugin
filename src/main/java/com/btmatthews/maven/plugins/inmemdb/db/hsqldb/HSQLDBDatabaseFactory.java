@@ -16,22 +16,32 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
 
-import java.util.Map;
-
 import com.btmatthews.utils.monitor.Server;
 import com.btmatthews.utils.monitor.ServerFactory;
 
 /**
+ * A factory that creates embedded HSQLDB database servers.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.2.0
  */
 public final class HSQLDBDatabaseFactory implements ServerFactory {
 
+    /**
+     * Get the name of the server created by this server factory.
+     *
+     * @return Always returns {@code hsqldb}.
+     */
     @Override
     public String getServerName() {
         return "hsqldb";
     }
 
+    /**
+     * Create the server instance.
+     *
+     * @return A {@link HSQLDBDatabase} instance.
+     */
     @Override
     public Server createServer() {
         return new HSQLDBDatabase();
