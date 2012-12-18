@@ -21,6 +21,7 @@ import java.sql.SQLException;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
+import com.btmatthews.maven.plugins.inmemdb.SQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.maven.plugins.inmemdb.ldr.AbstractLoader;
 import com.btmatthews.utils.monitor.Logger;
@@ -61,14 +62,14 @@ public abstract class AbstractDBUnitLoader extends AbstractLoader {
      */
     public final void load(final Logger logger, final Database database,
                            final Source source) {
-        assert database != null;
+        assert database instanceof SQLDatabase;
         assert logger != null;
         assert source != null;
 
         try {
             final IDataSet dataSet = loadDataSet(source);
             final IDatabaseConnection connection = new DatabaseDataSourceConnection(
-                    database.getDataSource());
+                    ((SQLDatabase)database).getDataSource());
             final Boolean qualifiedTableNames = source.getQualifiedTableNames();
             if (qualifiedTableNames != null) {
                 final DatabaseConfig config = connection.getConfig();
@@ -84,7 +85,7 @@ public abstract class AbstractDBUnitLoader extends AbstractLoader {
         } catch (final SQLException exception) {
             final String message = MessageUtil.getMessage(ERROR_PROCESSING_SOURCE_FILE, source.getSourceFile());
             logger.logError(message, exception);
-         } catch (final DatabaseUnitException exception) {
+        } catch (final DatabaseUnitException exception) {
             final String message = MessageUtil.getMessage(ERROR_PROCESSING_SOURCE_FILE, source.getSourceFile());
             logger.logError(message, exception);
         } catch (final IOException exception) {

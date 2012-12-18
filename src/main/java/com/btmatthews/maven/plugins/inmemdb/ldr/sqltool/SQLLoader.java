@@ -23,6 +23,7 @@ import java.sql.SQLException;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
+import com.btmatthews.maven.plugins.inmemdb.SQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.maven.plugins.inmemdb.ldr.AbstractLoader;
 import com.btmatthews.utils.monitor.Logger;
@@ -59,7 +60,8 @@ public final class SQLLoader extends AbstractLoader {
      * @param database The in-memory database.
      * @param source   The source file containing the DDL/DML script.
      */
-    public void load(final Logger logger, final Database database,
+    public void load(final Logger logger,
+                     final Database database,
                      final Source source) {
         try {
             final SqlFile sqlFile = new SqlFile(
@@ -69,7 +71,7 @@ public final class SQLLoader extends AbstractLoader {
                     null,
                     false,
                     null);
-            final DataSource dataSource = database.getDataSource();
+            final DataSource dataSource = ((SQLDatabase)database).getDataSource();
             final Connection connection = dataSource.getConnection();
             try {
                 sqlFile.setConnection(connection);

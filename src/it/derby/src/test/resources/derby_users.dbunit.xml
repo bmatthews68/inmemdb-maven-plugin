@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-	<table name="users">
+	<table name="derby_users">
 		<column>username_txt</column>
 		<column>password_txt</column>
 		<column>name_txt</column>
-		<row>
+        <row>
+            <value>alien_masha</value>
+            <value>neverhood</value>
+            <value>Elena</value>
+        </row>
+        <row>
 			<value>bmatthews68</value>
 			<value>everclear</value>
 			<value>Brian</value>
-		</row>
-		<row>
-			<value>alien_masha</value>
-			<value>neverhood</value>
-			<value>Elena</value>
 		</row>
 		<row>
 			<value>yaromir</value>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2012 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,27 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.db.derby;
-
-import com.btmatthews.utils.monitor.Server;
-import com.btmatthews.utils.monitor.ServerFactory;
+package com.btmatthews.maven.plugins.inmemdb.test;
 
 /**
- * A factory that creates embedded Derby database servers.
+ * Unit tests for the Mojo that implements the run goal.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
- * @since 1.2.0
  */
-public final class DerbyDatabaseFactory implements ServerFactory {
+public class TestDerbyRunMojo extends AbstractTestRunMojo {
 
-    /**
-     * Get the name of the server created by this server factory.
-     *
-     * @return Always returns {@code derby}.
-     */
     @Override
-    public String getServerName() {
+    protected String getType() {
         return "derby";
     }
 
-    /**
-     * Create the server instance.
-     *
-     * @return A {@link DerbyDatabase} instance.
-     */
     @Override
-    public Server createServer() {
-        return new DerbyDatabase();
+    protected String getDriverClassName() {
+        return "org.apache.derby.jdbc.ClientDriver";
+    }
+
+    @Override
+    protected String getConnectionString() {
+        return "jdbc:derby://localhost/memory:test;user=sa";
     }
 }

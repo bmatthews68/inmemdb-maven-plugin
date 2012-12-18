@@ -22,7 +22,7 @@ public final class ITestVerifyHSQLDBDatabase {
     @Before
     public void setUp() throws Exception {
         Class.forName("org.hsqldb.jdbcDriver");
-        jdbcConnection = DriverManager.getConnection("jdbc:hsqldb:hsql//localhost/test;user=sa;password=");
+        jdbcConnection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/test;user=sa;password=");
         connection = new DatabaseConnection(jdbcConnection);
     }
 
@@ -35,11 +35,11 @@ public final class ITestVerifyHSQLDBDatabase {
     @Test
     public void testLoadedData() throws Exception {
         IDataSet databaseDataSet = connection.createDataSet();
-        ITable actualTable = databaseDataSet.getTable("users");
+        ITable actualTable = databaseDataSet.getTable("hsqldb_users");
 
-        final InputStream inputStream = getClass().getResourceAsStream("users.dbunit.xml");
+        final InputStream inputStream = getClass().getResourceAsStream("hsqldb_users.dbunit.xml");
         IDataSet expectedDataSet =  new XmlDataSet(inputStream);
-        ITable expectedTable = expectedDataSet.getTable("users");
+        ITable expectedTable = expectedDataSet.getTable("hsqldb_users");
 
         Assertion.assertEquals(expectedTable, actualTable);
 

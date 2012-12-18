@@ -24,7 +24,7 @@ import java.util.Map;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
-import com.btmatthews.maven.plugins.inmemdb.db.AbstractDatabase;
+import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitFlatXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXLSLoader;
@@ -42,12 +42,12 @@ import org.hsqldb.server.ServerConstants;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class HSQLDBDatabase extends AbstractDatabase {
+public final class HSQLDBDatabase extends AbstractSQLDatabase {
 
     /**
      * The connection protocol for in-memory HSQLDB databases.
      */
-    private static final String PROTOCOL = "hsqldb:hsql//localhost/";
+    private static final String PROTOCOL = "hsqldb:hsql://localhost/";
 
     /**
      * The loaders that are supported for loading data or executing scripts.
@@ -131,7 +131,7 @@ public final class HSQLDBDatabase extends AbstractDatabase {
     public void stop(final Logger logger) {
         assert logger != null;
 
-        if (server == null) {
+     //   if (server == null) {
             try {
                 final DataSource dataSource = getDataSource();
                 final Connection connection = dataSource.getConnection();
@@ -148,12 +148,11 @@ public final class HSQLDBDatabase extends AbstractDatabase {
             } catch (final SQLException exception) {
                 final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
                 logger.logError(message, exception);
-                //throw new MojoFailureException(message, exception);
                 return;
             }
-        } else {
+     //   } else {
             server.shutdown();
             server = null;
-        }
+       // }
     }
 }

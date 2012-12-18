@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2011 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,32 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
+import javax.sql.DataSource;
+import java.util.Map;
+
 /**
- * The interface that must be implemented objects that describe DDL/DML scripts
- * or DBUnit data sets.
+ * Describes the operations that are used by the Mojos to launch in-memory
+ * databases, load data into, execute scripts against or shutdown the database.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public interface Source {
+public interface SQLDatabase extends Database {
 
     /**
-     * Get the source file that contains the DDL/DML script or DBUnit data set.
+     * Get the data source that describes the connection to the in-memory
+     * database.
      *
-     * @return The source file.
+     * @return The data source.
      */
-    String getSourceFile();
+    DataSource getDataSource();
 
     /**
-     * Determine if the table names in the source file are fully qualified.
+     * Get the data source that describes the connection to the in-memory
+     * database.
      *
-     * @return <ul>
-     *         <li>{@link Boolean#TRUE} if the table names are fully qualified.</li>
-     *         <li>{@link Boolean#FALSE} if the table names are not fully qualified.</li>
-     *         </ul>
+     * @param attributes Additional connection attributes.
+     * @return The data source.
      */
-    Boolean getQualifiedTableNames();
+    DataSource getDataSource(Map<String, String> attributes);
 }

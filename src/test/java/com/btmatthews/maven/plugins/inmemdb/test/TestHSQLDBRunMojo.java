@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2012 Brian Thomas Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,27 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.db.h2;
-
-import com.btmatthews.utils.monitor.Server;
-import com.btmatthews.utils.monitor.ServerFactory;
+package com.btmatthews.maven.plugins.inmemdb.test;
 
 /**
- * A factory that creates embedded H2 database servers.
+ * Unit tests for the Mojo that implements the run goal.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
- * @since 1.2.0
  */
-public final class H2DatabaseFactory implements ServerFactory {
+public class TestHSQLDBRunMojo extends AbstractTestRunMojo {
 
-    /**
-     * Get the name of the server created by this server factory.
-     *
-     * @return Always returns {@code h2}.
-     */
     @Override
-    public String getServerName() {
-        return "h2";
+    protected String getType() {
+        return "hsqldb";
     }
 
-    /**
-     * Create the server instance.
-     *
-     * @return A {@link H2Database} instance.
-     */
     @Override
-    public Server createServer() {
-        return new H2Database();
+    protected String getDriverClassName() {
+        return "org.hsqldb.jdbcDriver";
+    }
+
+    @Override
+    protected String getConnectionString() {
+        return "jdbc:hsqldb:hsql://localhost/test;user=sa;password=";
     }
 }

@@ -1,6 +1,6 @@
-drop table if exists users;
+drop table if exists hsqldb_users;
 
-create table users (
+create table hsqldb_users (
 	username_txt varchar(16) not null,
 	password_txt varchar(50) not null,
 	name_txt varchar(50),

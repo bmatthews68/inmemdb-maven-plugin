@@ -1,5 +1,3 @@
-drop table derby_users;
-
 create table derby_users (
 	username_txt varchar(16) not null,
 	password_txt varchar(50) not null,

@@ -38,6 +38,12 @@ public final class MessageUtil {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**
+     * Make the constructor private because this class only offers static utility methods.
+     */
+    private MessageUtil() {
+    }
+
+    /**
      * Retrieve the message pattern for a given message key from the resource
      * bundle and format the message replacing the place holders with the
      * message arguments.

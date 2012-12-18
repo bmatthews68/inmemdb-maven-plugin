@@ -61,7 +61,7 @@
                                     <sourceFile>src/test/resources/create_database.sql</sourceFile>
                                 </script>
                                 <dataSet>
-                                    <sourceFile>src/test/resources/users.csv</sourceFile>
+                                    <sourceFile>src/test/resources/hsqldb_users.csv</sourceFile>
                                 </dataSet>
                             </sources>
                         </configuration>

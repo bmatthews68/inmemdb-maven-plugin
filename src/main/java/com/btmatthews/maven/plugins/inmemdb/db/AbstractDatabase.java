@@ -16,8 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
@@ -76,16 +74,16 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
      * @param logger Used for logging error and information messages.
      */
     @Override
-    public void configure(final String name, final Object value, final Logger logger) {
+    public final void configure(final String name, final Object value, final Logger logger) {
         if ("database".equals(name)) {
             logger.logInfo("Configured database name: " + value);
-            databaseName = (String)value;
+            databaseName = (String) value;
         } else if ("username".equals(name)) {
             logger.logInfo("Configured database username: " + value);
-            databaseUsername = (String)value;
+            databaseUsername = (String) value;
         } else if ("password".equals(name)) {
             logger.logInfo("Configured database password: " + value);
-            databasePassword = (String)value;
+            databasePassword = (String) value;
         }
     }
 
@@ -128,17 +126,6 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
     protected abstract Loader[] getLoaders();
 
     /**
-     * Get a data source object without additional connection attributes.
-     *
-     * @return The data source object.
-     */
-    @Override
-    public final DataSource getDataSource() {
-        final Map<String, String> attributes = new HashMap<String, String>();
-        return getDataSource(attributes);
-    }
-
-    /**
      * Find the loader that supports the source file and use it to load the data
      * into or execute the script against the database.
      *
@@ -165,33 +152,5 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
                 logger.logError(message);
             }
         }
-    }
-
-    /**
-     * Get the database connection protocol.
-     *
-     * @return The database connection protocol.
-     */
-    protected abstract String getUrlProtocol();
-
-    /**
-     * Construct the JDBC URL with connection specific attributes.
-     *
-     * @param attributes The connection specific attributes.
-     * @return The JDBC URL.
-     */
-    public final String getUrl(final Map<String, String> attributes) {
-        final StringBuilder url = new StringBuilder("jdbc:");
-        url.append(getUrlProtocol());
-        url.append(getDatabaseName());
-        if (attributes.size() > 0) {
-            for (Map.Entry<String, String> entry : attributes.entrySet()) {
-                url.append(';');
-                url.append(entry.getKey());
-                url.append('=');
-                url.append(entry.getValue());
-            }
-        }
-        return url.toString();
     }
 }

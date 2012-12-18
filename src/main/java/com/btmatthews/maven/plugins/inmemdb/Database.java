@@ -16,48 +16,23 @@
 
 package com.btmatthews.maven.plugins.inmemdb;
 
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import com.btmatthews.utils.monitor.Logger;
-import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Describes the operations that are used by the Mojos to launch in-memory
  * databases, load data into, execute scripts against or shutdown the database.
- * 
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
 public interface Database {
 
-	/**
-	 * Get the data source that describes the connection to the in-memory
-	 * database.
-	 * 
-	 * @return The data source.
-	 */
-	DataSource getDataSource();
-
-	/**
-	 * Get the data source that describes the connection to the in-memory
-	 * database.
-	 * 
-	 * @param attributes
-	 *            Additional connection attributes.
-	 * @return The data source.
-	 */
-	DataSource getDataSource(Map<String, String> attributes);
-
-	/**
-	 * Find the loader that supports the source file and use it to load the data
-	 * into or execute the script against the database.
-	 * 
-	 * @param logger
-	 *            Used to report errors and raise exceptions.
-	 * @param source
-	 *            The source file containing data or script.
-	 */
-	void load(Logger logger, Source source);
+    /**
+     * Find the loader that supports the source file and use it to load the data
+     * into or execute the script against the database.
+     *
+     * @param logger Used to report errors and raise exceptions.
+     * @param source The source file containing data or script.
+     */
+    void load(Logger logger, Source source);
 }

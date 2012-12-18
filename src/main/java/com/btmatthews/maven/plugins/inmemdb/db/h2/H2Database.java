@@ -20,21 +20,21 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
-import com.btmatthews.maven.plugins.inmemdb.db.AbstractDatabase;
+import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitFlatXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXLSLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 import com.btmatthews.utils.monitor.Logger;
-import org.apache.maven.plugin.MojoFailureException;
 import org.h2.jdbcx.JdbcDataSource;
 import org.h2.server.ShutdownHandler;
-import org.h2.server.TcpServer;
+import org.h2.tools.Server;
 
 /**
  * Implements support for in-memory H2 databases.
@@ -42,13 +42,12 @@ import org.h2.server.TcpServer;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class H2Database extends AbstractDatabase implements
-        ShutdownHandler {
+public final class H2Database extends AbstractSQLDatabase implements ShutdownHandler {
 
     /**
      * The connection protocol for in-memory H2 databases.
      */
-    private static final String PROTOCOL = "h2:tcp://localhost/";
+    private static final String PROTOCOL = "h2:mem:";
 
     /**
      * The loaders that are supported for loading data or executing scripts.
@@ -60,7 +59,11 @@ public final class H2Database extends AbstractDatabase implements
     /**
      * The H2 TCP server.
      */
-    private TcpServer service;
+//    private TcpServer service;
+
+//    private Thread serviceListenerThread;
+
+    private Server server;
 
     /**
      * Get the database connection protocol.
@@ -107,22 +110,29 @@ public final class H2Database extends AbstractDatabase implements
     public void start(final Logger logger) {
         assert logger != null;
 
+        logger.logInfo("Starting embedded H2 database");
+
         try {
-            service = new TcpServer();
-            service.init("-tcpDaemon");
-            service.start();
-            service.setShutdownHandler(this);
-        } catch (final Exception exception) {
-            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-            logger.logError(message, exception);
+            server = Server.createTcpServer("-tcpDaemon");
+            server.setShutdownHandler(this);
+            server.setOut(System.out);
+            server.start();
+        } catch (SQLException e) {
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                service.listen();
-            }
-        }).start();
+
+        final Map<String, String> attributes = new HashMap<String, String>();
+        attributes.put("DB_CLOSE_DELAY", "-1");
+        try {
+            final DataSource dataSource = getDataSource(attributes);
+            final Connection connection = dataSource.getConnection();
+            connection.close();
+        } catch (final SQLException exception) {
+            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+            logger.logError(message, exception);
+        }
+
+        logger.logInfo("Embedded H2 database has started");
     }
 
     /**
@@ -130,10 +140,11 @@ public final class H2Database extends AbstractDatabase implements
      * the SHUTDOWN command.
      *
      * @param logger Used to report errors and raise exceptions.
-     * @throws MojoFailureException If there was an error trying to shutdown the database.
      */
     public void stop(final Logger logger) {
         assert logger != null;
+
+        logger.logInfo("Stopping embedded H2 database");
 
         try {
             final DataSource dataSource = getDataSource();
@@ -151,9 +162,9 @@ public final class H2Database extends AbstractDatabase implements
         } catch (final SQLException exception) {
             final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
             logger.logError(message, exception);
-            //throw new MojoFailureException(message, exception);
-            return;
         }
+
+        logger.logInfo("Stopped embedded H2 database");
     }
 
     /**
@@ -162,8 +173,6 @@ public final class H2Database extends AbstractDatabase implements
      * @see ShutdownHandler#shutdown()
      */
     public void shutdown() {
-        if (service.isRunning(false)) {
-            service.stop();
-        }
+        server.stop();
     }
 }

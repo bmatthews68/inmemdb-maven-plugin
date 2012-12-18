@@ -175,6 +175,13 @@
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                 </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -246,6 +253,16 @@
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
+            <version>10.9.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+            <version>10.9.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbynet</artifactId>
             <version>10.9.1.0</version>
         </dependency>
         <dependency>

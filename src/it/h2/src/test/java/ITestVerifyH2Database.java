@@ -1,4 +1,3 @@
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +5,7 @@ import java.sql.DriverManager;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.Column;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.XmlDataSet;
@@ -22,7 +22,7 @@ public final class ITestVerifyH2Database {
     @Before
     public void setUp() throws Exception {
         Class.forName("org.h2.Driver");
-        jdbcConnection = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test;user=sa;password=");
+        jdbcConnection = DriverManager.getConnection("jdbc:h2:tcp://localhost/mem:test;user=sa;password=");
         connection = new DatabaseConnection(jdbcConnection);
     }
 
@@ -35,17 +35,12 @@ public final class ITestVerifyH2Database {
     @Test
     public void testLoadedData() throws Exception {
         IDataSet databaseDataSet = connection.createDataSet();
-        System.err.println("Table names are:");
-        for (String tableName : databaseDataSet.getTableNames()) {
-            System.err.println("\t" + tableName);
-        }
-        ITable actualTable = databaseDataSet.getTable("users");
+        ITable actualTable = databaseDataSet.getTable("h2_users");
 
-        final InputStream inputStream = getClass().getResourceAsStream("users.dbunit.xml");
-        IDataSet expectedDataSet =  new XmlDataSet(inputStream);
-        ITable expectedTable = expectedDataSet.getTable("users");
+        final InputStream inputStream = getClass().getResourceAsStream("h2_users.dbunit.xml");
+        IDataSet expectedDataSet = new XmlDataSet(inputStream);
+        ITable expectedTable = expectedDataSet.getTable("h2_users");
 
         Assertion.assertEquals(expectedTable, actualTable);
-
     }
 }

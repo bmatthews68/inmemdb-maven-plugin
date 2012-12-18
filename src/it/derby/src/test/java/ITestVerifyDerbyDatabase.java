@@ -22,7 +22,7 @@ public final class ITestVerifyDerbyDatabase {
     @Before
     public void setUp() throws Exception {
         Class.forName("org.apache.derby.jdbc.ClientDriver");
-        jdbcConnection = DriverManager.getConnection("jdbc:derby://localhost/test;user=sa;password=");
+        jdbcConnection = DriverManager.getConnection("jdbc:derby://localhost/memory:test;user=sa");
         connection = new DatabaseConnection(jdbcConnection);
     }
 
@@ -35,11 +35,11 @@ public final class ITestVerifyDerbyDatabase {
     @Test
     public void testLoadedData() throws Exception {
         IDataSet databaseDataSet = connection.createDataSet();
-        ITable actualTable = databaseDataSet.getTable("users");
+        ITable actualTable = databaseDataSet.getTable("derby_users");
 
-        final InputStream inputStream = getClass().getResourceAsStream("users.dbunit.xml");
+        final InputStream inputStream = getClass().getResourceAsStream("derby_users.dbunit.xml");
         IDataSet expectedDataSet =  new XmlDataSet(inputStream);
-        ITable expectedTable = expectedDataSet.getTable("users");
+        ITable expectedTable = expectedDataSet.getTable("derby_users");
 
         Assertion.assertEquals(expectedTable, actualTable);
 

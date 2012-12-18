@@ -17,15 +17,16 @@
 package com.btmatthews.maven.plugins.inmemdb.db.derby;
 
 import javax.sql.DataSource;
+import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
-import com.btmatthews.maven.plugins.inmemdb.db.AbstractDatabase;
+import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitFlatXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXLSLoader;
@@ -33,8 +34,8 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 import com.btmatthews.utils.monitor.Logger;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.derby.jdbc.EmbeddedDriver;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.derby.drda.NetworkServerControl;
+import org.apache.derby.jdbc.ClientDriver;
 
 /**
  * Implements support for in-memory Apache Derby databases.
@@ -42,12 +43,13 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class DerbyDatabase extends AbstractDatabase {
+public final class DerbyDatabase extends AbstractSQLDatabase {
 
     /**
      * The connection protocol for in-memory Apache Derby databases.
      */
-    private static final String PROTOCOL = "derby:memory:";
+    //private static final String PROTOCOL = "derby:memory:";
+    private static final String PROTOCOL = "derby://localhost/memory:";
 
     /**
      * The value of the additional connection parameter which will cause the
@@ -67,6 +69,8 @@ public final class DerbyDatabase extends AbstractDatabase {
     private static final Loader[] LOADERS = new Loader[]{
             new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
             new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
+
+    private NetworkServerControl server;
 
     /**
      * Get the database connection protocol.
@@ -90,8 +94,10 @@ public final class DerbyDatabase extends AbstractDatabase {
         final BasicDataSource dataSource = new BasicDataSource();
         dataSource.setUrl(getUrl(attributes));
         dataSource.setUsername(getUsername());
-        dataSource.setPassword(getPassword());
-        dataSource.setDriverClassName("org.apache.derby.jdbc.EmbeddedDriver");
+        if (getPassword() != null && !"".equals(getPassword())) {
+            dataSource.setPassword(getPassword());
+        }
+        dataSource.setDriverClassName("org.apache.derby.jdbc.ClientDriver");
         return dataSource;
     }
 
@@ -109,14 +115,19 @@ public final class DerbyDatabase extends AbstractDatabase {
      * Start the in-memory Apache Derby database.
      *
      * @param logger Used to report errors and raise exceptions.
-     * @throws MojoFailureException If the database cannot be started.
      */
     @Override
     public void start(final Logger logger) {
         assert logger != null;
 
         try {
-            EmbeddedDriver.class.newInstance();
+            server = new NetworkServerControl();
+            server.start(new PrintWriter(System.out));
+        } catch (final Exception e) {
+            return;
+        }
+        try {
+            ClientDriver.class.newInstance();
         } catch (final InstantiationException exception) {
             final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
             logger.logError(message, exception);
@@ -154,17 +165,22 @@ public final class DerbyDatabase extends AbstractDatabase {
         attributes.put(DROP, "true");
         final String url = getUrl(attributes);
         try {
-            DriverManager.getConnection(url);
+            new ClientDriver().connect(url, new Properties());
             final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
             logger.logError(message);
             return;
         } catch (final SQLException exception) {
-            if (!("08006".equals(exception.getSQLState()) && 45000 == exception
-                    .getErrorCode())) {
+            if (!("08006".equals(exception.getSQLState()))) {
                 final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
                 logger.logError(message, exception);
                 return;
             }
+            try {
+                server.shutdown();
+            } catch (final Exception e) {
+                logger.logError(e.getMessage(), e);
+            }
         }
+
     }
 }
