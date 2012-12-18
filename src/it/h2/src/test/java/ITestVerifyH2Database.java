@@ -21,6 +21,7 @@ public final class ITestVerifyH2Database {
 
     @Before
     public void setUp() throws Exception {
+        Thread.sleep(1000L);
         Class.forName("org.h2.Driver");
         jdbcConnection = DriverManager.getConnection("jdbc:h2:tcp://localhost/mem:test;user=sa;password=");
         connection = new DatabaseConnection(jdbcConnection);

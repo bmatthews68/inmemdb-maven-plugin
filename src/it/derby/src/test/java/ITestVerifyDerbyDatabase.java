@@ -1,5 +1,6 @@
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.Thread;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -21,6 +22,7 @@ public final class ITestVerifyDerbyDatabase {
 
     @Before
     public void setUp() throws Exception {
+        Thread.sleep(1000L);
         Class.forName("org.apache.derby.jdbc.ClientDriver");
         jdbcConnection = DriverManager.getConnection("jdbc:derby://localhost/memory:test;user=sa");
         connection = new DatabaseConnection(jdbcConnection);

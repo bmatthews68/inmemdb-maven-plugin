@@ -1,4 +1,3 @@
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,6 +20,7 @@ public final class ITestVerifyHSQLDBDatabase {
 
     @Before
     public void setUp() throws Exception {
+        Thread.sleep(1000L);
         Class.forName("org.hsqldb.jdbcDriver");
         jdbcConnection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/test;user=sa");
         connection = new DatabaseConnection(jdbcConnection);
@@ -38,7 +38,7 @@ public final class ITestVerifyHSQLDBDatabase {
         ITable actualTable = databaseDataSet.getTable("hsqldb_users");
 
         final InputStream inputStream = getClass().getResourceAsStream("hsqldb_users.dbunit.xml");
-        IDataSet expectedDataSet =  new XmlDataSet(inputStream);
+        IDataSet expectedDataSet = new XmlDataSet(inputStream);
         ITable expectedTable = expectedDataSet.getTable("hsqldb_users");
 
         Assertion.assertEquals(expectedTable, actualTable);
