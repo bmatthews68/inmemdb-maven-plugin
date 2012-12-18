@@ -38,6 +38,17 @@ import com.btmatthews.utils.monitor.Logger;
 public abstract class AbstractLoader implements Loader {
 
     /**
+     * The prefix used to denote that a resource should be loaded from the classpath
+     * rather than the file system.
+     */
+    protected static final String CLASSPATH_PREFIX = "classpath:";
+
+    /**
+     * The length of the classpath: prefix.
+     */
+    protected static final int CLASSPATH_PREFIX_LENGTH = 10;
+
+    /**
      * The message key for the error reported when an error occurs validating a
      * file.
      */
@@ -82,7 +93,7 @@ public abstract class AbstractLoader implements Loader {
             final Locale locale = Locale.getDefault();
             final String name = source.getSourceFile().toLowerCase(locale);
             if (name.endsWith(getExtension())) {
-                if (source.getSourceFile().startsWith("classpath:")) {
+                if (source.getSourceFile().startsWith(CLASSPATH_PREFIX)) {
                     result = hasValidContent(logger, source);
                 } else {
                     final File sourceFile = new File(source.getSourceFile());
@@ -113,7 +124,7 @@ public abstract class AbstractLoader implements Loader {
      */
     protected final InputStream getInputStream(final Source source) throws IOException {
         if (isClasspath(source)) {
-            return getClass().getResourceAsStream(source.getSourceFile().substring(10));
+            return getClass().getResourceAsStream(source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH));
         } else {
             final File file = new File(source.getSourceFile());
             if (file.exists()) {

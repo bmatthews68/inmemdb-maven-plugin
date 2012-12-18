@@ -16,8 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db;
 
-import java.util.Map;
-
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
@@ -77,13 +75,13 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
     public final void configure(final String name, final Object value, final Logger logger) {
         if ("database".equals(name)) {
             logger.logInfo("Configured database name: " + value);
-            databaseName = (String) value;
+            databaseName = (String)value;
         } else if ("username".equals(name)) {
             logger.logInfo("Configured database username: " + value);
-            databaseUsername = (String) value;
+            databaseUsername = (String)value;
         } else if ("password".equals(name)) {
             logger.logInfo("Configured database password: " + value);
-            databasePassword = (String) value;
+            databasePassword = (String)value;
         }
     }
 

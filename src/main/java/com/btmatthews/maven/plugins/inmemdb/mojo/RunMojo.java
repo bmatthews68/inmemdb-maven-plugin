@@ -101,6 +101,7 @@ public final class RunMojo extends AbstractRunMojo {
      * and datasets that will initialise the database.
      *
      * @param server The database server.
+     * @param logger Used to log information and error messages.
      */
     @Override
     public void started(final Server server, final Logger logger) {

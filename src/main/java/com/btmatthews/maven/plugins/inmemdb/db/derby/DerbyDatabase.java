@@ -70,6 +70,9 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
             new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
 
+    /**
+     * The server used to accept connections from other JVMs.
+     */
     private NetworkServerControl server;
 
     /**

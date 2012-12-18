@@ -20,6 +20,8 @@ import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabase;
 import com.btmatthews.utils.monitor.Server;
 
 /**
+ * Unit test the HSQLDB database server.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.2.0
  */

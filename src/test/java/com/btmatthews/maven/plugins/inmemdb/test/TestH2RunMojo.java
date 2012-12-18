@@ -17,27 +17,47 @@
 package com.btmatthews.maven.plugins.inmemdb.test;
 
 /**
- * Unit tests for the Mojo that implements the run goal.
+ * Unit tests for the Mojo that implements the run goal for the H2 database server.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  */
 public class TestH2RunMojo extends AbstractTestRunMojo {
 
+    /**
+     * Get the monitor port for the H2 test cases.
+     *
+     * @return Always returns {@code 19092}.
+     */
     @Override
     protected int getMonitorPort() {
         return 19092;
     }
 
+    /**
+     * Get the type code for the H2 test cases.
+     *
+     * @return Always returns {@code h2}.
+     */
     @Override
     protected String getType() {
         return "h2";
     }
 
+    /**
+     * Get the driver class name for the H2 test cases.
+     *
+     * @return Always returns {@code org.h2.Driver}.
+     */
     @Override
     protected String getDriverClassName() {
         return "org.h2.Driver";
     }
 
+    /**
+     * Get the connection string for the H2 test cases.
+     *
+     * @return Always returns {@code jdbc:h2:tcp://localhost/mem:test;user=sa;password=}.
+     */
     @Override
     protected String getConnectionString() {
         return "jdbc:h2:tcp://localhost/mem:test;user=sa;password=";

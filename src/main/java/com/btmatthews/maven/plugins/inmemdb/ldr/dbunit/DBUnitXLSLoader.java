@@ -19,17 +19,15 @@ package com.btmatthews.maven.plugins.inmemdb.ldr.dbunit;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
+import com.btmatthews.maven.plugins.inmemdb.Source;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
 
-import com.btmatthews.maven.plugins.inmemdb.Source;
-
 /**
  * Loader that loads data from a DBUnit Excel data set.
- * 
+ *
  * @author <a href="brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
@@ -42,7 +40,7 @@ public final class DBUnitXLSLoader extends AbstractDBUnitLoader {
 
     /**
      * Get the file extension for DBUnit Excel data set files.
-     * 
+     *
      * @return {@link #EXT}
      */
     @Override
@@ -52,14 +50,11 @@ public final class DBUnitXLSLoader extends AbstractDBUnitLoader {
 
     /**
      * Load a DBUnit Excel data set.
-     * 
-     * @param source
-     *            The source file containing the DBUnit Excel data set.
+     *
+     * @param source The source file containing the DBUnit Excel data set.
      * @return The DBUnit Excel data set.
-     * @throws DataSetException
-     *             If there was an error loading the DBUnit Excel data set.
-     * @throws IOException
-     *             If there was an error reading the DBUnit Excel data set from the file.
+     * @throws DataSetException If there was an error loading the DBUnit Excel data set.
+     * @throws IOException      If there was an error reading the DBUnit Excel data set from the file.
      */
     @Override
     protected IDataSet loadDataSet(final Source source) throws DataSetException,

@@ -73,11 +73,11 @@ public final class DBUnitCSVLoader extends AbstractDBUnitLoader {
         final CsvParser parser = new CsvParserImpl();
         final List readData;
         final String tableName;
-        if (source.getSourceFile().startsWith("classpath:")) {
-            final URL url = getClass().getResource(source.getSourceFile().substring(10));
+        if (source.getSourceFile().startsWith(CLASSPATH_PREFIX)) {
+            final URL url = getClass().getResource(source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH));
             readData = parser.parse(url);
             if (slashPos == -1) {
-                tableName = source.getSourceFile().substring(10, dotPos);
+                tableName = source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH, dotPos);
             } else {
                 tableName = source.getSourceFile().substring(slashPos + 1, dotPos);
             }

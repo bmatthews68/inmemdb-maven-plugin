@@ -20,6 +20,8 @@ import com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabase;
 import com.btmatthews.utils.monitor.Server;
 
 /**
+ * Unit test the Derby database server.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.2.0
  */

@@ -17,27 +17,47 @@
 package com.btmatthews.maven.plugins.inmemdb.test;
 
 /**
- * Unit tests for the Mojo that implements the run goal.
+ * Unit tests for the Mojo that implements the run goal for the HSQLDB database server.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  */
 public class TestHSQLDBRunMojo extends AbstractTestRunMojo {
 
+    /**
+     * Get the monitor port for the HSQLDB test cases.
+     *
+     * @return Always returns {@code 19001}.
+     */
     @Override
     protected int getMonitorPort() {
         return 19001;
     }
 
+    /**
+     * Get the type code for the HSQLDB test cases.
+     *
+     * @return Always returns {@code hsqldb}.
+     */
     @Override
     protected String getType() {
         return "hsqldb";
     }
 
+    /**
+     * Get the driver class name for the HSQLDB test cases.
+     *
+     * @return Always returns {@code org.hsqldb.jdbcDriver}.
+     */
     @Override
     protected String getDriverClassName() {
         return "org.hsqldb.jdbcDriver";
     }
 
+    /**
+     * Get the connection string for the HSQLDB test cases.
+     *
+     * @return Always returns {@code jdbc:hsqldb:hsql://localhost/test;user=sa;password=}.
+     */
     @Override
     protected String getConnectionString() {
         return "jdbc:hsqldb:hsql://localhost/test;user=sa;password=";

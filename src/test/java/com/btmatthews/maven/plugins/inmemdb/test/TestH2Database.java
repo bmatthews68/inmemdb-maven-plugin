@@ -20,6 +20,8 @@ import com.btmatthews.maven.plugins.inmemdb.db.h2.H2Database;
 import com.btmatthews.utils.monitor.Server;
 
 /**
+ * Unit test the H2 database server.
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 1.2.0
  */

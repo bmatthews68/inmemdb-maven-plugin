@@ -17,27 +17,47 @@
 package com.btmatthews.maven.plugins.inmemdb.test;
 
 /**
- * Unit tests for the Mojo that implements the run goal.
+ * Unit tests for the Mojo that implements the run goal for the Derby database server.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  */
 public class TestDerbyRunMojo extends AbstractTestRunMojo {
 
+    /**
+     * Get the monitor port for the Derby test cases.
+     *
+     * @return Always returns {@code 11527}.
+     */
     @Override
     protected int getMonitorPort() {
         return 11527;
     }
 
+    /**
+     * Get the type code for the Derby test cases.
+     *
+     * @return Always returns {@code derby}.
+     */
     @Override
     protected String getType() {
         return "derby";
     }
 
+    /**
+     * Get the driver class name for the Derby test cases.
+     *
+     * @return Always returns {@code org.apache.derby.jdbc.ClientDriver}.
+     */
     @Override
     protected String getDriverClassName() {
         return "org.apache.derby.jdbc.ClientDriver";
     }
 
+    /**
+     * Get the connection string for the Derby test cases.
+     *
+     * @return Always returns {@code jdbc:derby//localhost/memory:test;user=sa}.
+     */
     @Override
     protected String getConnectionString() {
         return "jdbc:derby://localhost/memory:test;user=sa";

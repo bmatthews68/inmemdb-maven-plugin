@@ -1,8 +1,22 @@
+/*
+ * Copyright 2011-2012 Brian Matthews
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.btmatthews.maven.plugins.inmemdb.test;
 
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.io.File;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.mojo.DataSet;
@@ -24,13 +38,27 @@ import org.mockito.Mock;
  */
 public abstract class AbstractTestDatabase {
 
+    /**
+     * Mock for the logger.
+     */
     @Mock
     private Logger logger;
 
+    /**
+     * The main test fixture.
+     */
     private Server database;
 
+    /**
+     * Concrete class should override this method to create the main test fixture.
+     *
+     * @return The main test fixture.
+     */
     protected abstract Server createDatabaseServer();
 
+    /**
+     * Prepare for test case execute by creating, configuring and starting the main test fixture.
+     */
     @Before
     public void setUp() {
         initMocks(this);
@@ -41,11 +69,17 @@ public abstract class AbstractTestDatabase {
         database.start(logger);
     }
 
+    /**
+     * Clean up after test case execution by stopping the main test fixture.
+     */
     @After
     public void tearDown() {
         database.stop(logger);
     }
 
+    /**
+     * Verify that the database server starts and stops cleanly.
+     */
     @Test
     public void testStartStop() {
     }
@@ -151,5 +185,4 @@ public abstract class AbstractTestDatabase {
         source.setSourceFile("src/test/resources/users.xls");
         ((Database)database).load(logger, source);
     }
-
 }

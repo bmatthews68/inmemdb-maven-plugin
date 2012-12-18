@@ -16,60 +16,55 @@
 
 package com.btmatthews.maven.plugins.inmemdb.mojo;
 
-import java.io.File;
-
 import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
  * Abstract base class for objects that describe the source files that will be
  * loaded into the in-memory database.
- * 
+ *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
 public abstract class AbstractSource implements Source {
 
-	/**
-	 * The source file that contains the DDL/DML script or DBUnit data set.
-	 */
-	private String sourceFile;
+    /**
+     * The source file that contains the DDL/DML script or DBUnit data set.
+     */
+    private String sourceFile;
 
-	/**
-	 * The default constructor.
-	 */
-	protected AbstractSource() {
-	}
+    /**
+     * The default constructor.
+     */
+    protected AbstractSource() {
+    }
 
-	/**
-	 * Construct a source object that describes a DDL/DML script or DBUnit data
-	 * set.
-	 * 
-	 * @param file
-	 *            The source file that contains the DDL/DML script or DBUnit
-	 *            data set.
-	 */
-	protected AbstractSource(final String file) {
-		this.sourceFile = file;
-	}
+    /**
+     * Construct a source object that describes a DDL/DML script or DBUnit data
+     * set.
+     *
+     * @param file The source file that contains the DDL/DML script or DBUnit
+     *             data set.
+     */
+    protected AbstractSource(final String file) {
+        this.sourceFile = file;
+    }
 
-	/**
-	 * Get the source file that contains the DDL/DML script or DBUnit data set.
-	 * 
-	 * @return The source file.
-	 */
-	public final String getSourceFile() {
-		return this.sourceFile;
-	}
+    /**
+     * Get the source file that contains the DDL/DML script or DBUnit data set.
+     *
+     * @return The source file.
+     */
+    public final String getSourceFile() {
+        return this.sourceFile;
+    }
 
-	/**
-	 * 
-	 * Set the source file that contains the DDL/DML script or DBUnit data set.
-	 * 
-	 * @param file
-	 *            The source file.
-	 */
-	public final void setSourceFile(final String file) {
-		this.sourceFile = file;
-	}
+    /**
+     * Set the source file that contains the DDL/DML script or DBUnit data set.
+     *
+     * @param file The source file.
+     */
+    public final void setSourceFile(final String file) {
+        this.sourceFile = file;
+    }
 
 }

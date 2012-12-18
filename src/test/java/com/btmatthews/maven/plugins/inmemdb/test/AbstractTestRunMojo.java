@@ -66,18 +66,49 @@ public abstract class AbstractTestRunMojo {
     @Rule
     public TemporaryFolder outputDirectory = new TemporaryFolder();
 
+    /**
+     * Concrete implementations should override this method to get the port number that the monitor controlling the
+     * server listens for commands on.
+     *
+     * @return The port number.
+     */
     protected abstract int getMonitorPort();
 
+    /**
+     * Concrete implementations should override this method to get the database server type.
+     *
+     * @return The database server type.
+     */
     protected abstract String getType();
 
+    /**
+     * Concrete implementations should override this method to get the driver class name.
+     *
+     * @return The driver class name.
+     */
     protected abstract String getDriverClassName();
 
+    /**
+     * Concrete implementations should override this method to get the database connection string.
+     *
+     * @return The database connection string.
+     */
     protected abstract String getConnectionString();
 
+    /**
+     * Get the name of the database table used for testing.
+     *
+     * @return The name of the database table.
+     */
     private String getTableName() {
         return getType() + "_users";
     }
 
+    /**
+     * Get the relative path of the database script used to create the database schema.
+     *
+     * @return The relative path of the script.
+     */
     private String getCreateScript() {
         return "src/test/resources/create_" + getType() + "_database.sql";
     }
