@@ -24,6 +24,11 @@ package com.btmatthews.maven.plugins.inmemdb.test;
 public class TestH2RunMojo extends AbstractTestRunMojo {
 
     @Override
+    protected int getMonitorPort() {
+        return 19092;
+    }
+
+    @Override
     protected String getType() {
         return "h2";
     }

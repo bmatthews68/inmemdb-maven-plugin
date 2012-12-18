@@ -24,6 +24,11 @@ package com.btmatthews.maven.plugins.inmemdb.test;
 public class TestDerbyRunMojo extends AbstractTestRunMojo {
 
     @Override
+    protected int getMonitorPort() {
+        return 11527;
+    }
+
+    @Override
     protected String getType() {
         return "derby";
     }

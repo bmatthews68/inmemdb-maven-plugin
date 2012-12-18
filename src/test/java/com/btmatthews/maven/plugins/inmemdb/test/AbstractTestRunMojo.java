@@ -40,18 +40,20 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mock;
 
 /**
  * Unit tests for the Mojo that implements the run goal.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  */
-public abstract class AbstractTestRunMojo implements Logger {
+public abstract class AbstractTestRunMojo {
 
     /**
      * Mock the logger.
      */
-    private Logger logger = this;
+    @Mock
+    private Logger logger;
 
     /**
      * The mojo being tested.
@@ -63,6 +65,8 @@ public abstract class AbstractTestRunMojo implements Logger {
      */
     @Rule
     public TemporaryFolder outputDirectory = new TemporaryFolder();
+
+    protected abstract int getMonitorPort();
 
     protected abstract String getType();
 
@@ -88,7 +92,7 @@ public abstract class AbstractTestRunMojo implements Logger {
         initMocks(this);
         Class.forName(getDriverClassName());
         mojo = new RunMojo();
-        ReflectionUtils.setVariableValueInObject(mojo, "monitorPort", 10000);
+        ReflectionUtils.setVariableValueInObject(mojo, "monitorPort", getMonitorPort());
         ReflectionUtils.setVariableValueInObject(mojo, "monitorKey", "inmemdb");
         ReflectionUtils.setVariableValueInObject(mojo, "type", getType());
         ReflectionUtils.setVariableValueInObject(mojo, "database", "test");
@@ -113,7 +117,6 @@ public abstract class AbstractTestRunMojo implements Logger {
                 try {
                     mojo.execute();
                 } catch (final Exception e) {
-                    e.printStackTrace(System.out);
                 }
             }
         });
@@ -151,6 +154,13 @@ public abstract class AbstractTestRunMojo implements Logger {
         try {
             mojo.execute();
             Thread.sleep(5000L);
+            final Connection jdbcConnection = DriverManager.getConnection(getConnectionString());
+            final IDatabaseConnection connection = new DatabaseConnection(jdbcConnection);
+            IDataSet databaseDataSet = connection.createDataSet();
+            assertNotNull(databaseDataSet.getTable(getTableName()));
+
+            connection.close();
+            jdbcConnection.close();
         } finally {
             signalStop();
         }
@@ -160,22 +170,6 @@ public abstract class AbstractTestRunMojo implements Logger {
      * Send a stop signal to monitor controlling the server.
      */
     private void signalStop() {
-        new Monitor("inmemdb", 10000).sendCommand("stop", logger);
-    }
-
-    @Override
-    public void logInfo(String message) {
-        System.out.println(message);
-    }
-
-    @Override
-    public void logError(String message) {
-        System.out.println(message);
-    }
-
-    @Override
-    public void logError(String message, Throwable cause) {
-        System.out.println(message);
-        cause.printStackTrace(System.out);
+        new Monitor("inmemdb", getMonitorPort()).sendCommand("stop", logger);
     }
 }

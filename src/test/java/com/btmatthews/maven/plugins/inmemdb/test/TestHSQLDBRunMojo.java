@@ -24,6 +24,11 @@ package com.btmatthews.maven.plugins.inmemdb.test;
 public class TestHSQLDBRunMojo extends AbstractTestRunMojo {
 
     @Override
+    protected int getMonitorPort() {
+        return 19001;
+    }
+
+    @Override
     protected String getType() {
         return "hsqldb";
     }

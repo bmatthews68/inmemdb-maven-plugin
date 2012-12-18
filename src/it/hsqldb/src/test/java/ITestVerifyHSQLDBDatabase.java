@@ -22,7 +22,7 @@ public final class ITestVerifyHSQLDBDatabase {
     @Before
     public void setUp() throws Exception {
         Class.forName("org.hsqldb.jdbcDriver");
-        jdbcConnection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/test;user=sa;password=");
+        jdbcConnection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/test;user=sa");
         connection = new DatabaseConnection(jdbcConnection);
     }
 

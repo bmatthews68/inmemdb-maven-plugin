@@ -34,7 +34,7 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 import com.btmatthews.utils.monitor.Logger;
 import org.h2.jdbcx.JdbcDataSource;
 import org.h2.server.ShutdownHandler;
-import org.h2.tools.Server;
+import org.h2.server.TcpServer;
 
 /**
  * Implements support for in-memory H2 databases.
@@ -47,7 +47,7 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
     /**
      * The connection protocol for in-memory H2 databases.
      */
-    private static final String PROTOCOL = "h2:mem:";
+    private static final String PROTOCOL = "h2:tcp://localhost/mem:";
 
     /**
      * The loaders that are supported for loading data or executing scripts.
@@ -59,11 +59,7 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
     /**
      * The H2 TCP server.
      */
-//    private TcpServer service;
-
-//    private Thread serviceListenerThread;
-
-    private Server server;
+    private TcpServer service;
 
     /**
      * Get the database connection protocol.
@@ -113,13 +109,22 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
         logger.logInfo("Starting embedded H2 database");
 
         try {
-            server = Server.createTcpServer("-tcpDaemon");
-            server.setShutdownHandler(this);
-            server.setOut(System.out);
-            server.start();
+            service = new TcpServer();
+            service.init("-tcpDaemon");
+            service.start();
+            service.setShutdownHandler(this);
         } catch (SQLException e) {
             return;
         }
+
+        final Thread serviceListenerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                service.listen();
+            }
+        });
+        serviceListenerThread.setDaemon(true);
+        serviceListenerThread.start();
 
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put("DB_CLOSE_DELAY", "-1");
@@ -173,6 +178,9 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
      * @see ShutdownHandler#shutdown()
      */
     public void shutdown() {
-        server.stop();
+        if (service.isRunning(false)) {
+            service.stop();
+        }
     }
 }
+

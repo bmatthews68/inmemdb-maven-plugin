@@ -41,7 +41,7 @@
                 <version>@project.version@</version>
                 <configuration>
                     <monitorKey>inmemdb</monitorKey>
-                    <monitorPort>10000</monitorPort>
+                    <monitorPort>11527</monitorPort>
                 </configuration>
                 <executions>
                     <execution>
