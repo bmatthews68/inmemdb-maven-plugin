@@ -3,10 +3,10 @@
  ------
  Brian Matthews
  ------
- 2011-08-12
+ 2012-12-18
  ------
 
-~~ Copyright 2011 Brian Matthews
+~~ Copyright 2011-2012 Brian Matthews
 ~~
 ~~ Licensed under the Apache License, Version 2.0 (the "License");
 ~~ you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ In-Memory Database Maven Plug-in
 
 ~~  General Information about the goals.
 
-  * {{{./start-mojo.html}inmemdb:start}} Start the in-memory database and optionally load data 
+  * {{{./run-mojo.html}inmemdb:run}} Start the in-memory database and optionally load data
     from DDL/DML scripts or DBUnit data sets.
 
   * {{{./stop-mojo.html}inmemdb:stop}} Stop the embedded server and drop the in-memory database.
