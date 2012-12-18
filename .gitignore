@@ -6,5 +6,4 @@
 /derby.log
 /.idea
 *.iml
-*.db
-/hsql
+*.h2.db
