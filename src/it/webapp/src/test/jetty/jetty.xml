@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+
+    <New class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>
+            <Ref id="Server" />
+        </Arg>
+        <Arg>jdbc/test</Arg>
+        <Arg>
+            <New class="org.apache.commons.dbcp.BasicDataSource">
+                <Set name="username">sa</Set>
+                <Set name="password"></Set>
+                <Set name="url">jdbc:derby://localhost/memory:test</Set>
+                <Set name="driverClassName">org.apache.derby.jdbc.ClientDriver</Set>
+            </New>
+        </Arg>
+    </New>
+
+</Configure>
