@@ -41,9 +41,7 @@
 			<item name="Usage" href="usage.html" />
 		</menu>
 		<menu name="Examples">
-			<item name="Unit testing" href="examples/unit.html" />
 			<item name="Web application integration testing" href="examples/integration_webapp.html" />
-			<item name="Web Service integration testing" href="examples/integration_websvc.html" />
 		</menu>
 		<menu ref="reports" />
 	</body>

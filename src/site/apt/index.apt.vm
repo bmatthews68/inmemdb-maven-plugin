@@ -45,9 +45,5 @@ In-Memory Database Maven Plug-in
   To provide you with better understanding of some usages of the In-Memory Database
   Maven Plugin, you can take a look into the following examples:
 
-  * {{{./examples/unit.html}Unit testing with JUnit}}
-  
   * {{{./examples/integration_webapp.html}Integration testing with Jetty and Selenium}}
-  
-  * {{{./examples/integration_websvc.html}Integration testing with Jetty and soapUI}}
-  
+

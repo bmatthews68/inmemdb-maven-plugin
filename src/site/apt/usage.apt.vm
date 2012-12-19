@@ -3,10 +3,10 @@
  ------
  Brian Matthews
  ------
- 2011-08-12
+ 2012-12-18
  ------
 
-~~ Copyright 2011 Brian Matthews
+~~ Copyright 2011-2012 Brian Matthews
 ~~
 ~~ Licensed under the Apache License, Version 2.0 (the "License");
 ~~ you may not use this file except in compliance with the License.
@@ -41,6 +41,9 @@ Usage
         <artifactId>${project.artifactId}</artifactId>
         <version>${project.version}</version>
         <configuration>
+          <monitorPort>[port]</monitorPort>
+          <monitorKey>[key]</monitorKey>
+          <daemon>true|false</daemon>
           <type>hsqldb|derby|h2</type>
           <database>[database name]</database>
           <username>[username]</username>
@@ -50,7 +53,7 @@ Usage
           <execution>
             <id>start-db</id>
             <goals>
-              <goal>start</goal>
+              <goal>run</goal>
             <goals>
             <configuration>
               <sources>
@@ -114,6 +117,8 @@ Usage
         <artifactId>${project.artifactId}</artifactId>
         <version>${project.version}</version>
         <configuration>
+          <monitorPort>11527</monitorPort>
+          <monitorKey>inmemdb</monitorKey>
           <type>hsqldb</type>
           <database>.</database>
           <username>sa</username>
@@ -122,7 +127,7 @@ Usage
         <executions>
           <execution>
             <goals>
-              <goal>start</goal>
+              <goal>run</goal>
             </goals>
             <configuration>
               <sources>
