@@ -1,6 +1,7 @@
 com.btmatthews.maven.plugins.inmemdb
 com.btmatthews.maven.plugins.inmemdb.db
 com.btmatthews.maven.plugins.inmemdb.db.derby
+com.btmatthews.maven.plugins.inmemdb.db.h2
 com.btmatthews.maven.plugins.inmemdb.db.hsqldb
 com.btmatthews.maven.plugins.inmemdb.ldr
 com.btmatthews.maven.plugins.inmemdb.ldr.dbunit
