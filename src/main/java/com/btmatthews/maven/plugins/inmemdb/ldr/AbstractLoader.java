@@ -124,7 +124,9 @@ public abstract class AbstractLoader implements Loader {
      */
     protected final InputStream getInputStream(final Source source) throws IOException {
         if (isClasspath(source)) {
-            return getClass().getResourceAsStream(source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH));
+            final String resource = source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH);
+            final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            return classLoader.getResourceAsStream(resource);
         } else {
             final File file = new File(source.getSourceFile());
             if (file.exists()) {
@@ -148,5 +150,28 @@ public abstract class AbstractLoader implements Loader {
         } else {
             return new InputStreamReader(inputStream, System.getProperty("file.encoding"));
         }
+    }
+
+    public String getTableName(final Source source) {
+        final String path = source.getSourceFile();
+        final int startIndex;
+        final int endIndex = path.length() - getExtension().length();
+        if (isClasspath(source)) {
+            final int dotPos = path.lastIndexOf(".");
+            final int slashPos = path.lastIndexOf("/", CLASSPATH_PREFIX_LENGTH);
+            if (slashPos == -1) {
+                startIndex = CLASSPATH_PREFIX_LENGTH;
+            } else {
+                startIndex = slashPos + 1;
+            }
+        } else {
+            final int slashPos = path.lastIndexOf("/");
+            if (slashPos == -1) {
+                startIndex = 0;
+            } else {
+                startIndex = slashPos + 1;
+            }
+        }
+        return path.substring(startIndex, endIndex);
     }
 }

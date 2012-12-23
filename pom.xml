@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://maven.apache.org/POM/4.0.0   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation=" http://maven.apache.org/POM/4.0.0   http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <prerequisites>
         <maven>3.0.4</maven>
     </prerequisites>
     <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
     <artifactId>inmemdb-maven-plugin</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>In-Memory Database Plugin</name>
-    <description>A Maven 3 plug-in that can be used to launch an in-memory database for use in integration tests. Apache
-        Derby, HSQLDB and H2 are supported.
+    <description>A Maven 3 plugin that can be used to launch an in-memory database for use in integration tests.
+        The plugin supports the Apache Derby, HSQLDB and H2 SQL databases and the Monog (using Fongo) and Neo4J NoSQL
+        databases.
     </description>
     <inceptionYear>2011</inceptionYear>
     <licenses>
@@ -265,7 +267,23 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.3.168</version>
+            <version>1.3.170</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>server-api</artifactId>
+            <version>1.9.M02</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.app</groupId>
+            <artifactId>neo4j-server</artifactId>
+            <version>1.9.M02</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.app</groupId>
+            <artifactId>neo4j-server</artifactId>
+            <version>1.9.M02</version>
+            <classifier>static-web</classifier>
         </dependency>
         <dependency>
             <groupId>org.dbunit</groupId>
@@ -275,7 +293,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.8</version>
+            <version>3.9</version>
             <exclusions>
                 <exclusion>
                     <artifactId>log4j</artifactId>
@@ -319,6 +337,26 @@
             <groupId>com.btmatthews.utils</groupId>
             <artifactId>monitor</artifactId>
             <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.16</version>
+        </dependency>
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-server</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-enterprise</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.orientechnologies</groupId>
+            <artifactId>orientdb-commons</artifactId>
+            <version>1.3.0</version>
         </dependency>
     </dependencies>
     <scm>
