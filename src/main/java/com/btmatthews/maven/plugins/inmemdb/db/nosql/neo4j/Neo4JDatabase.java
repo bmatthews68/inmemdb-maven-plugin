@@ -16,10 +16,15 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.nosql.neo4j;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.db.AbstractNoSQLDatabase;
+import com.btmatthews.maven.plugins.inmemdb.ldr.json.JSONLoader;
 import com.btmatthews.utils.monitor.Logger;
 import org.codehaus.jackson.JsonNode;
+import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.helpers.Settings;
 import org.neo4j.kernel.GraphDatabaseAPI;
@@ -39,12 +44,43 @@ public class Neo4JDatabase extends AbstractNoSQLDatabase {
 
     @Override
     protected Loader[] getLoaders() {
-        return new Loader[0];
+        return new Loader[]{
+                new JSONLoader()
+        };
     }
 
     public void insertObject(final String collection,
                              final JsonNode object,
-                             final Logger logger) {
+                             final Logger logger)
+
+    {
+        final Node node = db.createNode();
+        final Iterator<Map.Entry<String, JsonNode>> entryIterator = object.getFields();
+        while (entryIterator.hasNext()) {
+            final Map.Entry<String, JsonNode> entry = entryIterator.next();
+            if (entry.getValue().isValueNode()) {
+                if (entry.getValue().isNumber()) {
+                    switch (entry.getValue().getNumberType()) {
+                        case INT:
+                            node.setProperty(entry.getKey(), entry.getValue().getIntValue());
+                            break;
+                        case LONG:
+                            node.setProperty(entry.getKey(), entry.getValue().getLongValue());
+                            break;
+                        case BIG_INTEGER:
+                            break;
+                        case FLOAT:
+                            node.setProperty(entry.getKey(), entry.getValue().getDoubleValue());
+                            break;
+                        case DOUBLE:
+                            node.setProperty(entry.getKey(), entry.getValue().getDoubleValue());
+                            break;
+                        case BIG_DECIMAL:
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
