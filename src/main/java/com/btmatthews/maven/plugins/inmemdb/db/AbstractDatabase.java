@@ -65,6 +65,11 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
     private String databasePassword;
 
     /**
+     * The port number used for the database (not supported by all databases)
+     */
+    private int port;
+
+    /**
      * Configure the server.
      *
      * @param name   Name of the configuration property.
@@ -82,6 +87,9 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
         } else if ("password".equals(name)) {
             logger.logInfo("Configured database password: " + value);
             databasePassword = (String)value;
+        } else if ("port".equals(name)) {
+            logger.logInfo("Configured database port: " + value);
+            port = new Integer(value.toString());
         }
     }
 
@@ -114,6 +122,24 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
         } else {
             return databasePassword;
         }
+    }
+
+    /**
+     * Get the port number used in the database connection URL
+     *
+     * @return database port number
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * Set the port number used in the database connection URL
+     *
+     * @param port port number
+     */
+    public void setPortNumber(int port) {
+        this.port = port;
     }
 
     /**
@@ -151,4 +177,5 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
             }
         }
     }
+
 }

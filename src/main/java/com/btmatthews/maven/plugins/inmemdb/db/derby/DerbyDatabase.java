@@ -16,9 +16,10 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.derby;
 
-import javax.sql.DataSource;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,10 +47,9 @@ import org.apache.derby.jdbc.ClientDriver;
 public final class DerbyDatabase extends AbstractSQLDatabase {
 
     /**
-     * The connection protocol for in-memory Apache Derby databases.
+     * Default port Derby listens on, can be altered via setting port property
      */
-    //private static final String PROTOCOL = "derby:memory:";
-    private static final String PROTOCOL = "derby://localhost/memory:";
+    private static final int DEFAULT_PORT = 1527;
 
     /**
      * The value of the additional connection parameter which will cause the
@@ -76,12 +76,12 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
     private NetworkServerControl server;
 
     /**
-     * Get the database connection protocol.
+     * Get the database connection protocol used for JDBC connections
      *
-     * @return Always returns {@link DerbyDatabase#PROTOCOL}.
+     * @return Returns protocol
      */
     protected String getUrlProtocol() {
-        return PROTOCOL;
+        return "derby://localhost:" + (getPort() > 0 ? getPort() : DEFAULT_PORT) + "/memory:";
     }
 
     /**
@@ -124,7 +124,7 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
         assert logger != null;
 
         try {
-            server = new NetworkServerControl();
+            server = new NetworkServerControl(InetAddress.getByName("localhost"), (getPort() > 0 ? getPort() : DEFAULT_PORT));
             server.start(new PrintWriter(System.out));
         } catch (final Exception e) {
             return;
