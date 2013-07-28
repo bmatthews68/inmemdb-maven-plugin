@@ -69,6 +69,12 @@ public final class RunMojo extends AbstractRunMojo {
     private String password = "";
 
     /**
+     * The port for database connections.
+     */
+    @Parameter(property = "inmemdb.port", defaultValue = "")
+    private String port;
+
+    /**
      * Get the server type.
      *
      * @return The value of {@link #type}.
@@ -79,7 +85,7 @@ public final class RunMojo extends AbstractRunMojo {
     }
 
     /**
-     * Get the server configuration parameters. These are {@link #database}, {@link #username} and {@link #password}.
+     * Get the server configuration parameters. These are {@link #database}, {@link #port}, {@link #username} and {@link #password}.
      *
      * @return A {@link Map} containing the configuration parameters.
      */
@@ -88,6 +94,9 @@ public final class RunMojo extends AbstractRunMojo {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("database", database);
         config.put("username", username);
+        if (port != null && !port.isEmpty()) {
+            config.put("port", port);
+        }
         if (password == null) {
             config.put("password", "");
         } else {
