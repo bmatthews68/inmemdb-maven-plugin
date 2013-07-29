@@ -21,6 +21,7 @@ import java.net.InetAddress;
 import java.sql.Connection;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -37,6 +38,7 @@ import com.btmatthews.utils.monitor.Logger;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.drda.NetworkServerControl;
 import org.apache.derby.jdbc.ClientDriver;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Implements support for in-memory Apache Derby databases.
@@ -45,6 +47,11 @@ import org.apache.derby.jdbc.ClientDriver;
  * @version 1.0.0
  */
 public final class DerbyDatabase extends AbstractSQLDatabase {
+
+    /**
+     * The connection protocol for in-memory H2 databases.
+     */
+    private static final String PROTOCOL = "derby://localhost:{0,number,#}/memory:";
 
     /**
      * Default port Derby listens on, can be altered via setting port property
@@ -76,12 +83,19 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
     private NetworkServerControl server;
 
     /**
+     * The default constructor initializes the default database port.
+     */
+    public DerbyDatabase() {
+        super(DEFAULT_PORT);
+    }
+
+    /**
      * Get the database connection protocol used for JDBC connections
      *
      * @return Returns protocol
      */
     protected String getUrlProtocol() {
-        return "derby://localhost:" + (getPort() > 0 ? getPort() : DEFAULT_PORT) + "/memory:";
+        return MessageFormat.format(PROTOCOL, getPort());
     }
 
     /**
@@ -97,7 +111,7 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
         final BasicDataSource dataSource = new BasicDataSource();
         dataSource.setUrl(getUrl(attributes));
         dataSource.setUsername(getUsername());
-        if (getPassword() != null && !"".equals(getPassword())) {
+        if (StringUtils.isNotEmpty(getPassword())) {
             dataSource.setPassword(getPassword());
         }
         dataSource.setDriverClassName("org.apache.derby.jdbc.ClientDriver");
@@ -121,12 +135,15 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
      */
     @Override
     public void start(final Logger logger) {
-        assert logger != null;
+
+        logger.logInfo("Starting embedded Derby database");
 
         try {
-            server = new NetworkServerControl(InetAddress.getByName("localhost"), (getPort() > 0 ? getPort() : DEFAULT_PORT));
-            server.start(new PrintWriter(System.out));
-        } catch (final Exception e) {
+            server = new NetworkServerControl(InetAddress.getByName("localhost"), getPort());
+            server.start(null);
+        } catch (final Exception exception) {
+            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+            logger.logError(message, exception);
             return;
         }
         try {
@@ -151,6 +168,8 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
             logger.logError(message, exception);
         }
+
+        logger.logInfo("Started embedded Derby database");
     }
 
     /**
@@ -162,7 +181,8 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
      */
     @Override
     public void stop(final Logger logger) {
-        assert logger != null;
+
+        logger.logInfo("Stopping embedded Derby database");
 
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put(DROP, "true");
@@ -185,5 +205,6 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             }
         }
 
+        logger.logInfo("Stopped embedded Derby database");
     }
 }

@@ -16,13 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.h2;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
 import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
@@ -33,8 +26,13 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 import com.btmatthews.utils.monitor.Logger;
 import org.h2.jdbcx.JdbcDataSource;
-import org.h2.server.ShutdownHandler;
 import org.h2.server.TcpServer;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implements support for in-memory H2 databases.
@@ -42,24 +40,33 @@ import org.h2.server.TcpServer;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class H2Database extends AbstractSQLDatabase implements ShutdownHandler {
+public final class H2Database extends AbstractSQLDatabase {
 
     /**
      * The connection protocol for in-memory H2 databases.
      */
-    private static final String PROTOCOL = "h2:tcp://localhost/mem:";
-
+    private static final String PROTOCOL = "h2:tcp://localhost:{0,number,#}/mem:";
+    /**
+     * Default port H2 listens on, can be altered via setting port property
+     */
+    private static final int DEFAULT_PORT = 9092;
     /**
      * The loaders that are supported for loading data or executing scripts.
      */
     private static final Loader[] LOADERS = new Loader[]{
             new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
-            new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
-
+            new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader()};
     /**
      * The H2 TCP server.
      */
     private TcpServer service;
+
+    /**
+     * The default constructor initializes the default database port.
+     */
+    public H2Database() {
+        super(DEFAULT_PORT);
+    }
 
     /**
      * Get the database connection protocol.
@@ -67,7 +74,7 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
      * @return Always returns {@link H2Database#PROTOCOL}.
      */
     protected String getUrlProtocol() {
-        return PROTOCOL;
+        return MessageFormat.format(PROTOCOL, getPort());
     }
 
     /**
@@ -80,8 +87,10 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
      */
     @Override
     public DataSource getDataSource(final Map<String, String> attributes) {
+        final Map<String, String> actualAttributes = new HashMap<String, String>(attributes);
+        actualAttributes.put("DB_CLOSE_DELAY", "-1");
         final JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setURL(getUrl(attributes));
+        dataSource.setURL(getUrl(actualAttributes));
         dataSource.setUser(getUsername());
         dataSource.setPassword(getPassword());
         return dataSource;
@@ -104,16 +113,16 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
      */
     @Override
     public void start(final Logger logger) {
-        assert logger != null;
 
         logger.logInfo("Starting embedded H2 database");
 
         try {
             service = new TcpServer();
-            service.init("-tcpDaemon");
+            service.init("-tcpDaemon", "-tcpPort", Integer.toString(getPort()));
             service.start();
-            service.setShutdownHandler(this);
-        } catch (SQLException e) {
+        } catch (final SQLException exception) {
+            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+            logger.logError(message, exception);
             return;
         }
 
@@ -126,17 +135,6 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
         serviceListenerThread.setDaemon(true);
         serviceListenerThread.start();
 
-        final Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("DB_CLOSE_DELAY", "-1");
-        try {
-            final DataSource dataSource = getDataSource(attributes);
-            final Connection connection = dataSource.getConnection();
-            connection.close();
-        } catch (final SQLException exception) {
-            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-            logger.logError(message, exception);
-        }
-
         logger.logInfo("Embedded H2 database has started");
     }
 
@@ -147,40 +145,15 @@ public final class H2Database extends AbstractSQLDatabase implements ShutdownHan
      * @param logger Used to report errors and raise exceptions.
      */
     public void stop(final Logger logger) {
-        assert logger != null;
 
         logger.logInfo("Stopping embedded H2 database");
 
-        try {
-            final DataSource dataSource = getDataSource();
-            final Connection connection = dataSource.getConnection();
-            try {
-                final Statement statement = connection.createStatement();
-                try {
-                    statement.execute("SHUTDOWN");
-                } finally {
-                    statement.close();
-                }
-            } finally {
-                connection.close();
-            }
-        } catch (final SQLException exception) {
-            final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
-            logger.logError(message, exception);
+        if (service != null) {
+            service.stop();
+            service = null;
         }
 
         logger.logInfo("Stopped embedded H2 database");
-    }
-
-    /**
-     * Handles the shutdown event by stopping the TCP server.
-     *
-     * @see ShutdownHandler#shutdown()
-     */
-    public void shutdown() {
-        if (service.isRunning(false)) {
-            service.stop();
-        }
     }
 }
 

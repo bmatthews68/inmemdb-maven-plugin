@@ -34,12 +34,12 @@ public final class ITestVerifyHSQLDBDatabase {
 
     @Test
     public void testLoadedData() throws Exception {
-        IDataSet databaseDataSet = connection.createDataSet();
-        ITable actualTable = databaseDataSet.getTable("hsqldb_users");
+        final IDataSet databaseDataSet = connection.createDataSet();
+        final ITable actualTable = databaseDataSet.getTable("hsqldb_users");
 
         final InputStream inputStream = getClass().getResourceAsStream("hsqldb_users.dbunit.xml");
-        IDataSet expectedDataSet = new XmlDataSet(inputStream);
-        ITable expectedTable = expectedDataSet.getTable("hsqldb_users");
+        final IDataSet expectedDataSet = new XmlDataSet(inputStream);
+        final ITable expectedTable = expectedDataSet.getTable("hsqldb_users");
 
         Assertion.assertEquals(expectedTable, actualTable);
 

@@ -35,39 +35,42 @@ import com.btmatthews.utils.monitor.Logger;
 public abstract class AbstractDatabase extends AbstractServer implements Database {
 
     /**
-     * The message key for the error reported when a file type is not supported.
-     */
-    private static final String UNSUPPORTED_FILE_TYPE = "unsupported_file_type";
-
-    /**
      * The message key for the error reported when a server cannot be started.
      */
     protected static final String ERROR_STARTING_SERVER = "error_starting_server";
-
     /**
      * The message key for the error reported when a server cannot be stopped.
      */
     protected static final String ERROR_STOPPING_SERVER = "error_stopping_server";
-
+    /**
+     * The message key for the error reported when a file type is not supported.
+     */
+    private static final String UNSUPPORTED_FILE_TYPE = "unsupported_file_type";
     /**
      * The database name.
      */
     private String databaseName;
-
     /**
      * The user name used to connect to the database.
      */
     private String databaseUsername;
-
     /**
      * The password used to connect to the database.
      */
     private String databasePassword;
-
     /**
      * The port number used for the database (not supported by all databases)
      */
     private int port;
+
+    /**
+     * Constructor initializes default database port.
+     *
+     * @param port The default port.
+     */
+    public AbstractDatabase(final int port) {
+        this.port = port;
+    }
 
     /**
      * Configure the server.
@@ -80,13 +83,13 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
     public final void configure(final String name, final Object value, final Logger logger) {
         if ("database".equals(name)) {
             logger.logInfo("Configured database name: " + value);
-            databaseName = (String)value;
+            databaseName = (String) value;
         } else if ("username".equals(name)) {
             logger.logInfo("Configured database username: " + value);
-            databaseUsername = (String)value;
+            databaseUsername = (String) value;
         } else if ("password".equals(name)) {
             logger.logInfo("Configured database password: " + value);
-            databasePassword = (String)value;
+            databasePassword = (String) value;
         } else if ("port".equals(name)) {
             logger.logInfo("Configured database port: " + value);
             port = new Integer(value.toString());

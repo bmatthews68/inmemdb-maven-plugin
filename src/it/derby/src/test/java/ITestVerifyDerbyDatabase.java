@@ -36,12 +36,12 @@ public final class ITestVerifyDerbyDatabase {
 
     @Test
     public void testLoadedData() throws Exception {
-        IDataSet databaseDataSet = connection.createDataSet();
-        ITable actualTable = databaseDataSet.getTable("derby_users");
+        final IDataSet databaseDataSet = connection.createDataSet();
+        final ITable actualTable = databaseDataSet.getTable("derby_users");
 
         final InputStream inputStream = getClass().getResourceAsStream("derby_users.dbunit.xml");
-        IDataSet expectedDataSet =  new XmlDataSet(inputStream);
-        ITable expectedTable = expectedDataSet.getTable("derby_users");
+        final IDataSet expectedDataSet =  new XmlDataSet(inputStream);
+        final ITable expectedTable = expectedDataSet.getTable("derby_users");
 
         Assertion.assertEquals(expectedTable, actualTable);
 

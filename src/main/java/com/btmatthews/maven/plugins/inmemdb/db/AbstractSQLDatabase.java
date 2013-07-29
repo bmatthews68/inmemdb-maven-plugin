@@ -16,11 +16,11 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db;
 
+import com.btmatthews.maven.plugins.inmemdb.SQLDatabase;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.btmatthews.maven.plugins.inmemdb.SQLDatabase;
 
 /**
  * Abstract base classes embedded SQL databases.
@@ -29,6 +29,15 @@ import com.btmatthews.maven.plugins.inmemdb.SQLDatabase;
  * @version 1.0.0
  */
 public abstract class AbstractSQLDatabase extends AbstractDatabase implements SQLDatabase {
+
+    /**
+     * Constructor initializes default database port.
+     *
+     * @param port The default port.
+     */
+    public AbstractSQLDatabase(final int port) {
+        super(port);
+    }
 
     /**
      * Get a data source object without additional connection attributes.

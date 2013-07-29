@@ -87,19 +87,19 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb-j5</artifactId>
-            <version>2.2.4</version>
+            <artifactId>hsqldb</artifactId>
+            <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

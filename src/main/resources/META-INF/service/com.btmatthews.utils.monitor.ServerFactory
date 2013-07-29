@@ -1,5 +1,0 @@
-com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabaseFactory
-com.btmatthews.maven.plugins.inmemdb.db.h2.H2DatabaseFactory
-com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabaseFactory
-com.btmatthews.maven.plugins.inmemdb.db.nosql.neo4j.Neo4JDatabaseFactory
-com.btmatthews.maven.plugins.inmemdb.db.nosql.orientdb.OrientDBDocumentDatabaseFactory
