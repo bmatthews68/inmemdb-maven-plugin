@@ -16,16 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.derby;
 
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.sql.Connection;
-import javax.sql.DataSource;
-import java.sql.SQLException;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
 import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
@@ -37,8 +27,20 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 import com.btmatthews.utils.monitor.Logger;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.drda.NetworkServerControl;
+import org.apache.derby.iapi.reference.Property;
 import org.apache.derby.jdbc.ClientDriver;
 import org.codehaus.plexus.util.StringUtils;
+
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Implements support for in-memory Apache Derby databases.
@@ -52,31 +54,30 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
      * The connection protocol for in-memory H2 databases.
      */
     private static final String PROTOCOL = "derby://localhost:{0,number,#}/memory:";
-
     /**
      * Default port Derby listens on, can be altered via setting port property
      */
     private static final int DEFAULT_PORT = 1527;
-
     /**
      * The value of the additional connection parameter which will cause the
      * database to be created.
      */
     private static final String CREATE = "create";
-
     /**
      * The value of the additional connection parameter which will cause the
      * database to be shutdown.
      */
     private static final String DROP = "drop";
-
     /**
      * The loaders that are supported for loading data or executing scripts.
      */
     private static final Loader[] LOADERS = new Loader[]{
             new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
-            new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader() };
-
+            new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader()};
+    private static final OutputStream DEV_NULL = new OutputStream() {
+        public void write(int b) {
+        }
+    };
     /**
      * The server used to accept connections from other JVMs.
      */
@@ -137,6 +138,8 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
     public void start(final Logger logger) {
 
         logger.logInfo("Starting embedded Derby database");
+
+        System.setProperty(Property.ERRORLOG_FIELD_PROPERTY, "com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabase.DEV_NULL");
 
         try {
             server = new NetworkServerControl(InetAddress.getByName("localhost"), getPort());

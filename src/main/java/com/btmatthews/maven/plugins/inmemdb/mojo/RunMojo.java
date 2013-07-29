@@ -16,10 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.mojo;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.utils.monitor.Logger;
@@ -28,6 +24,12 @@ import com.btmatthews.utils.monitor.mojo.AbstractRunMojo;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This plug-in Mojo starts an In Memory Database.
@@ -43,36 +45,31 @@ public final class RunMojo extends AbstractRunMojo {
      */
     @Parameter
     private List<? extends Source> sources;
-
     /**
      * The database type.
      */
     @Parameter(property = "inmemdb.type", defaultValue = "hsqldb")
     private String type = "hsqldb";
-
     /**
      * The database name.
      */
     @Parameter(property = "inmemdb.database", defaultValue = ".")
     private String database = ".";
-
     /**
      * The username for database connections.
      */
     @Parameter(property = "inmemdb.username", defaultValue = "sa")
     private String username = "sa";
-
     /**
      * The password for database connections.
      */
     @Parameter(property = "inmemdb.password", defaultValue = "")
     private String password = "";
-
     /**
      * The port for database connections.
      */
-    @Parameter(property = "inmemdb.port", defaultValue = "")
-    private String port;
+    @Parameter(property = "inmemdb.port")
+    private Integer port;
 
     /**
      * Get the server type.
@@ -94,7 +91,7 @@ public final class RunMojo extends AbstractRunMojo {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("database", database);
         config.put("username", username);
-        if (port != null && !port.isEmpty()) {
+        if (port != null) {
             config.put("port", port);
         }
         if (password == null) {
@@ -119,7 +116,7 @@ public final class RunMojo extends AbstractRunMojo {
             logger.logInfo("Executing initialization scripts and loading data sets");
             for (final Source source : sources) {
                 logger.logInfo("Loading " + source.toString());
-                ((Database)server).load(this, source);
+                ((Database) server).load(this, source);
             }
         }
     }
