@@ -3,7 +3,5 @@
 /.classpath
 /.checkstyle
 /.project
-/derby.log
 /.idea
 *.iml
-*.h2.db

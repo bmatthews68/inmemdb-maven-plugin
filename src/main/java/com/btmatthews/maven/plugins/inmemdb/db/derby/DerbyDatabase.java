@@ -28,19 +28,17 @@ import com.btmatthews.utils.monitor.Logger;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.drda.NetworkServerControl;
 import org.apache.derby.iapi.reference.Property;
-import org.apache.derby.jdbc.ClientDriver;
 import org.codehaus.plexus.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.io.File;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Implements support for in-memory Apache Derby databases.
@@ -59,15 +57,23 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
      */
     private static final int DEFAULT_PORT = 1527;
     /**
-     * The value of the additional connection parameter which will cause the
+     * The name of the additional connection parameter which will cause the
      * database to be created.
      */
     private static final String CREATE = "create";
     /**
-     * The value of the additional connection parameter which will cause the
+     * The name of the additional connection parameter which will cause the
      * database to be shutdown.
      */
-    private static final String DROP = "drop";
+    private static final String SHUTDOWN = "shutdown";
+    /**
+     * The value used with the {@link #CREATE} and {@link #SHUTDOWN} connection parameters.
+     */
+    private static final String TRUE = "true";
+    /**
+     * The JDBC driver class name.
+     */
+    private static final String DRIVER_CLASS = "org.apache.derby.jdbc.ClientDriver";
     /**
      * The loaders that are supported for loading data or executing scripts.
      */
@@ -115,7 +121,7 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
         if (StringUtils.isNotEmpty(getPassword())) {
             dataSource.setPassword(getPassword());
         }
-        dataSource.setDriverClassName("org.apache.derby.jdbc.ClientDriver");
+        dataSource.setDriverClassName(DRIVER_CLASS);
         return dataSource;
     }
 
@@ -150,7 +156,7 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             return;
         }
         try {
-            ClientDriver.class.newInstance();
+            Class.forName(DRIVER_CLASS).newInstance();
         } catch (final InstantiationException exception) {
             final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
             logger.logError(message, exception);
@@ -159,13 +165,16 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
             logger.logError(message, exception);
             return;
+        } catch (final ClassNotFoundException exception) {
+            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+            logger.logError(message, exception);
+            return;
         }
 
         final Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put(CREATE, "true");
+        attributes.put(CREATE, TRUE);
         try {
-            final DataSource dataSource = getDataSource(attributes);
-            final Connection connection = dataSource.getConnection();
+            final Connection connection = DriverManager.getConnection(getUrl(attributes));
             connection.close();
         } catch (final SQLException exception) {
             final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
@@ -187,25 +196,26 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
 
         logger.logInfo("Stopping embedded Derby database");
 
-        final Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put(DROP, "true");
-        final String url = getUrl(attributes);
-        try {
-            new ClientDriver().connect(url, new Properties());
-            final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
-            logger.logError(message);
-            return;
-        } catch (final SQLException exception) {
-            if (!("08006".equals(exception.getSQLState()))) {
+        if (server != null) {
+            final Map<String, String> attributes = new HashMap<String, String>();
+            attributes.put(SHUTDOWN, TRUE);
+            try {
+                DriverManager.getConnection(getUrl(attributes));
+            } catch (final SQLException exception) {
+                if (exception.getErrorCode() != 45000 || !"08006".equals(exception.getSQLState())) {
+                    final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+                    logger.logError(message, exception);
+                    return;
+                }
+            }
+            try {
+                server.shutdown();
+            } catch (final Exception exception) {
                 final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
                 logger.logError(message, exception);
                 return;
             }
-            try {
-                server.shutdown();
-            } catch (final Exception e) {
-                logger.logError(e.getMessage(), e);
-            }
+            server = null;
         }
 
         logger.logInfo("Stopped embedded Derby database");
