@@ -63,23 +63,28 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
     private static final String CREATE = "create";
     /**
      * The name of the additional connection parameter which will cause the
-     * database to be shutdown.
+     * database to be dropped.
      */
-    private static final String SHUTDOWN = "shutdown";
+    private static final String DROP = "drop";
     /**
-     * The value used with the {@link #CREATE} and {@link #SHUTDOWN} connection parameters.
+     * The value used with the {@link #CREATE} and {@link #DROP} connection parameters.
      */
     private static final String TRUE = "true";
     /**
      * The JDBC driver class name.
      */
     private static final String DRIVER_CLASS = "org.apache.derby.jdbc.ClientDriver";
+    private static final int PING_RETRIES = 10;
+    private static final int PING_DELAY = 100;
     /**
      * The loaders that are supported for loading data or executing scripts.
      */
     private static final Loader[] LOADERS = new Loader[]{
             new DBUnitXMLLoader(), new DBUnitFlatXMLLoader(),
             new DBUnitCSVLoader(), new DBUnitXLSLoader(), new SQLLoader()};
+    /**
+     *
+     */
     private static final OutputStream DEV_NULL = new OutputStream() {
         public void write(int b) {
         }
@@ -155,6 +160,27 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             logger.logError(message, exception);
             return;
         }
+
+        for (int i = 0; ; i++) {
+            try {
+                server.ping();
+                break;
+            } catch (final Exception e) {
+                if (i < PING_RETRIES) {
+                    try {
+                        Thread.sleep(PING_DELAY);
+                    } catch (final InterruptedException ie) {
+                        final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+                        logger.logError(message, ie);
+                        return;
+                    }
+                } else {
+                    final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+                    logger.logError(message, e);
+                    return;
+                }
+            }
+        }
         try {
             Class.forName(DRIVER_CLASS).newInstance();
         } catch (final InstantiationException exception) {
@@ -174,11 +200,12 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
         final Map<String, String> attributes = new HashMap<String, String>();
         attributes.put(CREATE, TRUE);
         try {
-            final Connection connection = DriverManager.getConnection(getUrl(attributes));
+            final Connection connection = DriverManager.getConnection(getUrl(attributes), getUsername(), getPassword().length() == 0 ? null : getPassword());
             connection.close();
         } catch (final SQLException exception) {
             final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
             logger.logError(message, exception);
+            return;
         }
 
         logger.logInfo("Started embedded Derby database");
@@ -198,9 +225,10 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
 
         if (server != null) {
             final Map<String, String> attributes = new HashMap<String, String>();
-            attributes.put(SHUTDOWN, TRUE);
+            attributes.put(DROP, TRUE);
             try {
-                DriverManager.getConnection(getUrl(attributes));
+
+                DriverManager.getConnection(getUrl(attributes), getUsername(), getPassword().length() == 0 ? null : getPassword());
             } catch (final SQLException exception) {
                 if (exception.getErrorCode() != 45000 || !"08006".equals(exception.getSQLState())) {
                     final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
