@@ -46,6 +46,8 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
      * The message key for the error reported when a file type is not supported.
      */
     private static final String UNSUPPORTED_FILE_TYPE = "unsupported_file_type";
+    private static final int PING_RETRIES = 10;
+    private static final int PING_DELAY = 500;
     /**
      * The database name.
      */
@@ -172,4 +174,37 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
         }
     }
 
+    protected final boolean waitForStart() {
+        for (int i = 0; i < PING_RETRIES; i++) {
+            if (hasStarted()) {
+                return true;
+            } else {
+                try {
+                    Thread.sleep(PING_DELAY);
+                } catch (final InterruptedException ie) {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected final boolean waitForStop() {
+        for (int i = 0; i < PING_RETRIES; i++) {
+            if (hasStopped()) {
+                return true;
+            } else {
+                try {
+                    Thread.sleep(PING_DELAY);
+                } catch (final InterruptedException exception) {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected abstract boolean hasStarted();
+
+    protected abstract boolean hasStopped();
 }

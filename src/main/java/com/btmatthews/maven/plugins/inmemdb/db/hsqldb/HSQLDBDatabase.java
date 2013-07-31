@@ -17,6 +17,7 @@
 package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
+import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
 import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitFlatXMLLoader;
@@ -48,7 +49,9 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
     /**
      * Default port HSQLDB listens on, can be altered via setting port property
      */
-    private static final int DEFAULT_PORT = 9001;
+    private static final int DEFAULT_PORT = ServerConstants.SC_DEFAULT_HSQL_SERVER_PORT;
+    private static final int PING_RETRIES = 10;
+    private static final int PING_DELAY = 100;
     /**
      * The loaders that are supported for loading data or executing scripts.
      */
@@ -115,12 +118,11 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
         logger.logInfo("Starting embedded HSQLDB database");
 
         server = new Server();
-        server.setPort(getPort());
         server.setDatabasePath(0, DatabaseURL.S_MEM + getDatabaseName());
         server.setDatabaseName(0, getDatabaseName());
         server.setDaemon(true);
         server.setAddress(ServerConstants.SC_DEFAULT_ADDRESS);
-        server.setPort(ServerConstants.SC_DEFAULT_HSQL_SERVER_PORT);
+        server.setPort(getPort());
         server.setErrWriter(null);
         server.setLogWriter(null);
         server.setTls(false);
@@ -129,6 +131,11 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
         server.setNoSystemExit(true);
         server.setRestartOnShutdown(false);
         server.start();
+        if (!waitForStart()) {
+            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+            logger.logError(message);
+            return;
+        }
 
         logger.logInfo("Started embedded HSQLDB database");
     }
@@ -144,10 +151,34 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
         logger.logInfo("Stopping embedded HSQLDB database");
 
         if (server != null) {
+            server.stop();
+            if (!waitForStop()) {
+                final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
+                logger.logError(message);
+                return;
+            }
             server.shutdown();
             server = null;
         }
 
         logger.logInfo("Stopping embedded HSQLDB database");
+    }
+
+    protected boolean hasStarted() {
+        try {
+            server.checkRunning(true);
+            return true;
+        } catch (final RuntimeException e) {
+            return false;
+        }
+    }
+
+    protected boolean hasStopped() {
+        try {
+            server.checkRunning(false);
+            return true;
+        } catch (final RuntimeException e) {
+            return false;
+        }
     }
 }

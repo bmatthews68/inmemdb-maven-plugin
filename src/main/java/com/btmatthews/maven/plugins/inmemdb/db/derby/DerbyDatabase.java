@@ -74,8 +74,6 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
      * The JDBC driver class name.
      */
     private static final String DRIVER_CLASS = "org.apache.derby.jdbc.ClientDriver";
-    private static final int PING_RETRIES = 10;
-    private static final int PING_DELAY = 100;
     /**
      * The loaders that are supported for loading data or executing scripts.
      */
@@ -161,25 +159,10 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             return;
         }
 
-        for (int i = 0; ; i++) {
-            try {
-                server.ping();
-                break;
-            } catch (final Exception e) {
-                if (i < PING_RETRIES) {
-                    try {
-                        Thread.sleep(PING_DELAY);
-                    } catch (final InterruptedException ie) {
-                        final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-                        logger.logError(message, ie);
-                        return;
-                    }
-                } else {
-                    final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-                    logger.logError(message, e);
-                    return;
-                }
-            }
+        if (!waitForStart()) {
+            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
+            logger.logError(message);
+            return;
         }
         try {
             Class.forName(DRIVER_CLASS).newInstance();
@@ -243,9 +226,34 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
                 logger.logError(message, exception);
                 return;
             }
+
+            if (!waitForStop()) {
+                final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
+                logger.logError(message);
+                return;
+            }
+
             server = null;
         }
 
         logger.logInfo("Stopped embedded Derby database");
+    }
+
+    protected boolean hasStarted() {
+        try {
+            server.ping();
+            return true;
+        } catch (final Exception e) {
+            return false;
+        }
+    }
+
+    protected boolean hasStopped() {
+        try {
+            server.ping();
+            return false;
+        } catch (final Exception e) {
+            return true;
+        }
     }
 }
