@@ -34,7 +34,7 @@ Example
 The **In-Memory Database Maven Plugin** can be used to automate integration tests  having a dependency on an
 external database server.
 
-# pom.xml
+### pom.xml
 
 The POM here is from taken from the
 [webapp](https://github%20%20.com/bmatthews68/inmemdb-maven-plugin/tree/master/src/it/webapp) integration test for the
@@ -221,7 +221,7 @@ tests during the **integration-test** phase of the build life cycle.
 The **com.btmatthews.selenium.junit4:selenium-junit-runner** and **junit:junit** dependencies are required by the
 integration tests.
 
-# jetty.xml
+### jetty.xml
 
 Add the following fragment of XML to the [jetty.xml](http://wiki.eclipse.org/Jetty/Reference/jetty.xml) to define a
 data source for the test database.
@@ -243,7 +243,7 @@ data source for the test database.
 </New>
 ```
 
-# web.xml
+### web.xml
 
 Add the following **<resource-ref/>** to the web.xml to make the data source defined in
 [jetty.xml](http://wiki.eclipse.org/Jetty/Reference/jetty.xml) inside the web application:
