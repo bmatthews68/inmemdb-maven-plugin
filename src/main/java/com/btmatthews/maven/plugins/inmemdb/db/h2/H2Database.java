@@ -120,11 +120,6 @@ public final class H2Database extends AbstractSQLDatabase {
             service = new TcpServer();
             service.init("-tcpDaemon", "-tcpPort", Integer.toString(getPort()));
             service.start();
-            if (!waitForStart()) {
-                final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-                logger.logError(message);
-                return;
-            }
         } catch (final SQLException exception) {
             final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
             logger.logError(message, exception);
@@ -155,22 +150,18 @@ public final class H2Database extends AbstractSQLDatabase {
 
         if (service != null) {
             service.stop();
-            if (!waitForStop()) {
-                final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-                logger.logError(message);
-                return;
-            }
-            service = null;
         }
 
         logger.logInfo("Stopped embedded H2 database");
     }
 
-    protected boolean hasStarted() {
-        return service.isRunning(false);
+    @Override
+    public boolean isStarted(final Logger logger) {
+        return service != null && service.isRunning(true);
     }
 
-    protected boolean hasStopped() {
+    @Override
+    public boolean isStopped(final Logger logger) {
         return !service.isRunning(false);
     }
 }

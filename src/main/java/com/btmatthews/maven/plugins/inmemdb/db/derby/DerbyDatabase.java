@@ -159,11 +159,6 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             return;
         }
 
-        if (!waitForStart()) {
-            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-            logger.logError(message);
-            return;
-        }
         try {
             Class.forName(DRIVER_CLASS).newInstance();
         } catch (final InstantiationException exception) {
@@ -210,7 +205,6 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
             final Map<String, String> attributes = new HashMap<String, String>();
             attributes.put(DROP, TRUE);
             try {
-
                 DriverManager.getConnection(getUrl(attributes), getUsername(), getPassword().length() == 0 ? null : getPassword());
             } catch (final SQLException exception) {
                 if (exception.getErrorCode() != 45000 || !"08006".equals(exception.getSQLState())) {
@@ -226,29 +220,26 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
                 logger.logError(message, exception);
                 return;
             }
-
-            if (!waitForStop()) {
-                final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
-                logger.logError(message);
-                return;
-            }
-
-            server = null;
         }
 
         logger.logInfo("Stopped embedded Derby database");
     }
 
-    protected boolean hasStarted() {
-        try {
-            server.ping();
-            return true;
-        } catch (final Exception e) {
-            return false;
+    @Override
+    public boolean isStarted(final Logger logger) {
+        if (server != null) {
+            try {
+                server.ping();
+                return true;
+            } catch (final Exception e) {
+                return false;
+            }
         }
+        return false;
     }
 
-    protected boolean hasStopped() {
+    @Override
+    public boolean isStopped(final Logger logger) {
         try {
             server.ping();
             return false;

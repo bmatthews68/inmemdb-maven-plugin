@@ -17,7 +17,6 @@
 package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
 
 import com.btmatthews.maven.plugins.inmemdb.Loader;
-import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
 import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitFlatXMLLoader;
@@ -131,11 +130,6 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
         server.setNoSystemExit(true);
         server.setRestartOnShutdown(false);
         server.start();
-        if (!waitForStart()) {
-            final String message = MessageUtil.getMessage(ERROR_STARTING_SERVER, getDatabaseName());
-            logger.logError(message);
-            return;
-        }
 
         logger.logInfo("Started embedded HSQLDB database");
     }
@@ -152,28 +146,27 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
 
         if (server != null) {
             server.stop();
-            if (!waitForStop()) {
-                final String message = MessageUtil.getMessage(ERROR_STOPPING_SERVER, getDatabaseName());
-                logger.logError(message);
-                return;
-            }
             server.shutdown();
-            server = null;
         }
 
         logger.logInfo("Stopping embedded HSQLDB database");
     }
 
-    protected boolean hasStarted() {
-        try {
-            server.checkRunning(true);
-            return true;
-        } catch (final RuntimeException e) {
-            return false;
+    @Override
+    public boolean isStarted(final Logger logger) {
+        if (server != null) {
+            try {
+                server.checkRunning(true);
+                return true;
+            } catch (final RuntimeException e) {
+                return false;
+            }
         }
+        return false;
     }
 
-    protected boolean hasStopped() {
+    @Override
+    public boolean isStopped(final Logger logger) {
         try {
             server.checkRunning(false);
             return true;
