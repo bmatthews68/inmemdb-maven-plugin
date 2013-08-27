@@ -86,8 +86,8 @@ public final class H2Database extends AbstractSQLDatabase {
      *         constructor.
      */
     @Override
-    public DataSource getDataSource(final Map<String, String> attributes) {
-        final Map<String, String> actualAttributes = new HashMap<String, String>(attributes);
+    public DataSource getDataSource() {
+        final Map<String, String> actualAttributes = new HashMap<String, String>(getAttributes());
         actualAttributes.put("DB_CLOSE_DELAY", "-1");
         final JdbcDataSource dataSource = new JdbcDataSource();
         dataSource.setURL(getUrl(actualAttributes));

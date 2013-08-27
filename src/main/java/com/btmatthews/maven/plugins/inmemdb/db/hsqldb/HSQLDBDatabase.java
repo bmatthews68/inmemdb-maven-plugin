@@ -16,6 +16,15 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.hsqldb;
 
+import java.text.MessageFormat;
+
+import javax.sql.DataSource;
+
+import org.hsqldb.DatabaseURL;
+import org.hsqldb.jdbc.JDBCDataSource;
+import org.hsqldb.server.Server;
+import org.hsqldb.server.ServerConstants;
+
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.db.AbstractSQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitCSVLoader;
@@ -24,14 +33,6 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXLSLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.dbunit.DBUnitXMLLoader;
 import com.btmatthews.maven.plugins.inmemdb.ldr.sqltool.SQLLoader;
 import com.btmatthews.utils.monitor.Logger;
-import org.hsqldb.DatabaseURL;
-import org.hsqldb.jdbc.JDBCDataSource;
-import org.hsqldb.server.Server;
-import org.hsqldb.server.ServerConstants;
-
-import javax.sql.DataSource;
-import java.text.MessageFormat;
-import java.util.Map;
 
 /**
  * Implements support for in-memory HSQLDB databases.
@@ -88,9 +89,9 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
      *         constructor.
      */
     @Override
-    public DataSource getDataSource(final Map<String, String> attributes) {
+    public DataSource getDataSource() {
         final JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl(getUrl(attributes));
+        dataSource.setUrl(getUrl(getAttributes()));
         dataSource.setUser(getUsername());
         dataSource.setPassword(getPassword());
         return dataSource;

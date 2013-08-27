@@ -16,6 +16,9 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Loader;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
@@ -62,6 +65,10 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
      * The port number used for the database (not supported by all databases)
      */
     private int port;
+    /**
+     * The attributes used for the database
+     */
+    private Map<String, String> attributes = new HashMap<String, String>();
 
     /**
      * Constructor initializes default database port.
@@ -93,6 +100,9 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
         } else if ("port".equals(name)) {
             logger.logInfo("Configured database port: " + value);
             port = (Integer) value;
+        } else if("attributes".equals(name)) {
+           logger.logInfo("Configured database attributes: " + value);
+           attributes = (Map<String, String>) value;
         }
     }
 
@@ -136,6 +146,15 @@ public abstract class AbstractDatabase extends AbstractServer implements Databas
         return port;
     }
 
+    
+    /**
+     * Get the attributes used to connect to database
+     * @return attributes
+     */
+    public Map<String, String> getAttributes() {
+       return attributes;
+    }
+    
     /**
      * Get the loaders that are supported for loading data or executing scripts.
      *
