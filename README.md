@@ -87,6 +87,22 @@ The POM here is from taken from the
                     </execution>
 ```
 
+You can add special configuration on your database connection URL with ***attributes*** tag in the ***configuration*** part.
+
+````xml
+				...
+				<configuration>
+                    <monitorKey>inmemdb</monitorKey>
+                    <monitorPort>11527</monitorPort>
+					<type>h2</type>
+					<database>test</database>
+					<attributes>
+						<PAGE_SIZE>512</PAGE_SIZE>
+					</attributes>
+				</configuration>
+				...
+```
+
 The **In-Memory Database Maven Plugin** is configured here to launch an in-memory Apache Derby database server as a
 daemon process during the **pre-integration-test** phase of the build life cycle. The database is initialised with
 a database schema and some seed data.
