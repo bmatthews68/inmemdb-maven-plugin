@@ -17,7 +17,6 @@
 package com.btmatthews.maven.plugins.inmemdb;
 
 import javax.sql.DataSource;
-import java.util.Map;
 
 /**
  * Describes the operations that are used by the Mojos to launch in-memory
@@ -35,13 +34,4 @@ public interface SQLDatabase extends Database {
      * @return The data source.
      */
     DataSource getDataSource();
-
-    /**
-     * Get the data source that describes the connection to the in-memory
-     * database.
-     *
-     * @param attributes Additional connection attributes.
-     * @return The data source.
-     */
-    DataSource getDataSource(Map<String, String> attributes);
 }
