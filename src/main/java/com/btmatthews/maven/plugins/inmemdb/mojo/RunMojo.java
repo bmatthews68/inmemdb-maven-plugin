@@ -16,20 +16,19 @@
 
 package com.btmatthews.maven.plugins.inmemdb.mojo;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.utils.monitor.Logger;
 import com.btmatthews.utils.monitor.Server;
 import com.btmatthews.utils.monitor.mojo.AbstractRunMojo;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-
-import java.io.File;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This plug-in Mojo starts an In Memory Database.
@@ -71,6 +70,9 @@ public final class RunMojo extends AbstractRunMojo {
     @Parameter(property = "inmemdb.port")
     private Integer port;
 
+    @Parameter(property = "inmemdb.attribute")
+    private Map<String, String> attributes;
+    
     /**
      * Get the server type.
      *
@@ -99,6 +101,11 @@ public final class RunMojo extends AbstractRunMojo {
         } else {
             config.put("password", password);
         }
+        
+        if(attributes!=null) {
+           config.put("attributes", attributes);
+        }
+        
         return config;
     }
 
