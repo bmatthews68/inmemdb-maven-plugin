@@ -61,6 +61,10 @@ The POM here is from taken from the
                 <configuration>
                     <monitorKey>inmemdb</monitorKey>
                     <monitorPort>11527</monitorPort>
+                    <skip>${maven.test.skip}</skip>
+                    <attributes>
+                        <territory>ga_IE</territory>
+                    </attributes>
                 </configuration>
                 <executions>
                     <execution>
