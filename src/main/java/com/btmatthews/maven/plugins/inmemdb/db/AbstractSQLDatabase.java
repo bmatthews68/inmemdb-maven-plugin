@@ -16,9 +16,10 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db;
 
-import java.util.Map;
-
 import com.btmatthews.maven.plugins.inmemdb.SQLDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Abstract base classes embedded SQL databases.
@@ -45,17 +46,28 @@ public abstract class AbstractSQLDatabase extends AbstractDatabase implements SQ
     protected abstract String getUrlProtocol();
 
     /**
+     * Construct the JDBC URL without addtional connection specific attributes.
+     *
+     * @return The JDC URL.
+     */
+    public final String getUrl() {
+        return getUrl(new HashMap<String, String>());
+    }
+
+    /**
      * Construct the JDBC URL with connection specific attributes.
      *
-     * @param attributes The connection specific attributes.
+     * @param additionalAttributes The connection specific attributes.
      * @return The JDBC URL.
      */
-    public final String getUrl(final Map<String, String> attributes) {
+    public final String getUrl(final Map<String, String> additionalAttributes) {
         final StringBuilder url = new StringBuilder("jdbc:");
         url.append(getUrlProtocol());
         url.append(getDatabaseName());
-        if (attributes.size() > 0) {
-            for (Map.Entry<String, String> entry : attributes.entrySet()) {
+        final Map<String, String> mergedAttributes = new HashMap<String, String>(getAttributes());
+        mergedAttributes.putAll(additionalAttributes);
+        if (mergedAttributes.size() > 0) {
+            for (final Map.Entry<String, String> entry : mergedAttributes.entrySet()) {
                 url.append(';');
                 url.append(entry.getKey());
                 url.append('=');

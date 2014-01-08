@@ -118,7 +118,7 @@ public final class DerbyDatabase extends AbstractSQLDatabase {
     @Override
     public DataSource getDataSource() {
         final BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl(getUrl(getAttributes()));
+        dataSource.setUrl(getUrl());
         dataSource.setUsername(getUsername());
         if (StringUtils.isNotEmpty(getPassword())) {
             dataSource.setPassword(getPassword());

@@ -90,7 +90,7 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
     @Override
     public DataSource getDataSource() {
         final JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl(getUrl(getAttributes()));
+        dataSource.setUrl(getUrl());
         dataSource.setUser(getUsername());
         dataSource.setPassword(getPassword());
         return dataSource;
