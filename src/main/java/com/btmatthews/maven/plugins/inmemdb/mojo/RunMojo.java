@@ -16,19 +16,19 @@
 
 package com.btmatthews.maven.plugins.inmemdb.mojo;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.utils.monitor.Logger;
 import com.btmatthews.utils.monitor.Server;
 import com.btmatthews.utils.monitor.mojo.AbstractRunMojo;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This plug-in Mojo starts an In Memory Database.
@@ -70,9 +70,35 @@ public final class RunMojo extends AbstractRunMojo {
     @Parameter(property = "inmemdb.port")
     private Integer port;
 
+    /**
+     * Additional attributes used to configure the database connection.
+     */
     @Parameter(property = "inmemdb.attribute")
     private Map<String, String> attributes;
-    
+
+    /**
+     * Indicates whether or not the Mojo execution should be skipped.
+     * @since 1.4.0
+     */
+    @Parameter(property = "inmemdb.skip", defaultValue = "false")
+    private boolean skip;
+
+    /**
+     * Checks whether the Mojo execution is being skipped before delegating to the super class to
+     * run the in-memory database.
+     *
+     * @throws MojoFailureException If there was a problem executing the Mojo.
+     * @since 1.4.0
+     */
+    @Override
+    public void execute() throws MojoFailureException {
+        if (skip) {
+            getLog().info("Skipping inmemdb:run because inmemdb.skip=='true'");
+        } else {
+            super.execute();
+        }
+    }
+
     /**
      * Get the server type.
      *
@@ -101,11 +127,11 @@ public final class RunMojo extends AbstractRunMojo {
         } else {
             config.put("password", password);
         }
-        
-        if(attributes!=null) {
-           config.put("attributes", attributes);
+
+        if (attributes != null) {
+            config.put("attributes", attributes);
         }
-        
+
         return config;
     }
 
