@@ -84,7 +84,6 @@ public final class HSQLDBDatabase extends AbstractSQLDatabase {
      * Get the data source that describes the connection to the in-memory HSQLDB
      * database.
      *
-     * @param attributes Additional attributes for the data source connection string.
      * @return Returns {@code dataSource} which was initialised by the
      *         constructor.
      */

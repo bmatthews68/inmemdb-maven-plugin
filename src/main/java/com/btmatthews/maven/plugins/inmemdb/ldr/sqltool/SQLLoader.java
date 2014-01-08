@@ -31,7 +31,7 @@ import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 
 /**
- * Loader that uses HSQLDB&apos;s {@link SqlFile} to load a DDL/DML script into
+ * Loader that uses HSQLDB's {@link SqlFile} to load a DDL/DML script into
  * the database.
  *
  * @author <a href="brian@btmatthews.com">Brian Matthews</a>

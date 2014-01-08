@@ -81,7 +81,6 @@ public final class H2Database extends AbstractSQLDatabase {
      * Get the data source that describes the connection to the in-memory H2
      * database.
      *
-     * @param attributes Additional attributes for the data source connection string.
      * @return Returns {@code dataSource} which was initialised by the
      *         constructor.
      */
