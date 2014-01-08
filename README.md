@@ -281,7 +281,7 @@ at the following coordinates:
 <plugin>
     <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
     <artifactId>inmemdb-maven-plugin</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 </plugin>
 ```
 
@@ -290,6 +290,7 @@ Credits
 This project contains contributions from:
 
 * [Glen Mazza](https://github.com/gmazza)
+* [Nicolas Girot](https://github.com/ngirot)
 
 License & Source Code
 ---------------------
