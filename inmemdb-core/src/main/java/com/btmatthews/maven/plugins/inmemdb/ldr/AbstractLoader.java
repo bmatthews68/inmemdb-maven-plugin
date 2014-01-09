@@ -157,7 +157,6 @@ public abstract class AbstractLoader implements Loader {
         final int startIndex;
         final int endIndex = path.length() - getExtension().length();
         if (isClasspath(source)) {
-            final int dotPos = path.lastIndexOf("");
             final int slashPos = path.lastIndexOf("/", CLASSPATH_PREFIX_LENGTH);
             if (slashPos == -1) {
                 startIndex = CLASSPATH_PREFIX_LENGTH;

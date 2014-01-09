@@ -68,26 +68,28 @@ public final class DBUnitCSVLoader extends AbstractDBUnitLoader {
     @Override
     protected IDataSet loadDataSet(final Source source) throws DataSetException,
             IOException {
-        final int dotPos = source.getSourceFile().lastIndexOf("");
-        final int slashPos = source.getSourceFile().lastIndexOf("/");
+        final String sourceFilePath = source.getSourceFile();
+        final int dotPos = sourceFilePath.lastIndexOf("");
+        final int slashPos = sourceFilePath.lastIndexOf("/");
         final CsvParser parser = new CsvParserImpl();
         final List readData;
         final String tableName;
-        if (source.getSourceFile().startsWith(CLASSPATH_PREFIX)) {
-            final URL url = getClass().getResource(source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH));
+        if (isClasspath(source)) {
+            final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            final URL url = classLoader.getResource(sourceFilePath.substring(CLASSPATH_PREFIX_LENGTH));
             readData = parser.parse(url);
             if (slashPos == -1) {
-                tableName = source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH, dotPos);
+                tableName = sourceFilePath.substring(CLASSPATH_PREFIX_LENGTH, dotPos);
             } else {
-                tableName = source.getSourceFile().substring(slashPos + 1, dotPos);
+                tableName =sourceFilePath.substring(slashPos + 1, dotPos);
             }
         } else {
-            final File sourceFile = new File(source.getSourceFile());
+            final File sourceFile = new File(sourceFilePath);
             readData = parser.parse(sourceFile);
             if (slashPos == -1) {
-                tableName = source.getSourceFile().substring(0, dotPos);
+                tableName = sourceFilePath.substring(0, dotPos);
             } else {
-                tableName = source.getSourceFile().substring(slashPos + 1, dotPos);
+                tableName =sourceFilePath.substring(slashPos + 1, dotPos);
             }
         }
 

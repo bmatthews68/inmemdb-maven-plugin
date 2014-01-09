@@ -16,11 +16,6 @@
 
 package com.btmatthews.maven.plugins.inmemdb.ldr.sqltool;
 
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.MessageUtil;
 import com.btmatthews.maven.plugins.inmemdb.SQLDatabase;
@@ -29,6 +24,12 @@ import com.btmatthews.maven.plugins.inmemdb.ldr.AbstractLoader;
 import com.btmatthews.utils.monitor.Logger;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Loader that uses HSQLDB's {@link SqlFile} to load a DDL/DML script into
@@ -64,20 +65,26 @@ public final class SQLLoader extends AbstractLoader {
                      final Database database,
                      final Source source) {
         try {
-            final SqlFile sqlFile = new SqlFile(
-                    getReader(source),
-                    source.getSourceFile(),
-                    System.out,
-                    null,
-                    false,
-                    null);
-            final DataSource dataSource = ((SQLDatabase)database).getDataSource();
-            final Connection connection = dataSource.getConnection();
-            try {
-                sqlFile.setConnection(connection);
-                sqlFile.execute();
-            } finally {
-                connection.close();
+            final Reader reader = getReader(source);
+            if (reader == null) {
+                final String message = MessageUtil.getMessage(CANNOT_READ_SOURCE_FILE, source.getSourceFile());
+                logger.logError(message);
+            } else {
+                final SqlFile sqlFile = new SqlFile(
+                        reader,
+                        source.getSourceFile(),
+                        System.out,
+                        null,
+                        false,
+                        null);
+                final DataSource dataSource = ((SQLDatabase) database).getDataSource();
+                final Connection connection = dataSource.getConnection();
+                try {
+                    sqlFile.setConnection(connection);
+                    sqlFile.execute();
+                } finally {
+                    connection.close();
+                }
             }
         } catch (final IOException exception) {
             final String message = MessageUtil.getMessage(CANNOT_READ_SOURCE_FILE, source.getSourceFile());

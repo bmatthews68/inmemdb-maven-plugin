@@ -27,8 +27,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.btmatthews.maven.plugins.inmemdb.Source;
-import com.btmatthews.maven.plugins.inmemdb.mojo.RunMojo;
-import com.btmatthews.maven.plugins.inmemdb.mojo.Script;
 import com.btmatthews.utils.monitor.Logger;
 import com.btmatthews.utils.monitor.Monitor;
 import org.apache.maven.plugin.Mojo;
@@ -56,7 +54,7 @@ public abstract class AbstractTestRunMojo {
     private Logger logger;
 
     /**
-     * The mojo being tested.
+     * The test being tested.
      */
     private Mojo mojo;
 
@@ -110,7 +108,7 @@ public abstract class AbstractTestRunMojo {
      * @return The relative path of the script.
      */
     private String getCreateScript() {
-        return "src/test/resources/create_" + getType() + "_database.sql";
+        return "classpath:create_" + getType() + "_database.sql";
     }
 
     /**

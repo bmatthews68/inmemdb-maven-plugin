@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.mojo;
+package com.btmatthews.maven.plugins.inmemdb.test;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Source;

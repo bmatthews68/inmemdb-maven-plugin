@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.db.h2;
 
-import com.btmatthews.maven.plugins.inmemdb.db.h2.H2Database;
+import com.btmatthews.maven.plugins.inmemdb.test.AbstractTestDatabase;
 import com.btmatthews.utils.monitor.Server;
 
 /**

@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.db.derby;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabaseFactory;
-import com.btmatthews.maven.plugins.inmemdb.db.h2.H2DatabaseFactory;
-import com.btmatthews.maven.plugins.inmemdb.db.hsqldb.HSQLDBDatabaseFactory;
 import com.btmatthews.utils.monitor.Logger;
 import com.btmatthews.utils.monitor.ServerFactory;
 import com.btmatthews.utils.monitor.ServerFactoryLocator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import static org.junit.Assert.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Unit test the server factory configuration.
@@ -46,7 +41,7 @@ public final class TestDatabaseFactory {
     private Logger logger;
 
     /**
-     * Used to locate the {@link ServerFactory} for the database server.
+     * Used to locate the {@link com.btmatthews.utils.monitor.ServerFactory} for the database server.
      */
     private ServerFactoryLocator locator;
 
@@ -70,7 +65,7 @@ public final class TestDatabaseFactory {
     }
 
     /**
-     * Verify that the server factory locator returns a {@link DerbyDatabaseFactory} when
+     * Verify that the server factory locator returns a {@link com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabaseFactory} when
      * &quot;derby&quot; is passed as the database type.
      */
     @Test
@@ -78,28 +73,6 @@ public final class TestDatabaseFactory {
         final ServerFactory factory = locator.getFactory("derby");
         assertNotNull(factory);
         assertTrue(factory instanceof DerbyDatabaseFactory);
-    }
-
-    /**
-     * Verify that the server factory locator returns a {@link H2DatabaseFactory} when
-     * &quot;h2&quot; is passed as the database type.
-     */
-    @Test
-    public void testH2Type() {
-        final ServerFactory factory = locator.getFactory("h2");
-        assertNotNull(factory);
-        assertTrue(factory instanceof H2DatabaseFactory);
-    }
-
-    /**
-     * Verify that the server factory locator returns a {@link HSQLDBDatabaseFactory} when
-     * &quot;hsqldb&quot; is passed as the database type.
-     */
-    @Test
-    public void testHSQLDBType() {
-        final ServerFactory factory = locator.getFactory("hsqldb");
-        assertNotNull(factory);
-        assertTrue(factory instanceof HSQLDBDatabaseFactory);
     }
 
     /**

@@ -60,12 +60,7 @@ public final class DBUnitXMLLoader extends AbstractDBUnitLoader {
     @Override
     protected IDataSet loadDataSet(final Source source)
             throws DataSetException, IOException {
-        final InputStream inputStream;
-        if (source.getSourceFile().startsWith(CLASSPATH_PREFIX)) {
-            inputStream = getClass().getResourceAsStream(source.getSourceFile().substring(CLASSPATH_PREFIX_LENGTH));
-        } else {
-            inputStream = new FileInputStream(source.getSourceFile());
-        }
+        final InputStream inputStream = getInputStream(source);
         return new XmlDataSet(inputStream);
     }
 }

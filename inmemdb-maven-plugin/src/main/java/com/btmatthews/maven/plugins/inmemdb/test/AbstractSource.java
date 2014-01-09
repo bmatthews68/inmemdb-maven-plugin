@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.mojo;
+package com.btmatthews.maven.plugins.inmemdb.test;
+
+import com.btmatthews.maven.plugins.inmemdb.Source;
 
 /**
- * Describes source files that contain DDL/DML scripts that can be used to
- * create and populate the in-memory database.
+ * Abstract base class for objects that describe the source files that will be
+ * loaded into the in-memory database.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.0.0
  */
-public final class Script extends AbstractSource {
+public abstract class AbstractSource implements Source {
+
+    /**
+     * The source file that contains the DDL/DML script or DBUnit data set.
+     */
+    private String sourceFile;
 
     /**
      * The default constructor.
      */
-    public Script() {
+    protected AbstractSource() {
     }
 
     /**
@@ -38,22 +45,26 @@ public final class Script extends AbstractSource {
      * @param file The source file that contains the DDL/DML script or DBUnit
      *             data set.
      */
-    public Script(final String file) {
-        super(file);
+    protected AbstractSource(final String file) {
+        this.sourceFile = file;
     }
 
     /**
-     * Indicates that the script source descriptor does not distinguish between
-     * qualified and unqualified table names by returning <code>null</code>.
+     * Get the source file that contains the DDL/DML script or DBUnit data set.
      *
-     * @return Always returns <code>null</code>.
+     * @return The source file.
      */
-    public Boolean getQualifiedTableNames() {
-        return null;
+    public final String getSourceFile() {
+        return this.sourceFile;
     }
 
-    @Override
-    public String toString() {
-        return "Script[" + getSourceFile() + "]";
+    /**
+     * Set the source file that contains the DDL/DML script or DBUnit data set.
+     *
+     * @param file The source file.
+     */
+    public final void setSourceFile(final String file) {
+        this.sourceFile = file;
     }
+
 }

@@ -37,7 +37,7 @@ external database server.
 ### pom.xml
 
 The POM here is from taken from the
-[webapp](https://github%20%20.com/bmatthews68/inmemdb-maven-plugin/tree/master/src/it/webapp) integration test for the
+[webapp](https://github.com/bmatthews68/inmemdb-maven-plugin/tree/master/src/it/webapp) integration test for the
 **In-Memory Database Maven Plugin**.
 
 ```xml
@@ -55,9 +55,9 @@ The POM here is from taken from the
     <build>
         <plugins>
             <plugin>
-                <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
+                <groupId>com.btmatthews.maven.plugins</groupId>
                 <artifactId>inmemdb-maven-plugin</artifactId>
-                <version>1.4.3</version>
+                <version>2.0.0</version>
                 <configuration>
                     <monitorKey>inmemdb</monitorKey>
                     <monitorPort>11527</monitorPort>
@@ -283,9 +283,9 @@ at the following coordinates:
 
 ```xml
 <plugin>
-    <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
+    <groupId>com.btmatthews.maven.plugins</groupId>
     <artifactId>inmemdb-maven-plugin</artifactId>
-    <version>1.4.3</version>
+    <version>2.0.0</version>
 </plugin>
 ```
 

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.db.derby;
 
-import com.btmatthews.maven.plugins.inmemdb.db.derby.DerbyDatabase;
+import com.btmatthews.maven.plugins.inmemdb.test.AbstractTestDatabase;
 import com.btmatthews.utils.monitor.Server;
 
 /**

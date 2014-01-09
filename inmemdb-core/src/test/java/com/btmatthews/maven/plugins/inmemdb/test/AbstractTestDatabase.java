@@ -16,18 +16,17 @@
 
 package com.btmatthews.maven.plugins.inmemdb.test;
 
-import static org.mockito.MockitoAnnotations.initMocks;
-
 import com.btmatthews.maven.plugins.inmemdb.Database;
-import com.btmatthews.maven.plugins.inmemdb.mojo.DataSet;
-import com.btmatthews.maven.plugins.inmemdb.mojo.Script;
+import com.btmatthews.maven.plugins.inmemdb.Source;
 import com.btmatthews.utils.monitor.Logger;
 import com.btmatthews.utils.monitor.Server;
-import org.apache.maven.plugin.MojoFailureException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,6 +42,12 @@ public abstract class AbstractTestDatabase {
      */
     @Mock
     private Logger logger;
+
+    /**
+     * Mock for the input source.
+     */
+    @Mock
+    private Source source;
 
     /**
      * The main test fixture.
@@ -89,9 +94,8 @@ public abstract class AbstractTestDatabase {
      */
     @Test
     public void testLoadScript() {
-        final Script source = new Script();
-        source.setSourceFile("src/test/resources/create_database.sql");
-        ((Database)database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:create_database.sql");
+        ((Database) database).load(logger, source);
     }
 
     /**
@@ -99,19 +103,17 @@ public abstract class AbstractTestDatabase {
      */
     @Test
     public void testLoadNonExistantScript() {
-        final Script source = new Script();
-        source.setSourceFile("src/test/resources/create_database1.sql");
-        ((Database)database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:create_database1.sql");
+        ((Database) database).load(logger, source);
     }
 
     /**
      * Verify than an exception is thrown when the script is invalid.
      */
     @Test
-    public void testLoadInvalidScript() throws MojoFailureException {
-        final Script source = new Script();
-        source.setSourceFile("src/test/resources/create_database2.sql");
-        ((Database)database).load(logger, source);
+    public void testLoadInvalidScript() {
+        when(source.getSourceFile()).thenReturn("classpath:create_database2.sql");
+        ((Database) database).load(logger, source);
     }
 
     /**
@@ -119,8 +121,8 @@ public abstract class AbstractTestDatabase {
      * the source file.
      */
     @Test
-    public void testLoadNull() throws MojoFailureException {
-        ((Database)database).load(logger, null);
+    public void testLoadNull() {
+        ((Database) database).load(logger, null);
     }
 
     /**
@@ -128,10 +130,9 @@ public abstract class AbstractTestDatabase {
      * directory.
      */
     @Test
-    public void testLoadDirectory() throws MojoFailureException {
-        final Script source = new Script();
-        source.setSourceFile("src/test/resources");
-        ((Database)database).load(logger, source);
+    public void testLoadDirectory() {
+        when(source.getSourceFile()).thenReturn(".");
+        ((Database) database).load(logger, source);
     }
 
     /**
@@ -139,12 +140,10 @@ public abstract class AbstractTestDatabase {
      */
     @Test
     public void testLoadDBUnitXML() {
-        final Script script = new Script();
-        script.setSourceFile("src/test/resources/create_database.sql");
-        ((Database)database).load(logger, script);
-        final DataSet source = new DataSet();
-        source.setSourceFile("src/test/resources/users.dbunit.xml");
-        ((Database)database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:create_database.sql");
+        ((Database) database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:users.dbunit.xml");
+        ((Database) database).load(logger, source);
     }
 
     /**
@@ -152,12 +151,10 @@ public abstract class AbstractTestDatabase {
      */
     @Test
     public void testLoadDBUnitFlatXML() {
-        final Script script = new Script();
-        script.setSourceFile("src/test/resources/create_database.sql");
-        ((Database)database).load(logger, script);
-        final DataSet source = new DataSet();
-        source.setSourceFile("src/test/resources/users.xml");
-        ((Database)database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:create_database.sql");
+        ((Database) database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:users.xml");
+        ((Database) database).load(logger, source);
     }
 
     /**
@@ -165,12 +162,10 @@ public abstract class AbstractTestDatabase {
      */
     @Test
     public void testLoadDBUnitCSV() {
-        final Script script = new Script();
-        script.setSourceFile("src/test/resources/create_database.sql");
-        ((Database)database).load(logger, script);
-        final DataSet source = new DataSet();
-        source.setSourceFile("src/test/resources/users.csv");
-        ((Database)database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:create_database.sql");
+        ((Database) database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:users.csv");
+        ((Database) database).load(logger, source);
     }
 
     /**
@@ -178,11 +173,9 @@ public abstract class AbstractTestDatabase {
      */
     @Test
     public void testLoadDBUnitXLS() {
-        final Script script = new Script();
-        script.setSourceFile("src/test/resources/create_database.sql");
-        ((Database)database).load(logger, script);
-        final DataSet source = new DataSet();
-        source.setSourceFile("src/test/resources/users.xls");
-        ((Database)database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:create_database.sql");
+        ((Database) database).load(logger, source);
+        when(source.getSourceFile()).thenReturn("classpath:users.xls");
+        ((Database) database).load(logger, source);
     }
 }
