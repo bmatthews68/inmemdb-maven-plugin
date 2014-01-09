@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.mojo;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;

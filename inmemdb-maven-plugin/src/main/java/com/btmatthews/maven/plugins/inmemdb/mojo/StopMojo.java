@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.mojo;
 
 import com.btmatthews.utils.monitor.mojo.AbstractStopMojo;
 import org.apache.maven.plugin.MojoFailureException;

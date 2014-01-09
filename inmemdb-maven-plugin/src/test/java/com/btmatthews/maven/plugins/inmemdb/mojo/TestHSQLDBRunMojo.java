@@ -14,52 +14,52 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.mojo;
 
 /**
- * Unit tests for the Mojo that implements the run goal for the Derby database server.
+ * Unit tests for the Mojo that implements the run goal for the HSQLDB database server.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  */
-public class TestDerbyRunMojo extends AbstractTestRunMojo {
+public class TestHSQLDBRunMojo extends AbstractTestRunMojo {
 
     /**
-     * Get the monitor port for the Derby test cases.
+     * Get the monitor port for the HSQLDB test cases.
      *
-     * @return Always returns {@code 11527}.
+     * @return Always returns {@code 19001}.
      */
     @Override
     protected int getMonitorPort() {
-        return 11527;
+        return 19001;
     }
 
     /**
-     * Get the type code for the Derby test cases.
+     * Get the type code for the HSQLDB test cases.
      *
-     * @return Always returns {@code derby}.
+     * @return Always returns {@code hsqldb}.
      */
     @Override
     protected String getType() {
-        return "derby";
+        return "hsqldb";
     }
 
     /**
-     * Get the driver class name for the Derby test cases.
+     * Get the driver class name for the HSQLDB test cases.
      *
-     * @return Always returns {@code org.apache.derby.jdbc.ClientDriver}.
+     * @return Always returns {@code org.hsqldb.jdbcDriver}.
      */
     @Override
     protected String getDriverClassName() {
-        return "org.apache.derby.jdbc.ClientDriver";
+        return "org.hsqldb.jdbcDriver";
     }
 
     /**
-     * Get the connection string for the Derby test cases.
+     * Get the connection string for the HSQLDB test cases.
      *
-     * @return Always returns {@code jdbc:derby//localhost/memory:test;user=sa}.
+     * @return Always returns {@code jdbc:hsqldb:hsql://localhost/test;user=sa;password=}.
      */
     @Override
     protected String getConnectionString() {
-        return "jdbc:derby://localhost/memory:test;user=sa";
+        return "jdbc:hsqldb:hsql://localhost/test;user=sa;password=";
     }
 }

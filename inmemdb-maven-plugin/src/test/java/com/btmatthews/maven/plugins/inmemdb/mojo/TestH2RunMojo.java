@@ -14,52 +14,52 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.mojo;
 
 /**
- * Unit tests for the Mojo that implements the run goal for the HSQLDB database server.
+ * Unit tests for the Mojo that implements the run goal for the H2 database server.
  *
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  */
-public class TestHSQLDBRunMojo extends AbstractTestRunMojo {
+public class TestH2RunMojo extends AbstractTestRunMojo {
 
     /**
-     * Get the monitor port for the HSQLDB test cases.
+     * Get the monitor port for the H2 test cases.
      *
-     * @return Always returns {@code 19001}.
+     * @return Always returns {@code 19092}.
      */
     @Override
     protected int getMonitorPort() {
-        return 19001;
+        return 19092;
     }
 
     /**
-     * Get the type code for the HSQLDB test cases.
+     * Get the type code for the H2 test cases.
      *
-     * @return Always returns {@code hsqldb}.
+     * @return Always returns {@code h2}.
      */
     @Override
     protected String getType() {
-        return "hsqldb";
+        return "h2";
     }
 
     /**
-     * Get the driver class name for the HSQLDB test cases.
+     * Get the driver class name for the H2 test cases.
      *
-     * @return Always returns {@code org.hsqldb.jdbcDriver}.
+     * @return Always returns {@code org.h2.Driver}.
      */
     @Override
     protected String getDriverClassName() {
-        return "org.hsqldb.jdbcDriver";
+        return "org.h2.Driver";
     }
 
     /**
-     * Get the connection string for the HSQLDB test cases.
+     * Get the connection string for the H2 test cases.
      *
-     * @return Always returns {@code jdbc:hsqldb:hsql://localhost/test;user=sa;password=}.
+     * @return Always returns {@code jdbc:h2:tcp://localhost/mem:test;user=sa;password=}.
      */
     @Override
     protected String getConnectionString() {
-        return "jdbc:hsqldb:hsql://localhost/test;user=sa;password=";
+        return "jdbc:h2:tcp://localhost/mem:test;user=sa;password=";
     }
 }

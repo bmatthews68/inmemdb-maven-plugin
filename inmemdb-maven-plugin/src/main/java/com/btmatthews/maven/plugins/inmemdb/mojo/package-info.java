@@ -15,7 +15,7 @@
  */
 
 /**
- * This package contains the classes that implement the unit tests.
+ * This package contains the classes that implement the plug-in's Mojos.
  */
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.mojo;
 

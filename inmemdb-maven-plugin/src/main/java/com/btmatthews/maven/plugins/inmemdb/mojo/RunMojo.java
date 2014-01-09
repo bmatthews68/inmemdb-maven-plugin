@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.mojo;
 
 import com.btmatthews.maven.plugins.inmemdb.Database;
 import com.btmatthews.maven.plugins.inmemdb.Source;
@@ -36,7 +36,10 @@ import java.util.Map;
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @version 1.2.0
  */
-@Mojo(name = "run", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
+@Mojo(
+        name = "run",
+        defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST,
+        configurator = "include-database-dependencies")
 public final class RunMojo extends AbstractRunMojo {
 
     /**

@@ -1,4 +1,4 @@
-package com.btmatthews.maven.plugins.inmemdb.test;
+package com.btmatthews.maven.plugins.inmemdb.mojo;
 
 import com.btmatthews.utils.monitor.Logger;
 

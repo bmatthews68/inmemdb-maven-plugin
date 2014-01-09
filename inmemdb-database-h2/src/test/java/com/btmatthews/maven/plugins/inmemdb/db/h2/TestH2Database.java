@@ -16,7 +16,7 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.h2;
 
-import com.btmatthews.maven.plugins.inmemdb.test.AbstractTestDatabase;
+import com.btmatthews.maven.plugins.inmemdb.mojo.AbstractTestDatabase;
 import com.btmatthews.utils.monitor.Server;
 
 /**
