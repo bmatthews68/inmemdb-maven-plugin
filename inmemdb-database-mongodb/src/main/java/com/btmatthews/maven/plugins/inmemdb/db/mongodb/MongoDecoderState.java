@@ -16,21 +16,14 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.mongodb;
 
-import com.btmatthews.utils.monitor.Server;
-import com.btmatthews.utils.monitor.ServerFactory;
-
 /**
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 2.0.0
  */
-public final class MongoDBDatabaseFactory implements ServerFactory {
-    @Override
-    public String getServerName() {
-        return "mongodb";
-    }
-
-    @Override
-    public Server createServer() {
-        return new MongoDBDatabase();
-    }
+public enum MongoDecoderState {
+    MESSAGE_LENGTH,
+    REQUEST_ID,
+    RESPONSE_TO,
+    OP_CODE,
+    PAYLOAD
 }

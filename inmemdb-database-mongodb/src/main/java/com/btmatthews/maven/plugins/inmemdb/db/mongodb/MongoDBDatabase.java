@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Brian Matthews
+ * Copyright 2011-2014 Brian Matthews
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,14 @@ import com.btmatthews.maven.plugins.inmemdb.db.AbstractNoSQLDatabase;
 import com.btmatthews.maven.plugins.inmemdb.ldr.json.JSONLoader;
 import com.btmatthews.utils.monitor.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
@@ -29,6 +37,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class MongoDBDatabase extends AbstractNoSQLDatabase {
 
     private static final int DEFAULT_PORT = 27017;
+
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private ChannelFuture serverFuture;
 
     public MongoDBDatabase() {
         super(DEFAULT_PORT);
@@ -48,9 +60,35 @@ public class MongoDBDatabase extends AbstractNoSQLDatabase {
 
     @Override
     public void start(final Logger logger) {
+        final FakeMongoServer fakeMongoServer = new FakeMongoServer(getDatabaseName());
+        try {
+            final ServerBootstrap bootstrap = new ServerBootstrap();
+            bootstrap.group(bossGroup, workerGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(final SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(
+                                    new MongoDecoder(),
+                                    new FakeMongoServerHandler(fakeMongoServer));
+                        }
+                    })
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+            serverFuture = bootstrap.bind(getPort()).sync();
+        } catch (final InterruptedException e) {
+        }
+
     }
 
     @Override
     public void stop(final Logger logger) {
+        try {
+            serverFuture.channel().closeFuture().sync();
+        } catch (final InterruptedException e) {
+        } finally {
+            workerGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();
+        }
     }
 }

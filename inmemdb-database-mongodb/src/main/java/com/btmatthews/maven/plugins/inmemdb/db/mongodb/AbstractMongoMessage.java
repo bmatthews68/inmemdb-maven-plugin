@@ -16,21 +16,33 @@
 
 package com.btmatthews.maven.plugins.inmemdb.db.mongodb;
 
-import com.btmatthews.utils.monitor.Server;
-import com.btmatthews.utils.monitor.ServerFactory;
-
 /**
  * @author <a href="mailto:brian@btmatthews.com">Brian Matthews</a>
  * @since 2.0.0
  */
-public final class MongoDBDatabaseFactory implements ServerFactory {
-    @Override
-    public String getServerName() {
-        return "mongodb";
+public class AbstractMongoMessage {
+
+    private final int requestID;
+    private final int responseTo;
+    private final OpCode opCode;
+
+    public AbstractMongoMessage(final int requestID,
+                                final int responseTo,
+                                final OpCode opCode) {
+        this.requestID = requestID;
+        this.responseTo = responseTo;
+        this.opCode = opCode;
     }
 
-    @Override
-    public Server createServer() {
-        return new MongoDBDatabase();
+    public int getRequestID() {
+        return requestID;
+    }
+
+    public int getResponseTo() {
+        return responseTo;
+    }
+
+    public OpCode getOpCode() {
+        return opCode;
     }
 }
