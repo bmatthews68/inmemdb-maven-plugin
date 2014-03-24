@@ -28,7 +28,6 @@
         <dependency>
             <groupId>com.orientechnologies</groupId>
             <artifactId>orientdb-server</artifactId>
-            <version>1.6.3</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
