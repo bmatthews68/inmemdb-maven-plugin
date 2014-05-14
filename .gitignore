@@ -1,7 +1,3 @@
-/target
-/.settings
-/.classpath
-/.checkstyle
-/.project
-/.idea
+target
+.idea/
 *.iml
