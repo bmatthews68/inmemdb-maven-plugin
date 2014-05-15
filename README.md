@@ -57,7 +57,7 @@ The POM here is from taken from the
             <plugin>
                 <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
                 <artifactId>inmemdb-maven-plugin</artifactId>
-                <version>1.4.2</version>
+                <version>1.4.3</version>
                 <configuration>
                     <monitorKey>inmemdb</monitorKey>
                     <monitorPort>11527</monitorPort>
@@ -285,7 +285,7 @@ at the following coordinates:
 <plugin>
     <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
     <artifactId>inmemdb-maven-plugin</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
 </plugin>
 ```
 
