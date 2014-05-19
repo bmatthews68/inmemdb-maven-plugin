@@ -6,7 +6,7 @@
     </prerequisites>
     <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
     <artifactId>inmemdb-maven-plugin</artifactId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.3</version>
     <packaging>maven-plugin</packaging>
     <name>In-Memory Database Plugin</name>
     <description>A Maven 3 plugin that can be used to launch an in-memory database for use in integration tests.
@@ -349,7 +349,7 @@
         <connection>scm:git:git@github.com:bmatthews68/inmemdb-maven-plugin.git</connection>
         <url>https://github.com/bmatthews68/inmemdb-maven-plugin</url>
         <developerConnection>scm:git:git@github.com:bmatthews68/inmemdb-maven-plugin.git</developerConnection>
-      <tag>inmemdb-maven-plugin-1.4.2</tag>
+      <tag>inmemdb-maven-plugin-1.4.3</tag>
   </scm>
     <url>https://github.com/bmatthews68/inmemdb-maven-plugin</url>
     <organization>
