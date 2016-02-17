@@ -1,7 +1,7 @@
 In-Memory Database Maven Plugin
 ===============================
 
-![Build Status](https://codeship.com/projects/a1d41b80-b668-0133-f402-527a54f9b7b1/status?branch=master)
+![Build Status](https://codeship.com/projects/a1d41b80-b668-0133-f402-527a54f9b7b1/status?branch=1.4.0)
 
 The [In-Memory Database Maven Plugin](http://inmemdb-maven-plugin.btmatthews.com/) is a [Maven](http://maven.apache.org)
 plugin that can launch and shutdown an embedded in-memory SQL database within the Maven build life-cycle. During the
