@@ -19,26 +19,9 @@
         http://maven.apache.org/DECORATION/1.1.0
         http://maven.apache.org/xsd/decoration-1.1.0.xsd"
          name="${project.name}">
-    <googleAnalyticsAccountId>UA-5713196-8</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>In-Memory Database Maven Plugin</name>
-        <href>http://inmemdb-maven-plugin.btmatthews.com</href>
-    </bannerLeft>
-    <publishDate format="dd MMM yyyy" position="left" />
-    <version position="left" />
     <body>
-        <links>
-            <item name="Maven 3" href="http://maven.apache.org/" />
-            <item name="HSQLDB" href="http://hsqldb.org/" />
-            <item name="H2" href="http://www.h2database.com/" />
-            <item name="Derby" href="http://db.apache.org/derby/" />
-            <item name="DBUnit" href="http://www.dbunit.org/" />
-        </links>
-        <menu ref="parent"/>
+        <menu name="Overview" inherit="top" />
+        <menu name="Examples" inherit="top" />
         <menu ref="reports"/>
     </body>
-    <poweredBy>
-        <logo name="Maven" href="http://maven.apache.org/"
-              img="http://maven.apache.org/images/logos/maven-feather.png"/>
-    </poweredBy>
 </project>

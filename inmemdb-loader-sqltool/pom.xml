@@ -11,7 +11,7 @@
         <version>1.5.0-SNAPSHOT</version>
     </parent>
     <artifactId>inmemdb-loader-sqltool</artifactId>
-    <name>In-Memory Database Plugin: SQL Loader</name>
+    <name>In-Memory Database Plugin: SQL Data Loader</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
