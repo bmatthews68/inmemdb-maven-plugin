@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
         <artifactId>inmemdb-parent</artifactId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.5.0-SNAPSHOT</version>
     </parent>
     <artifactId>inmemdb-database-h2</artifactId>
     <name>In-Memory Database Plugin: H2 Database Support</name>

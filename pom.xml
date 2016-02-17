@@ -7,7 +7,7 @@
     </prerequisites>
     <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
     <artifactId>inmemdb-parent</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>In-Memory Database Plugin</name>
     <description>A Maven 3 plugin that can be used to launch an in-memory database for use in integration tests.
