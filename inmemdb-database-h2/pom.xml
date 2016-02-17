@@ -23,6 +23,7 @@
             <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
             <artifactId>inmemdb-core</artifactId>
             <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>

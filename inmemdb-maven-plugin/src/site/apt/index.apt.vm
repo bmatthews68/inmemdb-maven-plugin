@@ -31,19 +31,19 @@ In-Memory Database Maven Plug-in
 
 ~~  General Information about the goals.
 
-  * {{{./inmemdb-maven-plugin/run-mojo.html}inmemdb:run}} Start the in-memory database and optionally load data
+  * {{{./run-mojo.html}inmemdb:run}} Start the in-memory database and optionally load data
     from DDL/DML scripts or DBUnit data sets.
 
-  * {{{./inmemdb-maven-plugin/stop-mojo.html}inmemdb:stop}} Stop the embedded server and drop the in-memory database.
+  * {{{./stop-mojo.html}inmemdb:stop}} Stop the embedded server and drop the in-memory database.
 
 * Usage
 
-  Instructions on how to use the In-Memory Database Maven Plugin can be found {{{./inmemdb-maven-plugin/usage.html}here}}.
+  Instructions on how to use the In-Memory Database Maven Plugin can be found {{{./usage.html}here}}.
 
 * Examples
 
   To provide you with better understanding of some usages of the In-Memory Database
   Maven Plugin, you can take a look into the following examples:
 
-  * {{{./inmemdb-maven-plugin/examples/integration_webapp.html}Integration testing with Jetty and Selenium}}
+  * {{{./examples/integration_webapp.html}Integration testing with Jetty and Selenium}}
 

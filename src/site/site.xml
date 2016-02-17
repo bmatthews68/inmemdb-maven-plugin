@@ -19,7 +19,7 @@
 	xsi:schemaLocation="
         http://maven.apache.org/DECORATION/1.1.0
         http://maven.apache.org/xsd/decoration-1.1.0.xsd"
-	name="In-Memory Database Maven Plugin">
+		 name="${project.name}">
 	<googleAnalyticsAccountId>UA-5713196-8</googleAnalyticsAccountId>
 	<bannerLeft>
 		<name>In-Memory Database Maven Plugin</name>
@@ -37,14 +37,19 @@
 		</links>
 		<menu name="Overview">
 			<item name="Introduction" href="index.html" />
-			<item name="Goals" href="plugin-info.html" />
-			<item name="Usage" href="usage.html" />
+			<item name="Goals" href="inmemdb-maven-plugin/plugin-info.html" />
+			<item name="Usage" href="inmemdb-maven-plugin/usage.html" />
 		</menu>
 		<menu name="Examples">
-			<item name="Web application integration testing" href="examples/integration_webapp.html" />
+			<item name="Web application integration testing" href="inmemdb-maven-plugin/examples/integration_webapp.html" />
 		</menu>
 		<menu ref="reports" />
-	</body>
+         </body>
+	 <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.3.0</version>
+    </skin>
 	<poweredBy>
 		<logo name="Maven" href="http://maven.apache.org/"
 			img="http://maven.apache.org/images/logos/maven-feather.png" />

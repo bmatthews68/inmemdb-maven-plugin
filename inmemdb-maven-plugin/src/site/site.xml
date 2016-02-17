@@ -1,0 +1,44 @@
+<!--
+    Copyright 2011-2016 Brian Matthews
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+        http://maven.apache.org/DECORATION/1.1.0
+        http://maven.apache.org/xsd/decoration-1.1.0.xsd"
+         name="${project.name}">
+    <googleAnalyticsAccountId>UA-5713196-8</googleAnalyticsAccountId>
+    <bannerLeft>
+        <name>In-Memory Database Maven Plugin</name>
+        <href>http://inmemdb-maven-plugin.btmatthews.com</href>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy" position="left" />
+    <version position="left" />
+    <body>
+        <links>
+            <item name="Maven 3" href="http://maven.apache.org/" />
+            <item name="HSQLDB" href="http://hsqldb.org/" />
+            <item name="H2" href="http://www.h2database.com/" />
+            <item name="Derby" href="http://db.apache.org/derby/" />
+            <item name="DBUnit" href="http://www.dbunit.org/" />
+        </links>
+        <menu ref="parent"/>
+        <menu ref="reports"/>
+    </body>
+    <poweredBy>
+        <logo name="Maven" href="http://maven.apache.org/"
+              img="http://maven.apache.org/images/logos/maven-feather.png"/>
+    </poweredBy>
+</project>
