@@ -60,6 +60,7 @@
                 <version>0.5</version>
             </extension>
         </extensions>
+        <pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -178,6 +179,7 @@
                 </executions>
             </plugin>
         </plugins>
+        </pluginManagement>
     </build>
     <profiles>
         <profile>
