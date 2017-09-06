@@ -95,7 +95,7 @@ The POM here is from taken from the
 
 You can add special configuration on your database connection URL with ***attributes*** tag in the ***configuration*** part.
 
-````xml
+```xml
 				...
 				<configuration>
                     <monitorKey>inmemdb</monitorKey>
