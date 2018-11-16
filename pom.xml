@@ -248,7 +248,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>3.0.5</version>
+            <version>3.5.0</version>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
@@ -268,7 +268,7 @@
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.12.1.1</version>
+            <version>10.14.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>
@@ -278,7 +278,7 @@
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derbynet</artifactId>
-            <version>10.12.1.1</version>
+            <version>10.14.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -288,7 +288,7 @@
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
-            <version>2.5.1</version>
+            <version>2.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
